@@ -1,0 +1,54 @@
+<head>
+  <link rel="stylesheet" href="/js_css/viewer/viewer_desktop_styles.css">
+     <style>
+        body {
+            animation: fadeInAnimation ease 2s;
+            animation-iteration-count: 1;
+            animation-fill-mode: forwards;
+        }
+
+        @keyframes fadeInAnimation {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+    </style>
+	<title>Sign In Required: PHS Interactive Map</title>
+</head>
+
+<body>
+
+<img style='margin-left: auto; margin-right: auto; width: 50%; display: block;' src='/img/logo.webp'>
+
+<!-- background page -->
+<h1 style='text-align: center'>Sign In Required</h1>
+<hr>
+<li>You are not logged in right now (either because you are a first-time user, have cleared your local/session storage, or because your old sign-on expired).</li><br>
+<li>Per MCPS policies, any map or document that provides information about the inside of MCPS facilities cannot be accessible to the general public or disseminated to anyone outside of MCPS. 
+As a result, all website users must sign with their mcpsmd.org accounts to be allowed access to map and facility data. 
+<b>(Students: remember that alongside your usual Google Account, you also have an MCPS Microsoft Account with the same username and password (except for in your username, you change mcpsmd.net to mcpsmd.org).</b></li>
+
+<p><b><a href='#' onclick='startssopopup()'>Click here to start signing in (make sure to enable popups).</a></b></p><hr><br><br><br>
+<p style='font-size: 10;'>Please see the <a href='/info#sensitiveinfo'>MCPS Sensitive Information Notice</a> and the <a href='/info#useofdata'>Use of Account Data Notice</a> for more information about why you have to sign in in the first place and what we do with your account data during the sign-in process.</p>
+
+<script src='/js_css/auth/bundle.js' defer></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@microsoft/microsoft-graph-client/lib/graph-js-sdk.js"></script>
+
+
+
+
+
+<!-- authentication modal -->
+<div class='overlay' id='authorization_head_modal' hidden>
+	<h1>Authorization Check</h1>
+	<hr>
+	1. User is signed in? <br><b id='authorization_gave_creds'>(checking...)</b><br><br>
+	2. User is a member of mcpsmd.org? <br><b id='authorization_ismember'>(waiting on step 1...)</b><br><br>
+	<div id='authorization_error_box' style='color: red; border: 0px solid red;'></div>
+</div>
+
+</body>

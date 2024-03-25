@@ -1,0 +1,103 @@
+<head>
+  <link rel="stylesheet" href="/js_css/viewer/viewer_desktop_styles.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PHS Interactive Map Important Information</title>
+</head>
+
+
+<h1 style='text-align: center'>IMPORTANT INFORMATION</h1>
+<p style='text-align: center; color: red;'>(THE FIRST TWO ARE ESPECIALLY IMPORTANT!)</p>
+<hr><br><br>
+
+<a id='emergency'></a>
+<fieldset>
+<h2>(1) Emergency Information Disclaimer</h2>
+<p>This map may not be up to date or reflect real-world circumstances (i.e. blocked evacuation routes, missing/broken emergency equipment). 
+This map should not be relied upon as a sole source of emergency information. 
+You should always follow the directions of staff during an emergency, and take the time to familiarize yourself with your surroundings before one.</p>
+</fieldset>
+
+<br><br>
+
+<a id='sensitiveinfo'></a>
+<fieldset>
+<h2>(2) MCPS Sensitive Information Notice</h2>
+<p>
+	<li>Per MCPS policies, any map or document that provides information about the inside of MCPS 
+	facilities <b>CANNOT BE ACCESSIBLE</b> to the general public or disseminated to anyone outside of MCPS. 
+	As a result, all website users must sign with their mcpsmd.org accounts to be allowed access to map and facility data.</li>
+	<br>
+	<li>Furthermore, should you decide to make any "export" of this application's data (i.e. by taking screenshots or printing the map out), 
+	you <b>MAY NOT DISSEMINATE IT</b> to anyone except for other Poolesville students, staff and temporary authorized visitors (i.e. students 
+	entering for an athletic event or substitute teachers).</li>
+	<br>
+	<li>Please understand that this policy is in place to <b>keep our schools and other facilities safe</b>.</li>
+	<br>
+	<li>This policy is <b>strictly enforced</b>,
+	both for us as the programmers and you as the end users.</li>
+	
+</p>
+</fieldset>
+
+<br><br>
+
+<a id='useofdata'></a>
+<fieldset>
+<h2>(3) Use of Account Data Notice</h2>
+<p>
+	<li>As a part of complying with MCPS' policies on interior maps/other similar documents, this application requires you to sign in with your MCPS issued Microsoft account
+	before you can interact with any map data.</li>
+	<br>
+	<li>After you sign into your Microsoft account, a unique access token issued by Microsoft is saved your browser's local storage. 
+	When you want to access restricted information (such as layer data for a particular map), your browser will send this token and a request for data
+	to our backend server; which will then look up the information 
+	for the Microsoft user that the token was issued on behalf of and use that information to make the decision to accept or reject the request for data.</li>
+	<br>
+	<li>In this process, our backend server is able to see information such as your name, email address, phone number (if there is one attached to your account), 
+	job title, and office/workplace location. However, none of this information is ever recorded, logged or made public. *
+	<br><br>
+	<li>Furthermore, your token does not carry any permissions (as in, it cannot be used to act on the user's behalf nor can it be used to access/modify sensitive information). 
+	Your token also loses its validity after a set amount of time (usually a couple hours at most), which is why you may have to sign back in multiple times in one day. **</li>
+	<br>
+	<li>We do use Google Firebase, Microsoft Azure Active Directory (Entra ID) and the Microsoft Graph API to manage our sign in process.</li>
+	<br>
+	<li>This information was last updated on the 25th of March, 2024. This information is subject to change at any time without prior notification.</li>
+	<br>
+	<p><i>*: This is the information exposed by the /v1.0/me endpoint on the Microsoft Graph API. Note that if you visited the website as a part a sanctioned testing or feedback run, your email address was logged as a part of testing our authorization system.<br>
+	**: All of the tokens we get issued have no OAuth scopes except for the default User.Read, which is given to all users.</p></i>
+</p>
+</fieldset>
+
+<br><br>
+
+<a id='contact'></a>
+<fieldset>
+<h2>(4) Contact</h2>
+<p>
+If you find any incorrect information, vulnerabilities, bugs, etc., please send an email to Charles Hu (130713@mcpsmd.net).
+Do not open an issue or pull request on Github as I do not regularly check it.
+</p>
+</fieldset>
+
+<br><br>
+
+<a id='credits'></a>
+<fieldset>
+<h2>(5) Credits</h2>
+<p>
+	<li>Rendering engine, front-facing website and backend by Charles Hu (Humanities '25).</li>
+	<li>Map annotations by Charles Hu (Humanities '25); map data provided by Arjun Rao (Global '25).</li>
+	<li>Base maps provided by VMDO Architects.</li>
+	<li>App testing and feedback provided by [who?]</li>
+</p>
+</fieldset>
+
+<br><br>
+
+<a id='opensource'></a>
+<fieldset>
+<h2>(6) Open Source Software</h2>
+<p>
+This is open source software. Our code is available for public scrutiny at [] (for our frontend) and at [] (for our backend).
+</p>
+</fieldset>

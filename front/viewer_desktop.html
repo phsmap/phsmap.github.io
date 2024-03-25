@@ -1,0 +1,121 @@
+<head>
+  <link rel="stylesheet" href="/js_css/viewer/viewer_desktop_styles.css">
+  <script src="/js_css/general/pvme.js"></script>
+  <script src="/js_css/general/pvme_reader.js"></script>
+  <script src="/js_css/viewer/viewer_behavior.js"></script>
+  <script src="/js_css/viewer/viewer_behavior_phs_gps_javascript.js"></script>
+  <title>(desktop) PHS Interactive Map</title>
+       <style>
+        body {
+            animation: fadeInAnimation ease 1s;
+            animation-iteration-count: 1;
+            animation-fill-mode: forwards;
+        }
+
+        @keyframes fadeInAnimation {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+		
+	a {
+		color: white;
+	}
+    </style>
+</head>
+
+
+<div class='topnav'>
+  <b class='topnav_title' style='color: gold;'>PHS Interactive Map</b>
+  <button class='topnav_button' onclick='gebi("view").hidden = !gebi("view").hidden; gebi("find").hidden = true; gebi("maps").hidden = true; gebi("options").hidden = true; '>Layers</button>
+  <button class='topnav_button' onclick='gebi("find").hidden = !gebi("find").hidden; gebi("view").hidden = true; gebi("maps").hidden = true; gebi("options").hidden = true; '>Find A Place</button>
+  <button class='topnav_button' onclick='gebi("maps").hidden = !gebi("maps").hidden; gebi("view").hidden = true; gebi("find").hidden = true; gebi("options").hidden = true; '>Switch Maps</button>
+  <button class='topnav_button' onclick='gebi("options").hidden = !gebi("options").hidden; gebi("view").hidden = true; gebi("maps").hidden = true; gebi("find").hidden = true; '>More...</button>
+  <b class='topnav_title2'>(desktop)</b>
+
+  <br><br>
+
+  <div id='view' hidden>
+    Pick information to show/hide below. Click here to apply changes: <button id='view_apply_changes' class='topnav_button' onclick='applyCheckboxPreferences()'>Apply Changes</button>
+    <div id='view_checkboxes' style='text-align: left;'></div>
+  </div>
+
+  <div id='find' hidden style='text-align:left;'>
+    <!--b>ROUTE</b> between two rooms (search by room # or landmark): from <input class='topnav_button' id='find_route_start' style='width: 80px;'> to <input style='width: 80px;' class='topnav_button' id='find_route_end'>: <button class='topnav_button' id='find_route'>Go!</button> 
+    <hr style='border: 1px solid #555'-->
+    <b>SEARCH</b> for: <input class='topnav_button' id='find_highlight'> <button onclick='searchFor( gebi("find_highlight").value )' class='topnav_button' id='find_route'>Go!</button>
+    <hr style='border: 1px solid #555'>
+    <b>CLEAR</b> search results + go back to normal map view: <button id='find_reset_map' class='topnav_button' onclick='applyCheckboxPreferences()'>Clear Search Results</button>
+  </div>
+
+  <div id='maps' hidden>
+    Change map: <div id='maps_buttons'></div>
+  </div>
+
+  <div id='options' hidden class='overlay' style='text-align:left; color: white;'>
+	<div class='container'>
+		<div>
+		    <h1>Information</h1>
+			<a href='/info#emergency'>Emergency Information Disclaimer</a><br>
+			<a href='/info#sensitiveinfo'>MCPS Sensitive Info Notice</a><br>
+			<a href='/info#useofdata'>Use of User Account Data Notice</a><br>
+			<a href='/info#contact'>Contact + Issue Reporting</a><br>
+			<a href='/info#credits'>Credits</a><br>
+			<a href='/info#opensource'>Open Source Information</a><br>
+		</div>
+		<div>
+			<h1>Preferences</h1>
+			<p>Override device type (changing this setting will reload the application):</p>
+			<button class='topnav_button' onclick='setCookie("devicePreference", "desktop", 40); document.location = "/"'>Desktop</button>
+			<button class='topnav_button' onclick='setCookie("devicePreference", "mobile", 40); document.location = "/"'>Mobile</button>
+			<button class='topnav_button' onclick='setCookie("devicePreference", "", 40); document.location = "/"'>Auto</button>
+			<p>Change font size/family of map point labels:</p>
+			<input class='topnav_button' id='preferences_font_size'>
+			<button class='topnav_button' onclick='setCookie("fontPreference", gebi("preferences_font_size").value);window.all.mapNames.map(function(e,a,n){window.all[n[a]].objects.map(function(e,a,n){n[a].font&&2==n[a].type&&(n[a].font=gebi("preferences_font_size").value)})}),loadMap(window.all.currentMap,!1);'>Apply</button>
+			<p>Change thicknesses of map points:</p>
+			<input class='topnav_button' id='preferences_points_thicc'>
+			<button class='topnav_button' onclick='setCookie("thickPreference", gebi("preferences_points_thicc").value);window.all.mapNames.map(function(e,a,c){window.all[c[a]].objects.map(function(e,a,c){c[a].thickness&&0==c[a].type&&(c[a].thickness=gebi("preferences_points_thicc").value)})}),loadMap(window.all.currentMap,!1);'>Apply</button>
+			<p>See first-time user popup again:</p>
+			<button class='topnav_button' onclick='setCookie("hasSeenFirstTimeMessage", "", 40);'>See first time user popup again</button>
+		</div>
+		<div>
+			<h1 style='text-align:left; wrap: '>How-To</h1>
+			<p>For more detailed documentation, go [here].</p>
+		</div>
+		<div>
+			<h1 style='text-align:left; wrap: '>Close Menu</h1>
+			<button onclick='gebi("options").hidden = true;' class='topnav_button'>Close this menu</button>
+		</div>
+	</div>
+  </div>
+
+</div>
+
+<div id='data_overlay' class='overlay' hidden>
+  <h1 style='text-align: center; display: inline;' id='data_overlay_title'>Data Viewer</h1>&nbsp;<b onclick='gebi("data_overlay").hidden = true;' style='font-size: 24px;'>(close)</b>
+  <div id='data_overlay_table'>
+    <!-- viewer_behavior.js will populate this div with a data table-->
+  </div>
+</div>
+
+<div id='find_route_resolve_overlay' class='overlay' hidden>
+
+  <b style='font-size: 24px;'>Select which landmark you meant:</b><hr>
+  <div id='find_route_resolve'></div>
+  (if you see any nonsensical or weird results, please ignore those. we will make the searching and filtering system more precise some time in the near future)
+  <hr>
+  <button class='topnav_button' onclick='gebi("find_route_resolve_overlay").hidden = true;' id='find_route_resvolve'>Cancel Search</button>
+  
+</div>
+
+<div id='zoomableDiv' class='zoomableDiv'>
+  <canvas id="map" style="border:1px solid #000000; z-index: 0;"></canvas>
+</div>
+
+
+<!-- the contents of this element tell viewer_behavior.js whether or not it is on mobile/desktop so it knows which scrollTo function to use -->
+<pre hidden id='client_type'>desktop</pre>
