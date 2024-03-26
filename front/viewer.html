@@ -1,0 +1,158 @@
+<head>
+  <link rel="stylesheet" href="/js_css/viewer/viewer_styles.css">
+  <script src="/js_css/general/pvme.js"></script>
+  <script src="/js_css/general/pvme_reader.js"></script>
+  <script src="/js_css/viewer/viewer_behavior.js"></script>
+  <script src="/js_css/viewer/viewer_behavior_phs_gps_javascript.js"></script>
+  <script src="/js_css/viewer/viewer_mobilespecificbehavior.js"></script>
+  <title>(desktop) PHS Interactive Map</title>
+       <style>
+        body {
+            animation: fadeInAnimation ease 1s;
+            animation-iteration-count: 1;
+            animation-fill-mode: forwards;
+        }
+
+        @keyframes fadeInAnimation {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+		
+	a {
+		color: white;
+	}
+    </style>
+</head>
+
+
+<div class='topnav'>
+  <!--b class='topnav_title' style='color: gold;'>PHS Interactive Map (desktop)</b-->
+  <button class='topnav_button' onclick='gebi("view").hidden = !gebi("view").hidden; gebi("find").hidden = true; gebi("maps").hidden = true; gebi("options").hidden = true; '>Reset View</button>&nbsp;
+  <button class='topnav_button' onclick='gebi("view").hidden = !gebi("view").hidden; gebi("find").hidden = true; gebi("maps").hidden = true; gebi("options").hidden = true; '>Layers</button>&nbsp;
+  <button class='topnav_button' onclick='gebi("find").hidden = !gebi("find").hidden; gebi("view").hidden = true; gebi("maps").hidden = true; gebi("options").hidden = true; '>Find</button>&nbsp;
+  <button class='topnav_button' onclick='gebi("maps").hidden = !gebi("maps").hidden; gebi("view").hidden = true; gebi("find").hidden = true; gebi("options").hidden = true; '>Switch Maps</button>&nbsp;
+  <button class='topnav_button' onclick='gebi("options").hidden = !gebi("options").hidden; gebi("view").hidden = true; gebi("maps").hidden = true; gebi("find").hidden = true; '>More</button>&nbsp;
+  <!--b class='topnav_title2'><a style='color:#888' href='https://defygg.github.io'>(go to PHS schedule website)</a></b-->
+  
+  <div id='view' hidden>
+    Pick information to show/hide below. Click here to apply changes: <button id='view_apply_changes' class='topnav_button' onclick='applyCheckboxPreferences()'>Apply Changes</button>
+    <div id='view_checkboxes' style='text-align: left;'></div>
+  </div>
+
+  <div id='find' hidden style='text-align:left;'>
+    <!--b>ROUTE</b> between two rooms (search by room # or landmark): from <input class='topnav_button' id='find_route_start' style='width: 80px;'> to <input style='width: 80px;' class='topnav_button' id='find_route_end'>: <button class='topnav_button' id='find_route'>Go!</button> 
+    <hr style='border: 1px solid #555'-->
+    <b>SEARCH</b> for: <input class='topnav_button' id='find_highlight'> <button onclick='searchFor( gebi("find_highlight").value )' class='topnav_button' id='find_route'>Go!</button>
+    <hr style='border: 1px solid #555'>
+    <b>CLEAR</b> search results + go back to normal map view: <button id='find_reset_map' class='topnav_button' onclick='applyCheckboxPreferences()'>Clear Search Results</button>
+  </div>
+
+  <div id='maps' hidden>
+    Change map: <div id='maps_buttons'></div>
+  </div>
+
+  <div id='options' hidden class='overlay' style='text-align:left; color: white;'>
+	<div class='container'>
+		<div>
+		    <h1>Information</h1>
+			<a href='/info#emergency'>Emergency Information Disclaimer</a><br>
+			<a href='/info#sensitiveinfo'>MCPS Sensitive Info Notice</a><br>
+			<a href='/info#useofdata'>Use of User Account Data Notice</a><br>
+			<a href='/info#contact'>Contact + Issue Reporting</a><br>
+			<a href='/info#credits'>Credits</a><br>
+			<a href='/info#opensource'>Open Source Information</a><br>
+		</div>
+		<div>
+			<h1>Preferences</h1>
+			<p>Override device type (changing this setting will reload the application):</p>
+			<button class='topnav_button' onclick='setCookie("devicePreference", "desktop", 40); document.location = "/"'>Desktop</button>
+			<button class='topnav_button' onclick='setCookie("devicePreference", "mobile", 40); document.location = "/"'>Mobile</button>
+			<button class='topnav_button' onclick='setCookie("devicePreference", "", 40); document.location = "/"'>Auto</button>
+			<p>Change font size/family of map point labels:</p>
+			<input class='topnav_button' id='preferences_font_size'>
+			<button class='topnav_button' onclick='setCookie("fontPreference", gebi("preferences_font_size").value);window.all.mapNames.map(function(e,a,n){window.all[n[a]].objects.map(function(e,a,n){n[a].font&&2==n[a].type&&(n[a].font=gebi("preferences_font_size").value)})}),loadMap(window.all.currentMap,!1);'>Apply</button>
+			<p>Change thicknesses of map points:</p>
+			<input class='topnav_button' id='preferences_points_thicc'>
+			<button class='topnav_button' onclick='setCookie("thickPreference", gebi("preferences_points_thicc").value);window.all.mapNames.map(function(e,a,c){window.all[c[a]].objects.map(function(e,a,c){c[a].thickness&&0==c[a].type&&(c[a].thickness=gebi("preferences_points_thicc").value)})}),loadMap(window.all.currentMap,!1);'>Apply</button>
+			<p>See first-time user popup again:</p>
+			<button class='topnav_button' onclick='gebi("first_time_user").hidden = false;gebi("options").hidden = true;'>See first time user popup again</button>
+		</div>
+		<div>
+			<h1 style='text-align:left; wrap: '>How-To</h1>
+			<p>For more detailed documentation, go [here].</p>
+		</div>
+		<div>
+			<h1 style='text-align:left; wrap: '>Close Menu</h1>
+			<button onclick='gebi("options").hidden = true;' class='topnav_button'>Close this menu</button>
+		</div>
+	</div>
+  </div>
+
+</div>
+
+<div id='data_overlay' class='overlay' hidden>
+  <h1 style='text-align: center; display: inline;' id='data_overlay_title'>Data Viewer</h1>&nbsp;<b onclick='gebi("data_overlay").hidden = true;' style='font-size: 24px;'>(close)</b>
+  <div id='data_overlay_table'>
+    <!-- viewer_behavior.js will populate this div with a data table-->
+  </div>
+</div>
+
+<div id='find_route_resolve_overlay' class='overlay' hidden>
+
+  <b style='font-size: 24px;'>Select which landmark you meant:</b><hr>
+  <div id='find_route_resolve'></div>
+  (if you see any nonsensical or weird results, please ignore those. we will make the searching and filtering system more precise some time in the near future)
+  <hr>
+  <button class='topnav_button' onclick='gebi("find_route_resolve_overlay").hidden = true;' id='find_route_resvolve'>Cancel Search</button>
+  
+</div>
+
+
+<div id='first_time_user' class='overlay' style='background-color: #000000EE' hidden>
+
+	<br><br>
+	
+  <div style='text-align: center;'>
+  <b style='font-size: 24px;color: gold;'>Welcome to the PHS Interactive Map!</b>
+  </div>
+  
+  
+  <b><u style='font-size: 20px;color: gold;'>Important Notices</b></u><br><br>
+  <b style='color: red;'>THIS IS RESTRICTED INFORMATION!</b>&ensp;Any map or document that provides information about the inside of an MCPS facility
+  is considered sensitive information and cannot be disseminated to or accessible to the general public.
+  This means that should you decide to download, print out or otherwise export the data in this application, 
+  you are responsible for keeping it secure and adhering to this policy. 
+  The only people allowed to have access to this data are students, staff and authorized visitors (such as students coming in from other schools for athletic events, or substitute teachers).
+  <br><br>
+  <b style='color: red;'>DO NOT RELY ON THIS INFORMATION DURING AN EMERGENCY!</b>&ensp;This information may not be up to date or reflect real-world conditions (i.e. broken emergency equipment, blocked exits, etc). You should
+  not use this map as your sole source of information during an emergency. You should always take the time to familiarize yourself with your surroundings before an emergency and follow staff instructions during one.
+  
+  <br><br>
+  
+  <b><u style='font-size: 20px;color: gold;'>App Controls</b></u><br><br>
+	<li>To view a given point's metadata (i.e. to check if a certain room is a lab), double click on that point.</li>
+	<br>
+	<li>To show/hide different map layers (i.e. room numbers, major landmarks, stairs, etc.), use the Layers menu.</li>
+	<br>
+	<li>To switch which part of campus you're focusing on, use the Switch Maps menu.</li>
+	<br>
+	<li>To download an image of a map, take a screenshot or right-click anywhere on the map and hit "Save image as" (or other similar button). Please be responsible in storing, using and sharing this data.</li>
+	
+  <br><br>
+  
+  <button class='topnav_button' onclick='gebi("first_time_user").hidden = true; setCookie("hasSeenFTUModal", "true", 40)' id='find_route_resvolve'>Continue</button> (this message will not appear automatically anymore. if you want to see it again, go to Options and click "See first time user popup again".
+  
+</div>
+
+<div id='zoomableDiv' class='zoomableDiv'>
+  <canvas id="map" style="border:1px solid #000000; z-index: 0;"></canvas>
+</div>
+
+
+<!-- the contents of this element tell viewer_behavior.js whether or not it is on mobile/desktop so it knows which scrollTo function to use -->
+<pre hidden id='client_type'>desktop</pre>
