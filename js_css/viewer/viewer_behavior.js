@@ -268,6 +268,11 @@ function startUp(evt = null) {
  // So that the listeners at the bottom don't instantly error out
   loadCanvas("map", "/img/missing.png", false);
   
+  // open the first time user thing, if applicable
+  if (getCookie("hasSeenFTUModal") == "" || !getCookie("hasSeenFTUModal")) {
+	  gebi("first_time_user").hidden = false;
+  }
+  
   // Get list of all map/data sets that we need to load
   window.all = {};
   window.objects = [];
