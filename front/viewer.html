@@ -75,7 +75,7 @@
 			<a href='/info#opensource'>Open Source Information</a><br>
 		</div>
 		<div>
-			<h1 style='color: gold;'>Preferences</h1>
+			<h1 style='color: gold;'>Settings/Actions</h1>
 			<p>Override device type (changing this setting will reload the application):</p>
 			<button class='topnav_button' onclick='setCookie("devicePreference", "desktop", 40); document.location = "/"'>Desktop</button>
 			<button class='topnav_button' onclick='setCookie("devicePreference", "mobile", 40); document.location = "/"'>Mobile</button>
@@ -88,6 +88,8 @@
 			<button class='topnav_button' onclick='setCookie("thickPreference", gebi("preferences_points_thicc").value);window.all.mapNames.map(function(e,a,c){window.all[c[a]].objects.map(function(e,a,c){c[a].thickness&&0==c[a].type&&(c[a].thickness=gebi("preferences_points_thicc").value)})}),loadMap(window.all.currentMap,!1);'>Apply</button><br><br>
 			<p>See first-time user popup again:</p>
 			<button class='topnav_button' onclick='gebi("first_time_user").hidden = false;gebi("options").hidden = true;'>See first time user popup again</button><br><br>
+			<p>Download current image:</p>
+			<button class='topnav_button' onclick='img_location = gebi("map").toDataURL(); link = document.createElement("a"); link.download = "export.jpg"; link.href = img_location; link.click()'>Export map as static image</button><br><br>
 		</div>
 		<div>
 			<h1 style='text-align:left; color: gold;'>How-To</h1>
@@ -155,7 +157,7 @@
 	<br>
 	<li>To switch which part of campus you're focusing on, use the Switch Maps menu.</li>
 	<br>
-	<li>To download an image of a map, take a screenshot or right-click anywhere on the map and hit "Save image as" (or other similar button). Please be responsible in storing, using and sharing this data.</li>
+	<li>To download an image of a map, take a screenshot or use the "Export map as" button located in the More menu.</li>
 	<br>
 	<li>To see this message again, go to More then click "See first time user popup again".</li>
 	</p>
