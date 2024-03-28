@@ -304,11 +304,13 @@ function startUp(evt = null) {
           for (let j = 0; j < window.all[allMaps[i]].checkboxes.length; j += 1) {
             element = window.all[allMaps[i]].checkboxes[j];
             if (element.length == 1) {
-              gebi(`view_checkboxes_${allMaps[i]}`).innerHTML += `<hr><b>${element[0]}</b>&ensp;`;
+              if (clientType() == "desktop") gebi(`view_checkboxes_${allMaps[i]}`).innerHTML += `<hr><b style='color:gold;'>${element[0]}</b>&ensp;`;
+			  else if (clientType() == "mobile") gebi(`view_checkboxes_${allMaps[i]}`).innerHTML += `<hr><b style='color:gold;'>${element[0]}</b><br>`;
             } else if (element.length == 5) {
               if (element[4]) checked = 'checked';
               else checked = '';
-              gebi(`view_checkboxes_${allMaps[i]}`).innerHTML += `(${element[0]} <input type='checkbox' id='view.showhide.${allMaps[i]}.${element[3]}' ${checked}>) &nbsp;`;
+			  if (clientType() == "desktop") gebi(`view_checkboxes_${allMaps[i]}`).innerHTML += `(${element[0]} <input type='checkbox' id='view.showhide.${allMaps[i]}.${element[3]}' ${checked}>) &nbsp;`;
+			  else if (clientType() == "mobile") gebi(`view_checkboxes_${allMaps[i]}`).innerHTML += `${element[0]} <input type='checkbox' id='view.showhide.${allMaps[i]}.${element[3]}' ${checked}> <br>`;
             }
           }
           // we have to make the requests in order because for some reason if they load the other way around you get the race condition
