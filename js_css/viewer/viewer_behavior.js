@@ -153,17 +153,22 @@ function changeVisOnAllObjects(vis, array = window.objects) {
 }
 
 function focusOnPoint(ptx, pty) {
-		mx = Math.max( document.body.scrollWidth, document.body.offsetWidth, 
-                   document.documentElement.clientWidth, document.documentElement.scrollWidth, document.documentElement.offsetWidth );
-		my = Math.max( document.body.scrollHeight, document.body.offsetHeight, 
-                   document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight );
-		x = Math.round(ptx * mx);
-		y = Math.round(pty * my);
-		console.log(`[focusonpt] Focusing on ${ptx}, ${pty}: actual pages coords ${x}, ${y}`);
-		document.documentElement.scrollLeft = x;
-		document.body.scrollLeft = x;
-		document.documentElement.scrollTop = y;
-		document.body.scrollTop = y;
+		if (clientType() == 'desktop') {
+			mx = Math.max( document.body.scrollWidth, document.body.offsetWidth, 
+					   document.documentElement.clientWidth, document.documentElement.scrollWidth, document.documentElement.offsetWidth );
+			my = Math.max( document.body.scrollHeight, document.body.offsetHeight, 
+					   document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight );
+			x = Math.round(ptx * mx);
+			y = Math.round(pty * my);
+			console.log(`[focusonpt] Focusing on ${ptx}, ${pty}: actual pages coords ${x}, ${y}`);
+			document.documentElement.scrollLeft = x;
+			document.body.scrollLeft = x;
+			document.documentElement.scrollTop = y;
+			document.body.scrollTop = y;
+		} else {
+			resetViewport();
+			gebi("find").hidden = true; // so that way the user can see if the point ends up being behind the massive search modal 
+		}
 }
 
 function viewData(obj, distance) {
@@ -418,7 +423,7 @@ function startUp(evt = null) {
     for (let i = 0; i < window.objects.length; i += 1) {
       obj = window.objects[i];
       // in this case, we don't want all objects to be selectable; instead; we only wants to be selectable
-      if (obj.type == 0 && obj.visible) {
+      if (obj.type == 0 && object.visible) {
         distance = Math.sqrt(((offsetX - (obj.xcoord * window.canvas.width)) ** 2) + ((offsetY - (obj.ycoord * window.canvas.height)) ** 2));
         if (minDistance == null || distance < minDistance) {
           minDistance = distance;

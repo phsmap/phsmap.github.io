@@ -56,7 +56,7 @@ function startUpMobileListeners() {
 function resetViewport() {
 	gebi("map").style.left = '0px';
 	gebi("map").style.top = '0px';
-	
+	gebi("map").style.transform = 'scale(1.0)';
 }
 
 
