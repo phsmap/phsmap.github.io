@@ -54,7 +54,7 @@ function searchFor(keyTerm) {
       name = window.all.mapNames[i];
         for (let j = 0; j < window.all[name].objects.length; j += 1) {
           object = window.all[name].objects[j];
-          if (object.id.includes("landmark") && object.data.length >= 2) {
+          if ((object.id.includes("landmark") || object.id.includes("office")) && object.data.length >= 2) {
             // now, we load the attributes from the array form they're stored in to the assosicative array that we want
             attributes = {};
             for (let h = 0; h < window.all[name].objects[j].data.length; h += 1) {
@@ -76,12 +76,14 @@ function searchFor(keyTerm) {
       resultant_ids = resultant_ids.filter((item,index) => resultant_ids.indexOf(item) === index); // removes duplicates - some of the landmarks have multiple fsm expressoins that can match at the same time, so if a landmark comes up twice, we need to remove the second instance so that the user only sees one button for that choice
       for (let i = 0; i < resultant_ids.length; i += 1) {
 		allIds.push(resultant_ids[i].split("::")[1]);
+		if (resultant_ids[i].includes("office.") || resultant_ids[i].includes("offices.")) modifier = " Office";
+		else modifier = "";
         listofresults.innerHTML += `<button 
 		style='border-color: #00FF00; color: #00FF00;' 
 		onclick='gebi("find_route_resolve_overlay").hidden = true; changeVisOnAllObjects(false, window.all[this.id.split("///")[1].split("::")[0]].objects); changeVis( [this.id.split("///")[1].split("::")[1], this.id.split("///")[1].split("::")[1] + "_tx"], true, window.all[this.id.split("///")[1].split("::")[0]].objects ); loadMap(this.id.split("///")[1].split("::")[0], false); setTimeout(function(){focusOnPoint(${objectLookup(resultant_ids[i].split("::")[1] + "_tx", true, false, window.all[name].objects).xcoord - 0.1}, ${objectLookup(resultant_ids[i].split("::")[1] + "_tx", true, false, window.all[name].objects).ycoord - 0.1})}, 500);' 
 		class='topnav_button' 
 		id='search_result///${resultant_ids[i].replace("<", "")}'>
-		${objectLookup(resultant_ids[i].split("::")[1] + "_tx", true, false, window.all[name].objects).text}
+		${objectLookup(resultant_ids[i].split("::")[1] + "_tx", true, false, window.all[name].objects).text + modifier}
 		</button><br><br>`;
       }
     }    
