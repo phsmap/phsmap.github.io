@@ -336,8 +336,13 @@ function startUp(evt = null) {
 						// do nothing, because the user alr has it set and we don't want to interfere with their preference
 						console.log(`[startUp] User already has font preference set to ${getCookie("thickPreference")}`)
 					} else {
-						console.log(`[startUp] Setting default thickness to 10 [px]`);
-						setCookie("thickPreference", "10");
+						if (clientType() == "desktop") {
+							console.log(`[startUp] Setting default thickness to 10 [px]`);
+							setCookie("thickPreference", "10");
+						} else {
+							console.log(`[startUp] Setting default thickness to 7 [px]`);
+							setCookie("thickPreference", "7");
+						}
 					}
 					gebi("preferences_points_thicc").value = getCookie("thickPreference")
 					window.all.mapNames.map(function(e,a,c){window.all[c[a]].objects.map(function(e,a,c){c[a].thickness&&0==c[a].type&&(c[a].thickness=getCookie("thickPreference"))})}),loadMap(window.all.currentMap,!1);
@@ -345,8 +350,13 @@ function startUp(evt = null) {
 						// do nothing, because the user alr has it set and we don't want to interfere with their preference
 						console.log(`[startUp] User already has font preference set to ${getCookie("fontPreference")}`)
 					} else {
-						console.log(`[startUp] Setting default font to 5mm Arial`)
-						setCookie("fontPreference", "5mm Arial");
+						if (clientType() == "desktop") {
+							console.log(`[startUp] Setting default font to 5mm Arial`)
+							setCookie("fontPreference", "5mm Arial");
+						} else {
+							console.log(`[startUp] Setting default font to 3.75mm Arial`)
+							setCookie("fontPreference", "3.75mm Arial");
+						}
 					}
 					gebi("preferences_font_size").value = getCookie("fontPreference");
 					window.all.mapNames.map(function(e,a,c){window.all[c[a]].objects.map(function(e,a,c){c[a].font&&2==c[a].type&&(c[a].font=getCookie("fontPreference"))})}),loadMap(window.all.currentMap,!1);
