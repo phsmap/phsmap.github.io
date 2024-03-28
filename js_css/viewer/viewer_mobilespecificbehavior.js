@@ -52,6 +52,12 @@ function startUpMobileListeners() {
       }
     });
   }
+  
+function resetViewport() {
+	gebi("map").style.left = '0px';
+	gebi("map").style.top = '0px';
+	
+}
 
 
 window.addEventListener("load", startUpMobileListeners);

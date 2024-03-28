@@ -396,7 +396,7 @@ function startUp(evt = null) {
       for (let i = 0; i < window.objects.length; i += 1) {
         obj = window.objects[i];
         // in this case, we don't want all objects to be selectable; instead; we only wants to be selectable
-        if (obj.type == 0) {
+        if (obj.type == 0 && obj.visible) {
           distance = Math.sqrt(((offsetX - (obj.xcoord * window.canvas.width)) ** 2) + ((offsetY - (obj.ycoord * window.canvas.height)) ** 2));
           if (minDistance == null || distance < minDistance) {
             minDistance = distance;
@@ -418,7 +418,7 @@ function startUp(evt = null) {
     for (let i = 0; i < window.objects.length; i += 1) {
       obj = window.objects[i];
       // in this case, we don't want all objects to be selectable; instead; we only wants to be selectable
-      if (obj.type == 0) {
+      if (obj.type == 0 && obj.visible) {
         distance = Math.sqrt(((offsetX - (obj.xcoord * window.canvas.width)) ** 2) + ((offsetY - (obj.ycoord * window.canvas.height)) ** 2));
         if (minDistance == null || distance < minDistance) {
           minDistance = distance;
