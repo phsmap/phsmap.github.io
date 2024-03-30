@@ -398,8 +398,9 @@ function startUp(evt = null) {
     const offsetY = (event.touches[0].clientY-y)/height*event.target.offsetHeight;
       minDistance = null;
       objectAtMinDistance = null;
-      for (let i = 0; i < window.objects.length; i += 1) {
-        obj = window.objects[i];
+	  filteredObjects = window.objects.filter(obj => obj.visible === true);
+      for (let i = 0; i < filteredObjects.length; i += 1) {
+        obj = window.filteredObjects[i];
         // in this case, we don't want all objects to be selectable; instead; we only wants to be selectable
         if (obj.type == 0 && obj.visible) {
           distance = Math.sqrt(((offsetX - (obj.xcoord * window.canvas.width)) ** 2) + ((offsetY - (obj.ycoord * window.canvas.height)) ** 2));
@@ -420,8 +421,9 @@ function startUp(evt = null) {
     offsetY = event.offsetY;
     minDistance = null;
     objectAtMinDistance = null;
-    for (let i = 0; i < window.objects.length; i += 1) {
-      obj = window.objects[i];
+	filteredObjects = window.objects.filter(obj => obj.visible === true);
+    for (let i = 0; i < filteredObjects.length; i += 1) {
+      obj = filteredObjects[i];
       // in this case, we don't want all objects to be selectable; instead; we only wants to be selectable
       if (obj.type == 0 && object.visible) {
         distance = Math.sqrt(((offsetX - (obj.xcoord * window.canvas.width)) ** 2) + ((offsetY - (obj.ycoord * window.canvas.height)) ** 2));

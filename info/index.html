@@ -54,15 +54,16 @@ You should always follow the directions of staff during an emergency, and take t
 	to our backend server; which will then look up the information 
 	for the Microsoft user that the token was issued on behalf of and use that information to make the decision to accept or reject the request for data.</li>
 	<br>
-	<li>In this process, our backend server is able to see information such as your name, email address, phone number (if there is one attached to your account), 
-	job title, and office/workplace location.* However, none of this information is ever recorded, logged or made public by our backend (although Google Firebase does record your email address the first time you sign in).
+	<li>In the process of authenticating users, our backend server is able to see information such as your name, email address, phone number (if there is one attached to your account), 
+	job title, and office/workplace location.* However, none of this information is ever recorded, logged or made public by our backend (although your email address, 
+	date/time of first sign in and date/time of most recent sign in is recorded by Google Firebase).
 	<br><br>
 	<li>Furthermore, your token does not carry any permissions (as in, it cannot be used to act on the user's behalf nor can it be used to access/modify sensitive information). 
 	Your token also loses its validity after a set amount of time (usually a couple hours at most), which is why you may have to sign back in multiple times in one day. **</li>
 	<br>
 	<li>We do use Google Firebase, Microsoft Azure Active Directory (Entra ID) and the Microsoft Graph API to manage our sign in process.</li>
 	<br>
-	<li>This information was last updated on the 25th of March, 2024. This information is subject to change at any time without prior notification.</li>
+	<li>This information was last updated on the 30th of March, 2024. This information is subject to change at any time without prior notification.</li>
 	<br>
 	<b>Technical elaborations:</b>
 	<p><i>*: This is all of the information that is exposed by the <a href='https://learn.microsoft.com/en-us/graph/api/user-get?view=graph-rest-1.0&tabs=http'>/v1.0/me endpoint</a> on the Microsoft Graph API.<br>
