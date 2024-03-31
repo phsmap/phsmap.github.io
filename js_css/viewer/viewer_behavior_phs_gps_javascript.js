@@ -37,7 +37,7 @@ function searchFor(keyTerm) {
 	  window.tobeFocused = objectLookup(ids[0], true, false, window.all[mapsWithMatches[0]].objects); 
       loadMap(mapsWithMatches[0], false, true); 
      // alert(`Room ${keyTerm} was found in the map for ${mapsWithMatches[0]}! Its location on the map should be shown below.`);
-	  setTimeout(function(){focusOnPoint(window.tobeFocused.xcoord - 0.1, window.tobeFocused.ycoord - 0.1);}, 500); // because loadMap will just undo our focusOnPoint because image data will come in + it'll realign much later
+	  setTimeout(function(){focusOnPoint(window.tobeFocused.xcoord, window.tobeFocused.ycoord);}, 500); // because loadMap will just undo our focusOnPoint because image data will come in + it'll realign much later
 	  return true;
 	} else {
 		// do nothing, and move onto the landmark search sectino 
@@ -80,7 +80,7 @@ function searchFor(keyTerm) {
 		else modifier = "";
         listofresults.innerHTML += `<button 
 		style='border-color: #00FF00; color: #00FF00;' 
-		onclick='gebi("find_route_resolve_overlay").hidden = true; changeVisOnAllObjects(false, window.all[this.id.split("///")[1].split("::")[0]].objects); changeVis( [this.id.split("///")[1].split("::")[1], this.id.split("///")[1].split("::")[1] + "_tx"], true, window.all[this.id.split("///")[1].split("::")[0]].objects ); loadMap(this.id.split("///")[1].split("::")[0], false); setTimeout(function(){focusOnPoint(${objectLookup(resultant_ids[i].split("::")[1] + "_tx", true, false, window.all[name].objects).xcoord - 0.1}, ${objectLookup(resultant_ids[i].split("::")[1] + "_tx", true, false, window.all[name].objects).ycoord - 0.1})}, 500); ' 
+		onclick='gebi("find_route_resolve_overlay").hidden = true; changeVisOnAllObjects(false, window.all[this.id.split("///")[1].split("::")[0]].objects); changeVis( [this.id.split("///")[1].split("::")[1], this.id.split("///")[1].split("::")[1] + "_tx"], true, window.all[this.id.split("///")[1].split("::")[0]].objects ); loadMap(this.id.split("///")[1].split("::")[0], false); setTimeout(function(){focusOnPoint(${objectLookup(resultant_ids[i].split("::")[1] + "_tx", true, false, window.all[name].objects).xcoord}, ${objectLookup(resultant_ids[i].split("::")[1] + "_tx", true, false, window.all[name].objects).ycoord})}, 500); ' 
 		class='topnav_button' 
 		id='search_result///${resultant_ids[i].replace("<", "")}'>
 		${objectLookup(resultant_ids[i].split("::")[1] + "_tx", true, false, window.all[name].objects).text + modifier}

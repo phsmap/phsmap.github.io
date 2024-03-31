@@ -153,6 +153,8 @@ function changeVisOnAllObjects(vis, array = window.objects) {
 }
 
 function focusOnPoint(ptx, pty) {
+		ptx -= 0.1;
+		pty -= 0.1;
 		if (clientType() == 'desktop') {
 			mx = Math.max( document.body.scrollWidth, document.body.offsetWidth, 
 					   document.documentElement.clientWidth, document.documentElement.scrollWidth, document.documentElement.offsetWidth );
@@ -169,6 +171,14 @@ function focusOnPoint(ptx, pty) {
 			resetViewport();
 			gebi("find").hidden = true; // so that way the user can see if the point ends up being behind the massive search modal 
 		}
+		ptx += 0.1;
+		pty += 0.1;
+		window.ctx.strokeStyle = 'red';
+		window.ctx.beginPath();
+		console.log(ptx * window.canvas.width, pty * window.canvas.height);
+		console.log(ptx, pty);
+		window.ctx.arc(ptx * window.canvas.width, pty * window.canvas.height, 35, 0, 2 * Math.PI);
+		window.ctx.stroke();
 }
 
 function viewData(obj, distance) {
