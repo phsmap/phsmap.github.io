@@ -196,17 +196,26 @@ function viewData(obj, distance) {
     }
   }
   gebi("data_overlay").hidden = false;
-  content = "<table class='data_overlay_table'>";
-  for (let i = 0; i < attributes.length; i += 1) {
-    content += `
-    <tr>
-      <td>${attributes[i][0]}</td><td>&ensp;&ensp;${attributes[i][1]}</td>
-    </tr>
-    `;
+  if (clientType() == "desktop") {
+	  content = "<table class='data_overlay_table'>";
+	  for (let i = 0; i < attributes.length; i += 1) {
+		content += `
+		<tr>
+		  <td>${attributes[i][0].replace("<", "")}</td><td>&ensp;&ensp;${attributes[i][1].replace("<", "")}</td>
+		</tr>
+		`;
+	  }
+	  content += '</table>';
+	  gebi("data_overlay_table").innerHTML = content;
+	  gebi("data_overlay_title").innerText = obj.id.replaceAll("<", "");
+  } else {
+	  content = "<br><br>";
+	  for (let i = 0; i < attributes.length; i += 1) {
+		content += `<u><b style='font-size: 1.5cm; border: 5px solid white; padding: 3px;'>${attributes[i][0].replace("<", "")}:</b></u>&ensp;&ensp;<p style='font-size: 1.25cm'>${attributes[i][1].replace("<", "")}</p><br>`;
+	  }
+	  gebi("data_overlay_table").innerHTML = content;
+	  gebi("data_overlay_title").innerText = obj.id.replaceAll("<", "");
   }
-  content += '</table>';
-  gebi("data_overlay_table").innerHTML = content;
-  gebi("data_overlay_title").innerText = obj.id.replaceAll("<", "");
 }
 
 function handleClickOnCanvas(obj, distance) {
@@ -352,8 +361,8 @@ function startUp(evt = null) {
 						console.log(`[startUp] User already has font preference set to ${getCookie("thickPreference")}`)
 					} else {
 						if (clientType() == "desktop") {
-							console.log(`[startUp] Setting default thickness to 10 [px]`);
-							setCookie("thickPreference", "10");
+							console.log(`[startUp] Setting default thickness to 8 [px]`);
+							setCookie("thickPreference", "8");
 						} else {
 							console.log(`[startUp] Setting default thickness to 7 [px]`);
 							setCookie("thickPreference", "7");
@@ -366,8 +375,8 @@ function startUp(evt = null) {
 						console.log(`[startUp] User already has font preference set to ${getCookie("fontPreference")}`)
 					} else {
 						if (clientType() == "desktop") {
-							console.log(`[startUp] Setting default font to 5mm Arial`)
-							setCookie("fontPreference", "5mm Arial");
+							console.log(`[startUp] Setting default font to 4mm Arial`)
+							setCookie("fontPreference", "4mm Arial");
 						} else {
 							console.log(`[startUp] Setting default font to 3.75mm Arial`)
 							setCookie("fontPreference", "3.75mm Arial");

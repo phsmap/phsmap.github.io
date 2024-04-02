@@ -81,6 +81,9 @@
 			<button class='topnav_button' onclick='setCookie("thickPreference", gebi("preferences_points_thicc").value);window.all.mapNames.map(function(e,a,c){window.all[c[a]].objects.map(function(e,a,c){c[a].thickness&&0==c[a].type&&(c[a].thickness=gebi("preferences_points_thicc").value)})}),loadMap(window.all.currentMap,!1);'>Apply</button>
 			<p>See first-time user popup again:</p>
 			<button class='topnav_button' onclick='gebi("first_time_user").hidden = false;gebi("options").hidden = true;'>See first time user popup again</button>
+			<p>Clear sign in + preference data:</p>
+			<button class='topnav_button' style='color:red;border: 1px solid red;' onclick='window.localStorage.clear(); document.cookie.split(";").forEach(function(c) { document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); }); document.location = "/";'>Clear sign in and preference data</button> 
+			<!-- thank you to https://stackoverflow.com/questions/179355/clearing-all-cookies-with-javascript for the clear cookies one liner-->
 		</div>
 		<div>
 			<h1 style='text-align:left; wrap: '>How-To</h1>
@@ -96,10 +99,12 @@
 </div>
 
 <div id='data_overlay' class='overlay' hidden>
-  <h1 style='text-align: center; display: inline;' id='data_overlay_title'>Data Viewer</h1>&nbsp;<b onclick='gebi("data_overlay").hidden = true;' style='font-size: 24px;'>(close)</b>
+  <h1 style='text-align: center; display: inline;' id='data_overlay_title'>Data Viewer</h1>&nbsp;
   <div id='data_overlay_table'>
     <!-- viewer_behavior.js will populate this div with a data table-->
   </div>
+  <hr>
+  <button class='topnav_button' onclick='gebi("data_overlay").hidden = true;' style='font-size: 24px;'>Close</button>
 </div>
 
 <div id='find_route_resolve_overlay' class='overlay' hidden>
@@ -141,6 +146,8 @@
 	<li>To switch which part of campus you're focusing on, use the Switch Maps menu.</li>
 	<br>
 	<li>To download an image of a map, take a screenshot or right-click anywhere on the map and hit "Save image as" (or other similar button). Please be responsible in storing, using and sharing this data.</li>
+	<br>
+	<li>To switch from the desktop client to the mobile client, go to More then use the options under "Override device".</li>
 	
   <br><br>
   

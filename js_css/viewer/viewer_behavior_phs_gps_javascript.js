@@ -60,7 +60,7 @@ function searchFor(keyTerm) {
             for (let h = 0; h < window.all[name].objects[j].data.length; h += 1) {
               attributes[window.all[name].objects[j].data[h][0]] = window.all[name].objects[j].data[h][1];
              }
-            if (attributes.altnames && attributes.roomno) {
+            if (attributes.altnames && (attributes["roomno"] || attributes["*roomno"])) {
               // we have ANOTHER for loop to check the points for the different FSM patterns we could have
               fsmpatterns = attributes.altnames.split(",");
               for (let a = 0; a < fsmpatterns.length; a += 1) {
@@ -76,8 +76,8 @@ function searchFor(keyTerm) {
       resultant_ids = resultant_ids.filter((item,index) => resultant_ids.indexOf(item) === index); // removes duplicates - some of the landmarks have multiple fsm expressoins that can match at the same time, so if a landmark comes up twice, we need to remove the second instance so that the user only sees one button for that choice
       for (let i = 0; i < resultant_ids.length; i += 1) {
 		allIds.push(resultant_ids[i].split("::")[1]);
-		if (resultant_ids[i].includes("office.") || resultant_ids[i].includes("offices.")) modifier = " Office";
-		else modifier = "";
+		if (resultant_ids[i].includes("office.") || resultant_ids[i].includes("offices.")) modifier = ` Office (${resultant_ids[i].split("::")[0]})`;
+		else modifier = ` (${resultant_ids[i].split("::")[0]})`;
         listofresults.innerHTML += `<button 
 		style='border-color: #00FF00; color: #00FF00;' 
 		onclick='gebi("find_route_resolve_overlay").hidden = true; changeVisOnAllObjects(false, window.all[this.id.split("///")[1].split("::")[0]].objects); changeVis( [this.id.split("///")[1].split("::")[1], this.id.split("///")[1].split("::")[1] + "_tx"], true, window.all[this.id.split("///")[1].split("::")[0]].objects ); loadMap(this.id.split("///")[1].split("::")[0], false); setTimeout(function(){focusOnPoint(${objectLookup(resultant_ids[i].split("::")[1] + "_tx", true, false, window.all[name].objects).xcoord}, ${objectLookup(resultant_ids[i].split("::")[1] + "_tx", true, false, window.all[name].objects).ycoord})}, 500); ' 

@@ -90,6 +90,9 @@
 			<button class='topnav_button' onclick='gebi("first_time_user").hidden = false;gebi("options").hidden = true;'>See first time user popup again</button><br><br>
 			<p>Download current image:</p>
 			<button class='topnav_button' onclick='img_location = gebi("map").toDataURL(); link = document.createElement("a"); link.download = "export.jpg"; link.href = img_location; link.click()'>Export map as static image</button><br><br>
+			<p>Clear sign in + preference data:</p>
+			<button class='topnav_button' style='color:red;border: 1px solid red;' onclick='window.localStorage.clear(); document.cookie.split(";").forEach(function(c) { document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); }); document.location = "/";'>Clear sign in and preference data</button><br><br>
+			<!-- thank you to https://stackoverflow.com/questions/179355/clearing-all-cookies-with-javascript for the clear cookies one liner-->
 		</div>
 		<div>
 			<h1 style='text-align:left; color: gold;'>How-To</h1>
@@ -160,6 +163,8 @@
 	<li>To download an image of a map, take a screenshot or use the "Export map as" button located in the More menu.</li>
 	<br>
 	<li>To see this message again, go to More then click "See first time user popup again".</li>
+	<br>
+	<li>To switch from the mobile client to the desktop client, go to More then use the settings under "Override device"</li>
 	</p>
   
   
