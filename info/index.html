@@ -49,7 +49,7 @@ You should always follow the directions of staff during an emergency, and take t
 	<br>
 	<li>While we're looking up users' profiles, we are able to see other information too, such as their email address, phone number, office location, job title and language preferences. (This is the information that Microsoft returns on its API endpoint for user lookup, <a href="https://learn.microsoft.com/en-us/graph/api/user-get?view=graph-rest-1.0&tabs=http">/me</a>). However, we do not record any of this information - once we're done using it for authentication, we let go of it.</li>
 	<br>
-	<li>(Do note however that our intermediary to Microsoft's identity management services, Supabase, will record user email addresses, date/time of first sign in and date/time of most recent sign in.)</li>
+	<li>(Do note however that our intermediary to Microsoft's identity management services, Supabase, will record user names, email addresses, date/time of first sign in and date/time of most recent sign in.)</li>
 	<br>
 	<li>Furthermore, I would like to restate that we <b>DO NOT HANDLE any user passwords or secrets</b>. Some applications will take your username/password, and then use those to directly look up your account information/act on your behalf. However, we do not. Instead, we have users enter their passwords on Microsoft's website, after which Microsoft gives us an <i>access token</i> (a certificate of delegated permission) which allows us to look up their information.</li>
 	<br>
