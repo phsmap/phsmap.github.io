@@ -43,17 +43,17 @@ You should always follow the directions of staff during an emergency, and take t
 <h2>(3) Use of Account Data Notice</h2>
 <p>
 	<li>As a part of complying with MCPS' policies on interior maps/other similar documents, this application requires you to sign in with your MCPS issued Microsoft account
-	in order to restrict who can visit and use this website.</li>
+	in order to restrict who can view this website.</li>
 	<br>
-	<li>Our resource server works by looking up incoming users' Microsoft profiles and checking to make sure that they are of MCPS origin before serving any maps or data. More specifically, we check the user's principal name, which contains the user's name as well as their domain (the domain is the part we care about).</li>
+	<li>Our resource server (the one that actually serves maps/layer data to users) works by looking up incoming users' Microsoft profiles and checking to make sure that they are of MCPS origin before serving any maps or data. More specifically, we check the user's principal name, which contains the user's name as well as their domain (the domain is the part we care about).</li>
 	<br>
-	<li>While we're looking up users' profiles, we are able to see other information too, such as their email address, phone number, office location, job title and language preferences. (This is the information that Microsoft returns on its API endpoint for user lookup, <a href="https://learn.microsoft.com/en-us/graph/api/user-get?view=graph-rest-1.0&tabs=http">/me</a>). However, we do not record any of this information - once we're done using it to check for MCPS origin, we let go of it.</li>
+	<li>While we're looking up users' profiles, we are able to see other information too, such as their email address, phone number, office location, job title and language preferences. (This is the information that Microsoft returns on its API endpoint for user lookup, <a href="https://learn.microsoft.com/en-us/graph/api/user-get?view=graph-rest-1.0&tabs=http">/me</a>). However, we do not record any of this information - once we're done using it for authentication, we let go of it.</li>
 	<br>
-	<li>Do note however that our intermediary to Microsoft's identity management services, Supabase, will record user email addresses, date/time of first sign in and date/time of most recent sign in.</li>
+	<li>(Do note however that our intermediary to Microsoft's identity management services, Supabase, will record user email addresses, date/time of first sign in and date/time of most recent sign in.)</li>
 	<br>
-	<li>Furthermore, I would like to restate that we <b>DO NOT HANDLE any user passwords or secrets</b>. Many applications will take your username/password, and then use those to look up your account information/act on your behalf. However, we do not. Instead, we have users enter their passwords on Microsoft's website, after which Microsoft gives us a temporary signed certificate (an <i>access token</i>) which allows us to look up their information.</li>
+	<li>Furthermore, I would like to restate that we <b>DO NOT HANDLE any user passwords or secrets</b>. Some applications will take your username/password, and then use those to directly look up your account information/act on your behalf. However, we do not. Instead, we have users enter their passwords on Microsoft's website, after which Microsoft gives us an <i>access token</i> (a certificate of delegated permission) which allows us to look up their information.</li>
 	<br>
-	<li>The good part about having access tokens which expire and are given to specific applications is that it allows Microsoft to allow access to the parts of the account that an application like ours could need. It's like having people carry keycards that only work in certain rooms of a building as opposed to master keys that allow access to all rooms. What I'm trying to say is that this application <b>cannot act on your behalf and cannot access any account data beyond what has been described.</b></li>
+	<li>And because of the way access tokens work in terms of permissions, this application <b>cannot act on your behalf and cannot access any account data beyond what has been described.</b></li>
 	<br>
 	<li>For people who want to know: we're using OAuth 2.0 access tokens in the manner described in <a href='https://learn.microsoft.com/en-us/entra/architecture/auth-oauth2'>this</a> document. We only request the User.Read, openid, profile and email scopes.
 	<br>
