@@ -1,0 +1,60 @@
+<head>
+  <link rel="stylesheet" href="/js_css/viewer/viewer_desktop_styles.css">
+     <style>
+        body {
+            animation: fadeInAnimation ease 2s;
+            animation-iteration-count: 1;
+            animation-fill-mode: forwards;
+			font-size: 18px;
+        }
+
+        @keyframes fadeInAnimation {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+    </style>
+	<title>Sign In Required: PHS Interactive Map</title>
+</head>
+
+<body>
+
+<img style='margin-left: auto; margin-right: auto; width: 50%; display: block;' src='/img/logo.webp'>
+
+<!-- background page -->
+<h1 style='text-align: center'>Sign In/Reauthentication Required</h1>
+<hr>
+<p style='text-align: center'><b>Remember to use your Microsoft account to sign in, and not your Google account.</b> (Students: the logins to your MS account are the same as your Google account; the only difference is that your Microsoft email address ends in ".org" instead of ".net")</p><br>
+
+<p style='text-align: center;'><button style='font-size: 2cm;' onclick='startSignIn()'>Proceed To Log In</button>
+<br>
+<br>
+<p style='text-align: center;color: red;'>*** This application NEVER saves, accesses or transmits your password. See this <a href='/info#useofdata'>page</a> for an explanation. ***</p>
+</p>
+
+
+<br>
+<br>
+
+<hr>
+
+<button hidden style='font-size: 24px;' onclick='document.getElementById("extrainfo").hidden = !document.getElementById("extrainfo").hidden'>Show/hide extra information</button>
+
+<div style='font-size: 18px;' id='extrainfo' hidden>
+<a href='/info#useofdata'>How is users' Microsoft account data used?</a>
+<br>
+<a href='/info#sensitiveinfo'>Why is a sign in necessary anyways?</a>
+<br>
+<br>
+To avoid having to constantly re-enter your logins, don't use incognito/private mode, say Yes when Microsoft asks if you want to stay signed in, and don't reload the map page once you're on it (once you've loaded the map page, you can continue to use it 
+even if your access token expires or you lose internet).
+</div>
+
+
+<script src='/js_css/auth/auth2_bundle.js' defer></script>
+
+</body>

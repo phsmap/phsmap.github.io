@@ -57,8 +57,8 @@ function go() {
 		if (window.onmobile) document.location = "/front/viewer.html";
 		else document.location = "front/viewer_desktop.html";
 	} else {
-		if (window.onmobile) document.location = "/auth/?redirectonsuccess=/front/viewer.html";
-		else document.location = "/auth/?redirectonsuccess=/front/viewer_desktop.html";
+		if (window.onmobile) document.location = "/auth2.0?redirectonsuccess=/front/viewer.html";
+		else document.location = "/auth2.0?redirectonsuccess=/front/viewer_desktop.html";
 	}
 }
 

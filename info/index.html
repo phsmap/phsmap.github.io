@@ -29,12 +29,9 @@ You should always follow the directions of staff during an emergency, and take t
 	<br>
 	<li>Furthermore, should you decide to make any "export" of this application's data (i.e. by taking screenshots or printing the map out), 
 	you <b>MAY NOT DISSEMINATE IT</b> to anyone except for other Poolesville students, staff and temporary authorized visitors (i.e. students 
-	entering for an athletic event or substitute teachers).</li>
+	entering for an extracurricular/sport or substitute teachers).</li>
 	<br>
-	<li>Please understand that this policy is in place to <b>keep our schools and other facilities safe</b>.</li>
-	<br>
-	<li>This policy is <b>strictly enforced</b>,
-	both for us as the programmers and you as the end users.</li>
+	<li>Please understand that this policy is in place to <b>keep our schools and other facilities safe</b> and that it is strictly enforced by school administrators, security and county officials. </li>
 	
 </p>
 </fieldset>
@@ -48,26 +45,21 @@ You should always follow the directions of staff during an emergency, and take t
 	<li>As a part of complying with MCPS' policies on interior maps/other similar documents, this application requires you to sign in with your MCPS issued Microsoft account
 	in order to restrict who can visit and use this website.</li>
 	<br>
-	<li>After you sign into your Microsoft account, a unique, Microsoft-issued access token (which is essentially a signed certificate that identifies the bearer and grants them certain priviledges) is saved to your browser's local storage.</li>
+	<li>Our resource server works by looking up incoming users' Microsoft profiles and checking to make sure that they are of MCPS origin before serving any maps or data. More specifically, we check the user's principal name, which contains the user's name as well as their domain (the domain is the part we care about).</li>
 	<br>
-	<li>When you want to access restricted information, such as a layer data file, your browser will send this token and a request for data
-	to our backend server; which will then look up the information 
-	for the Microsoft user that the token was issued on behalf of and use that information to make the decision to accept or reject the request for data.</li>
+	<li>While we're looking up users' profiles, we are able to see other information too, such as their email address, phone number, office location, job title and language preferences. (This is the information that Microsoft returns on its API endpoint for user lookup, <a href="https://learn.microsoft.com/en-us/graph/api/user-get?view=graph-rest-1.0&tabs=http">/me</a>). However, we do not record any of this information - once we're done using it to check for MCPS origin, we let go of it.</li>
 	<br>
-	<li>In the process of authenticating users, our backend server is able to see information such as your name, email address, phone number (if there is one attached to your account), 
-	job title, and office/workplace location.* However, none of this information is ever recorded, logged or made public by our backend (although your email address, 
-	date/time of first sign in and date/time of most recent sign in is recorded by Google Firebase).
-	<br><br>
-	<li>Furthermore, your token does not carry any permissions (as in, it cannot be used to act on the user's behalf nor can it be used to access/modify sensitive information). 
-	Your token also loses its validity after a set amount of time (usually a couple hours at most), which is why you may have to sign back in multiple times in one day. **</li>
+	<li>Do note however that our intermediary to Microsoft's identity management services, Supabase, will record user email addresses, date/time of first sign in and date/time of most recent sign in.</li>
 	<br>
-	<li>We do use Google Firebase, Microsoft Azure Active Directory (Entra ID) and the Microsoft Graph API to manage our sign in process.</li>
+	<li>Furthermore, I would like to restate that we <b>DO NOT HANDLE any user passwords or secrets</b>. Many applications will take your username/password, and then use those to look up your account information/act on your behalf. However, we do not. Instead, we have users enter their passwords on Microsoft's website, after which Microsoft gives us a temporary signed certificate (an <i>access token</i>) which allows us to look up their information.</li>
 	<br>
-	<li>This information was last updated on the 30th of March, 2024. This information is subject to change at any time without prior notification.</li>
+	<li>The good part about having access tokens which expire and are given to specific applications is that it allows Microsoft to allow access to the parts of the account that an application like ours could need. It's like having people carry keycards that only work in certain rooms of a building as opposed to master keys that allow access to all rooms. What I'm trying to say is that this application <b>cannot act on your behalf and cannot access any account data beyond what has been described.</b></li>
 	<br>
-	<b>Technical elaborations:</b>
-	<p><i>*: This is all of the information that is exposed by the <a href='https://learn.microsoft.com/en-us/graph/api/user-get?view=graph-rest-1.0&tabs=http'>/v1.0/me endpoint</a> on the Microsoft Graph API.<br>
-	**: All of the access tokens we get issued have no OAuth scopes except for the default User.Read, which is given to all users specifically so they can always look up their own information. This application does not store or use the refresh or ID tokens at all.</p></i>
+	<li>For people who want to know: we're using OAuth 2.0 access tokens in the manner described in <a href='https://learn.microsoft.com/en-us/entra/architecture/auth-oauth2'>this</a> document. We only request the User.Read, openid, profile and email scopes.
+	<br>
+	<li>Lastly, we use Microsoft Azure Active Directory/Entra ID as our authorization provider and Supabase as an intermediary between the application and Microsoft AAD. You may want to consider reading their policies on data collection, privacy, etc. This information was last updated on the 4th of April, 2024 and is subject to change without notice.</li>
+	<br>
+	
 </p>
 </fieldset>
 
