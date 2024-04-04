@@ -51,7 +51,7 @@ You should always follow the directions of staff during an emergency, and take t
 	<br>
 	<li>(Do note however that our intermediary to Microsoft's identity management services, Supabase, will record user email addresses, date/time of first sign in and date/time of most recent sign in.)</li>
 	<br>
-	<li>Furthermore, I would like to restate that we <b>DO NOT HANDLE any user passwords or secrets</b>. Some applications will take your username/password, and then use those to directly look up your account information/act on your behalf. However, we do not. Instead, we have users enter their passwords on Microsoft's website, after which Microsoft gives us an <i>access token</i> which allows us to look up their information.</li>
+	<li>Furthermore, I would like to restate that we <b>DO NOT HANDLE any user passwords or secrets</b>. Some applications will take your username/password, and then use those to directly look up your account information/act on your behalf. However, we do not. Instead, we have users enter their passwords on Microsoft's website, after which Microsoft gives us an <i>access token</i> (a certificate of delegated permission) which allows us to look up their information.</li>
 	<br>
 	<li>And because of the way access tokens work in terms of permissions, this application <b>cannot act on your behalf and cannot access any account data beyond what has been described.</b></li>
 	<br>
