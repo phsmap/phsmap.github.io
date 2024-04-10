@@ -137,7 +137,7 @@ function httpGET(url, callback) {
 
 function changeVis(list_of_ids, vis, array = window.objects) {
   for (let i = 0; i < list_of_ids.length; i += 1) {
-    console.log(list_of_ids[i]);
+    console.log(list_of_ids[i]); 
     //console.log(objectLookup(list_of_ids[i], true, true, array));
     if (vis) array[objectLookup(list_of_ids[i], true, true, array)].visible = true;
     else array[objectLookup(list_of_ids[i], true, true, array)].visible = false;
