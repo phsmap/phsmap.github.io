@@ -5,9 +5,7 @@ function escapeRegExp(str) {
 }
 
 function fuzzyMatch(pattern, str) {
-  pattern = '.*' + pattern.split('').map(l => `${escapeRegExp(l)}.*`).join('');
-  const re = new RegExp(pattern);
-  return re.test(str);
+  return str.contains(pattern); // we're using this system now because the old one sucked
 }
 
 //SEARCH through this map for the room with this number (i.e. 1627), etc.
