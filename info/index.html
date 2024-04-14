@@ -47,17 +47,17 @@ You should always follow the directions of staff during an emergency, and take t
 	<br>
 	<li>Our resource server (the one that actually serves maps/layer data to users) works by looking up incoming users' Microsoft profiles and checking to make sure that they are of MCPS origin before serving any maps or data. More specifically, we check the user's principal name, which contains the user's name as well as their domain (the domain is the part we care about).</li>
 	<br>
-	<li>While we're looking up users' profiles, we are able to see other information too, such as their email address, phone number, office location, job title and language preferences. (This is the information that Microsoft returns on its API endpoint for user lookup, <a href="https://learn.microsoft.com/en-us/graph/api/user-get?view=graph-rest-1.0&tabs=http">/me</a>). However, we do not record any of this information - once we're done using it for authentication, we let go of it.</li>
+	<li>While we're looking up users' profiles, we are able to see other information too, such as their email address, phone number, office location, job title and language preferences. (This is the information that Microsoft returns on its API endpoint for user lookup, <a href="https://learn.microsoft.com/en-us/graph/api/user-get?view=graph-rest-1.0&tabs=http">/me</a>). However, we do not record any of this Microsoft account information - once we're done using it for authentication, we let go of it.</li>
 	<br>
-	<li>(Do note however that our intermediary to Microsoft's identity management services, Supabase, will record user names, email addresses, date/time of first sign in and date/time of most recent sign in.)</li>
+	<li>(Do note however that we record IP addresses, user names, user agents, email addresses, date/time of first and subsequent sign ins, and date/time of attempted accesses of secured resources. These are pieces of information that almost all web services will record.)</li>
 	<br>
 	<li>Furthermore, I would like to restate that we <b>DO NOT HANDLE any user passwords or secrets</b>. Some applications will take your username/password, and then use those to directly look up your account information/act on your behalf. However, we do not. Instead, we have users enter their passwords on Microsoft's website, after which Microsoft gives us an <i>access token</i> (a certificate of delegated permission) which allows us to look up their information.</li>
 	<br>
-	<li>And because of the way access tokens work in terms of permissions, this application <b>cannot act on your behalf and cannot access any account data beyond what has been described.</b></li>
+	<li>And because of the way access tokens work in terms of permissions, this application <b>cannot act on your behalf and cannot access any Microsoft account data beyond what has been described.</b></li>
 	<br>
 	<li>For people who want to know: we're using OAuth 2.0 access tokens in the manner described in <a href='https://learn.microsoft.com/en-us/entra/architecture/auth-oauth2'>this</a> document. We only request the User.Read, openid, profile and email scopes.</li>
 	<br>
-	<li>Lastly, we use Microsoft Azure Active Directory/Entra ID as our authorization provider and Supabase as an intermediary between the application and Microsoft AAD. You may want to consider reading their policies on data collection, privacy, etc. This information was last updated on the 4th of April, 2024 and is subject to change without notice.</li>
+	<li>Lastly, we use Microsoft Azure Active Directory/Entra ID as our authorization provider and Supabase as an intermediary between the application and Microsoft AAD. You may want to consider reading their policies about what data they collect, who gets access to it and what they do with it. This information was last updated on the 14th of April, 2024 and is subject to change without notice.</li>
 	<br>
 	
 </p>
