@@ -185,8 +185,8 @@ function renderAllFeatures() {
     ctx = window.ctx;
     canvas = window.canvas;
     if (obj.type == 0 && obj.visible == true) { // if the object is a simple point
-      console.log("  Rendering a simple point...");
-      console.log("  " + JSON.stringify(obj));
+      //console.log("  Rendering a simple point...");
+      //console.log("  " + JSON.stringify(obj));
       ctx.fillStyle = obj.color;
       ctx.strokeStyle = obj.color;
       ctx.fillRect(
@@ -196,8 +196,8 @@ function renderAllFeatures() {
       );
     }
     if (obj.type == 1 && obj.visible == true) { // if the object is a line segment or polygon (they're both a series of points; just visually different)
-      console.log("  Rendering a line segment");
-      console.log("  " + JSON.stringify(obj));
+      //console.log("  Rendering a line segment");
+      //console.log("  " + JSON.stringify(obj));
       ctx.fillStyle = obj.color;
       ctx.strokeStyle = obj.color;
       ctx.lineWidth = obj.thickness;
@@ -205,12 +205,12 @@ function renderAllFeatures() {
       for (let j = 0; j < obj.points.length; j += 1) {
         entry = obj.points[j];
         if (entry[0] == 0) { // if the selected entry is of type 0, or a literal point
-          console.log("    + Added literal point to line segment");
+          //console.log("    + Added literal point to line segment");
           // we need moveTo first to establish a starting point; so we do that on the first point
           if (j == 0) ctx.moveTo(entry[1] * canvas.width, entry[2] * canvas.height);
           if (j > 0) ctx.lineTo(entry[1] * canvas.width, entry[2] * canvas.height);
         } else if (entry[0] == 1) { // if the selected entry is of type 1, or a reference to another point
-          console.log("    + Added referenced point to line segment");
+          //console.log("    + Added referenced point to line segment");
           referencedObject = objectLookup(entry[1], true, false);
           if (referencedObject == null) console.warn("    - ID given as reference does not exist: "+entry[1])
           // again -- we have to call moveTo first before we can use lineTo, so we do so on the first point
@@ -220,17 +220,17 @@ function renderAllFeatures() {
       }
 
       if (obj.polygon) {
-        console.log("    (++) Filling in the polygon.");
+        //console.log("    (++) Filling in the polygon.");
         ctx.fill();
       } else {
-        console.log("    (++) Leaving the line segment unfilled.")
+        //console.log("    (++) Leaving the line segment unfilled.")
         ctx.stroke();
       }
       
     }
     if (obj.type == 2 && obj.visible == true) { // if the object is a text box
-      console.log("  " + "  Rendering a line of text...");
-      console.log(JSON.stringify(obj));
+      //console.log("  " + "  Rendering a line of text...");
+      //console.log(JSON.stringify(obj));
       ctx.fillStyle = obj.color;
       ctx.strokeStyle = obj.color;
       ctx.font = obj.font;

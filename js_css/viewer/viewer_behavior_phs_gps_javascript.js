@@ -5,11 +5,53 @@ function escapeRegExp(str) {
 }
 
 function fuzzyMatch(pattern, str) {
-  return str.includes(pattern); // we're using this system now because the old one sucked
+  pattern = '.*' + pattern.split('').map(l => `${escapeRegExp(l)}.*`).join('');
+  const re = new RegExp(pattern);
+  return re.test(str);
 }
 
-//SEARCH through this map for the room with this number (i.e. 1627), etc.
+//SEARCH through this map for various landmarks
 function searchFor(keyTerm) { 
+	if (keyTerm.toUpperCase().startsWith("LKR")) {
+	numberofAnswers = 0; // this is part of the check that makes sure that there aren't multiple locker nodes that meet the user's SEARCH
+	// (which shouldn't be possible, because the nodes should be set up such that each locker number only belongs to one node)
+	for (let i = 0; i < window.all.mapNames.length; i += 1) {
+		// check every submap
+        name = window.all.mapNames[i];
+        changeVisOnAllObjects(false, window.all[name].objects);
+		for (let j = 0; j < window.all[name].objects.length; j += 1) {
+			// check every for any locker nodes
+			obj = window.all[name].objects[j];
+			if (obj.type == 0 && obj.id.includes("locker") && obj.data[0] && obj.data[0][0] == "bounds") {
+				// if there is a locker node found on the map, look up its ifnromation
+				lower = Number(obj.data[0][1].split(",")[0]);
+				upper = Number(obj.data[0][1].split(",")[1]);
+				query = Number(keyTerm.replaceAll("LKR", ""));
+				if (lower < query && query < upper && numberofAnswers <= 1) {
+					toChangeVis_node_element_indice = objectLookup(obj.id, true, true, window.all[name].objects);
+					toChangeVis_node_element_parent = structuredClone(name);
+					window.all[name].objects[toChangeVis_node_element_indice].visible = true;
+					window.all[name].objects[objectLookup(obj.id + "_tx", true, true, window.all[name].objects)].visible = true;
+					loadMap(name, false, false);
+					console.log(window.all[name].objects[toChangeVis_node_element_indice]);
+					setTimeout(function(){focusOnPoint(window.all[toChangeVis_node_element_parent].objects[toChangeVis_node_element_indice].xcoord, window.all[toChangeVis_node_element_parent].objects[toChangeVis_node_element_indice].ycoord)}, 500);
+					numberofAnswers += 1;
+				} else if (numberofAnswers > 1) {
+					alert("Error! Locker number search collision: multiple locker nodes report having this locker number, which shouldn't be possible.");
+					applyCheckboxPreferences(); // don't show any search results and go back
+					return null;
+				}
+			}
+		}
+	  }
+	if (numberofAnswers == 0) {
+		alert("This locker could not be found on campus!");
+	}
+	return null;
+    } else {
+		// the user has initiated a search by room, staff officw or landmark and we can proceed with that
+	}
+	
     mapsWithMatches = [];
 	ids = [];
     for (let i = 0; i < window.all.mapNames.length; i += 1) {
@@ -78,7 +120,7 @@ function searchFor(keyTerm) {
 		else modifier = ` (${resultant_ids[i].split("::")[0]})`;
         listofresults.innerHTML += `<button 
 		style='border-color: #00FF00; color: #00FF00;' 
-		onclick='gebi("find_route_resolve_overlay").hidden = true; changeVisOnAllObjects(false, window.all[this.id.split("///")[1].split("::")[0]].objects); changeVis( [this.id.split("///")[1].split("::")[1], this.id.split("///")[1].split("::")[1] + "_tx"], true, window.all[this.id.split("///")[1].split("::")[0]].objects ); loadMap(this.id.split("///")[1].split("::")[0], false); setTimeout(function(){focusOnPoint(${objectLookup(resultant_ids[i].split("::")[1] + "_tx", true, false, window.all[name].objects).xcoord}, ${objectLookup(resultant_ids[i].split("::")[1] + "_tx", true, false, window.all[name].objects).ycoord})}, 500); ' 
+		onclick='gebi("find_route_resolve_overlay").hidden = true; changeVisOnAllObjects(false, window.all[this.id.split("///")[1].split("::")[0]].objects); changeVis( [this.id.split("///")[1].split("::")[1], this.id.split("///")[1].split("::")[1] + "_tx"], true, window.all[this.id.split("///")[1].split("::")[0]].objects ); loadMap(this.id.split("///")[1].split("::")[0], false); setTimeout(function(){focusOnPoint(${objectLookup(resultant_ids[i].split("::")[1] + "", true, false, window.all[name].objects).xcoord}, ${objectLookup(resultant_ids[i].split("::")[1] + "", true, false, window.all[name].objects).ycoord})}, 500); ' 
 		class='topnav_button' 
 		id='search_result///${resultant_ids[i].replace("<", "")}'>
 		${objectLookup(resultant_ids[i].split("::")[1] + "_tx", true, false, window.all[name].objects).text + modifier}

@@ -59,7 +59,7 @@ function multiBlockFileToObject(inputString) {
 function authorized_httpGET(resource, callback, type = 'text') {
 	if (window.localStorage.getItem("acstoken") == undefined) {
 		//alert("A sign in is required to access map and other facility data. Press OK to go sign in.");
-		document.location = "/auth2.0/?redirectonsuccess=/front/viewer_desktop.html";
+		document.location = "/auth/?redirectonsuccess=/front/viewer_desktop.html";
 	}
 	
 	if (window.authorized_httpGET_datacache[resource]) {
@@ -112,7 +112,7 @@ function authorized_httpGET(resource, callback, type = 'text') {
 					}
 				} else if (xhr.status == 401) {
 					//alert("Your sign in was expired, invalid or missing. Press OK to go sign in.");
-					document.location = "/auth2.0/?redirectonsuccess=/front/viewer_desktop.html";
+					document.location = "/auth?redirectonsuccess=/front/viewer_desktop.html";
 				} else {
 					console.log(xhr.responseText);
 					alert("There was an error in retrieving data from the secure resource server. Please see the development console for more information.");
@@ -135,21 +135,21 @@ function httpGET(url, callback) {
     xhr.send();
 }
 
-function changeVis(list_of_ids, vis, array = window.objects) {
+function changeVis(list_of_ids, vis, array = window.objects, raf = true) {
   for (let i = 0; i < list_of_ids.length; i += 1) {
-    console.log(list_of_ids[i]); 
+    console.log(list_of_ids[i]);
     //console.log(objectLookup(list_of_ids[i], true, true, array));
     if (vis) array[objectLookup(list_of_ids[i], true, true, array)].visible = true;
     else array[objectLookup(list_of_ids[i], true, true, array)].visible = false;
   }
-  renderAllFeatures();
+  if (raf) renderAllFeatures();
 }
 
-function changeVisOnAllObjects(vis, array = window.objects) {
+function changeVisOnAllObjects(vis, array = window.objects, raf = true) {
   for (let i = 0; i < array.length; i += 1) {
     array[i].visible = vis;
   }
-  renderAllFeatures();
+  if (raf) renderAllFeatures();
 }
 
 function focusOnPoint(ptx, pty) {
@@ -233,17 +233,18 @@ function applyCheckboxPreferences() {
   // also - even though floor1 and floor2 have basically the same sets of checkboxes, we still apply their respectiev check box sets separately
   // (so if a person has all offices hidden away on the second floor but shown on the first floor, we want that distiction to be maintained)
   for (let map = 0; map < window.all.mapNames.length; map += 1) {
-    changeVisOnAllObjects(false, window.all[window.all.mapNames[map]].objects);
+    changeVisOnAllObjects(false, window.all[window.all.mapNames[map]].objects, false);
     console.log("[applyCBpreferences] checking checkbox preferences for: " + window.all.mapNames[map]);
     for (let checkboxitem = 0; checkboxitem < window.all[window.all.mapNames[map]].checkboxes.length; checkboxitem += 1) {
       checkBoxStruct = window.all[window.all.mapNames[map]].checkboxes[checkboxitem];
       if (checkBoxStruct.length > 2) {
-        changeVis(queryObjects([ [checkBoxStruct[1], checkBoxStruct[2], checkBoxStruct[3]] ], window.all[window.all.mapNames[map]].objects), gebi(`view.showhide.${window.all.mapNames[map]}.${checkBoxStruct[3]}`).checked, window.all[window.all.mapNames[map]].objects);
+        changeVis(queryObjects([ [checkBoxStruct[1], checkBoxStruct[2], checkBoxStruct[3]] ], window.all[window.all.mapNames[map]].objects), gebi(`view.showhide.${window.all.mapNames[map]}.${checkBoxStruct[3]}`).checked, window.all[window.all.mapNames[map]].objects, false);
       }
     }
   }
 
   // now that we have correctly set the visibility flag of all objects, we can reload the current map
+  renderAllFeatures();
   loadMap(window.all.currentMap, false);
 
 }
