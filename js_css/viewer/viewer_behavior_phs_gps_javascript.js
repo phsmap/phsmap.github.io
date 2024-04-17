@@ -109,11 +109,11 @@ function searchFor(keyTerm, keytermSearchUsesStrictSearch = true) {
               fsmpatterns = attributes.altnames.split(",");
               for (let a = 0; a < fsmpatterns.length; a += 1) {
 				if (keytermSearchUsesStrictSearch) {
-					if (fuzzyMatch(fsmpatterns[a], keyTerm)) {
+					if (harderSearch(fsmpatterns[a], keyTerm)) {
 					  resultant_ids.push(name + "::" + object.id);
 					}
 				} else {
-					if (harderSearch(fsmpatterns[a], keyTerm)) {
+					if (fuzzyMatch(fsmpatterns[a], keyTerm)) {
 					  resultant_ids.push(name + "::" + object.id);
 					}
 				}
