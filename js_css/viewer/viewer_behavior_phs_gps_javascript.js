@@ -141,7 +141,7 @@ function searchFor(keyTerm, keytermSearchUsesStrictSearch = true) {
 	console.log(allIds);
     // now, we append a list of URLs to the HTML page with the search results
 	if (allIds.length > 0) gebi("find_route_resolve_overlay").hidden = false;
-	else if (keytermSearchUsesStrictSearch) (confirm("This room/landmark was not found. Do you want to retry your search wit loose match search enabled?") && searchFor(keyTerm, false)); 
+	else if (keytermSearchUsesStrictSearch) (confirm("This room/landmark was not found. Do you want to retry your search with loose match search enabled?") && searchFor(keyTerm, false)); 
 	else alert("This room/landmark was not found on campus! (Using loose-match search also failed.)");
     
   
