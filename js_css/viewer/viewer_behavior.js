@@ -59,7 +59,7 @@ function multiBlockFileToObject(inputString) {
 function authorized_httpGET(resource, callback, type = 'text') {
 	if (window.localStorage.getItem("acstoken") == undefined) {
 		//alert("A sign in is required to access map and other facility data. Press OK to go sign in.");
-		document.location = "/auth2.0/?redirectonsuccess=/front/viewer_desktop.html";
+		document.location = "/";
 	}
 	
 	if (window.authorized_httpGET_datacache[resource]) {
@@ -112,7 +112,7 @@ function authorized_httpGET(resource, callback, type = 'text') {
 					}
 				} else if (xhr.status == 401) {
 					//alert("Your sign in was expired, invalid or missing. Press OK to go sign in.");
-					document.location = "/auth2.0/?redirectonsuccess=/front/viewer_desktop.html";
+					document.location = "/";
 				} else {
 					console.log(xhr.responseText);
 					alert("There was an error in retrieving data from the secure resource server. Please see the development console for more information.");
