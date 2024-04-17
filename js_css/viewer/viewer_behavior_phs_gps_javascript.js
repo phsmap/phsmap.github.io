@@ -5,11 +5,17 @@ function escapeRegExp(str) {
 }
 
 function fuzzyMatch(pattern, str) {
-    return str.contains(pattern); // we're using this system now because the old one sucked
+  pattern = '.*' + pattern.split('').map(l => `${escapeRegExp(l)}.*`).join('');
+  const re = new RegExp(pattern);
+  return re.test(str);
+}
+
+function harderSearch(pattern, str) {
+	return str.includes(pattern);
 }
 
 //SEARCH through this map for various landmarks
-function searchFor(keyTerm) { 
+function searchFor(keyTerm, keytermSearchUsesStrictSearch = true) { 
 	if (keyTerm.toUpperCase().startsWith("LKR")) {
 	numberofAnswers = 0; // this is part of the check that makes sure that there aren't multiple locker nodes that meet the user's SEARCH
 	// (which shouldn't be possible, because the nodes should be set up such that each locker number only belongs to one node)
@@ -129,7 +135,8 @@ function searchFor(keyTerm) {
 	console.log(allIds);
     // now, we append a list of URLs to the HTML page with the search results
 	if (allIds.length > 0) gebi("find_route_resolve_overlay").hidden = false;
-	else alert("This room/landmark was not found on campus!");
+	else if (keytermSearchUsesStrictSearch) searchFor(keyTerm, keytermSearchUsesStrictSearch); 
+	else alert("This room/landmark was not found on campus! (Using loose-match search also failed.)");
     
   
  }
