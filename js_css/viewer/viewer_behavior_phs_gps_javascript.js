@@ -108,9 +108,15 @@ function searchFor(keyTerm, keytermSearchUsesStrictSearch = true) {
               // we have ANOTHER for loop to check the points for the different FSM patterns we could have
               fsmpatterns = attributes.altnames.split(",");
               for (let a = 0; a < fsmpatterns.length; a += 1) {
-                if (fuzzyMatch(fsmpatterns[a], keyTerm)) {
-                  resultant_ids.push(name + "::" + object.id);
-                }
+				if (keytermSearchUsesStrictSearch) {
+					if (fuzzyMatch(fsmpatterns[a], keyTerm)) {
+					  resultant_ids.push(name + "::" + object.id);
+					}
+				} else {
+					if (harderSearch(fsmpatterns[a], keyTerm)) {
+					  resultant_ids.push(name + "::" + object.id);
+					}
+				}
               }
             }
           } else {
