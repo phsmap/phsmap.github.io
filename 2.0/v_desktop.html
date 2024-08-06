@@ -118,9 +118,9 @@ Click <a onclick='this.parentElement.style.display="none";' style='color: pink;'
 		<br>
 		<br>
 		<select id='dev_select'>
+			<option value=''>Auto-Detect On Relaunch</option>
 			<option value='mobile'>Mobile</option>
 			<option value='desktop'>Desktop</option>
-			<option value=''>Auto-Detect On Relaunch</option>
 		</select>
 		<br>
 		<br>
@@ -144,7 +144,7 @@ Click <a onclick='this.parentElement.style.display="none";' style='color: pink;'
 		<br>
 		<br>
 		<br>
-		<button style='color: lightgreen;' onclick='setCookie("devicePreference", gebi("dev_select").value, 40); setCookie("version_preference", gebi("vers_select").value, 40); document.location = "/"'>Apply device/version preferences and reload</button>
+		<button style='color: lightgreen;' onclick='setCookie("devicePreference", gebi("dev_select").value, 40); setCookie("version_preference", gebi("vers_select").value, 40); document.location = "/"'>Apply device/version preferences and relaunch</button>
    </div>
    <div class='config_menu cfg' id='auth_pref' hidden>
 		<h4>Sign Out</h4>
