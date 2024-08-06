@@ -230,6 +230,9 @@ function searchAndResolve(search_term) {
 }
 
 window.onload = function() {
+	
+	console.log("[window.onload] Starting up!");
+	
 	if (!getCookie("vers2_nof12_reporting")) {
 		setCookie("vers2_nof12_reporting", "disabled", 40);
 		console.log("[window.onload] NoF12 Reporting automatically disabled by default.");
@@ -250,6 +253,19 @@ window.onload = function() {
 	gebi("mousemove_sens").value = window.mousemove_sens;
 	gebi("curr_type_device").textContent = getCookie("devicePreference");
 	gebi("curr_type_legacy").textContent = getCookie("version_preference");
+	
+	if (window.localStorage.getItem("acstoken").startsWith("testing")) {
+		gebi("tkn_issuer").textContent = "Fixed Testing Token";
+	} else {
+		decoded_jwt = JSON.parse(atob(window.localStorage.getItem("acstoken").split(".")[1]));
+		gebi("tkn_issuer").textContent = "Azure AD";
+		gebi("tkn_name").textContent = decoded_jwt.name;
+		gebi("tkn_upn").textContent = decoded_jwt.upn;
+		d_iat = new Date(Number(decoded_jwt.iat) * 1000);
+		gebi("tkn_iat").textContent = d_iat.toLocaleString();
+		d_exp = new Date(Number(decoded_jwt.exp) * 1000);
+		gebi("tkn_exp").textContent = d_exp.toLocaleString();
+	}
 	
 	
 	document.addEventListener('keydown', function(event) {
@@ -285,10 +301,6 @@ window.onload = function() {
 		}
 	}
 
-
-	console.log("[window.onload] Starting up!");
-	console.log("[window.onload] (c) Charles Hu 2024");
-	
 	window.mapSet = new PVMapGroup();
 	window.tmpMaps = {};
 	

@@ -148,10 +148,10 @@ Click <a onclick='this.parentElement.style.display="none";' style='color: pink;'
    </div>
    <div class='config_menu cfg' id='auth_pref' hidden>
 		<h4>Sign Out</h4>
-		<button style='color: red;'>Sign out AND clear preference data</button>
+		<button style='color: red;' onclick='window.localStorage.clear(); document.cookie.split(";").forEach(function(c) { document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); }); document.location = "/";'>Sign out AND clear preference data</button>
 		<br>
 		<br>
-		<button style='color: red;'>Sign out</button>
+		<button style='color: red;' onclick='window.localStorage.clear();'>Sign out</button>
 		<br>
 		<br>
 		<br>
@@ -169,7 +169,7 @@ Click <a onclick='this.parentElement.style.display="none";' style='color: pink;'
 				<td>expiry time</td>
 			</tr>
 			<tr style='font-family:monospace'>
-				<td id='tkn_name'>waiting...</td>
+				<td id='tkn_issuer'>waiting...</td>
 				<td id='tkn_name'>N/A</td>
 				<td id='tkn_upn'>N/A</td>
 				<td id='tkn_iat'>N/A</td>
