@@ -151,7 +151,7 @@ Click <a onclick='this.parentElement.style.display="none";' style='color: pink;'
 		<button style='color: red;' onclick='window.localStorage.clear(); document.cookie.split(";").forEach(function(c) { document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); }); document.location = "/";'>Sign out AND clear preference data</button>
 		<br>
 		<br>
-		<button style='color: red;' onclick='window.localStorage.clear();'>Sign out</button>
+		<button style='color: red;' onclick='window.localStorage.clear(); document.location = "/";'>Sign out</button>
 		<br>
 		<br>
 		<br>
