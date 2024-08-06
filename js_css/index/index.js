@@ -54,11 +54,21 @@ function userinformationHttp(bearerToken, callback) {
 function go() {
 	//return null;
 	if (window.signedIn) {
-		if (window.onmobile) document.location = "/front/viewer.html";
-		else document.location = "front/viewer_desktop.html";
+		if (getCookie("version_preference") == "1") {
+			if (window.onmobile) document.location = "/front/viewer.html";
+			else document.location = "front/viewer_desktop.html";
+		} else if (getCookie("version_preference") == "2") {
+			if (window.onmobile) document.location = "2.0/v_desktop.html";
+			else document.location = "2.0/v_mobile.html";
+		}
 	} else {
-		if (window.onmobile) document.location = "/auth2.0?redirectonsuccess=/front/viewer.html";
-		else document.location = "/auth2.0?redirectonsuccess=/front/viewer_desktop.html";
+		if (getCookie("version_preference") == "1") {
+			if (window.onmobile) document.location = "/auth2.0?redirectonsuccess=/front/viewer.html";
+			else document.location = "/auth2.0?redirectonsuccess=/front/viewer_desktop.html";
+		} else if (getCookie("version_preference") == "2") {
+			if (window.onmobile) document.location = "/auth2.0?redirectonsuccess=/2.0/v_desktop.html";
+			else document.location = "/auth2.0?redirectonsuccess=/2.0/v_mobile.html";
+		}
 	}
 }
 
@@ -76,6 +86,13 @@ window.addEventListener("load", function() {
 	}
 	
 	window.onmobile = getCookie("devicePreference") == "mobile";
+	
+	// the second thing we do is ascertain if the user wants to use the second version, and to stop
+	// application launch if they haven't chosen yet
+	if (!getCookie("version_preference")) {
+		document.getElementById("version_select").hidden = false;
+		return null; // do not forward user
+	}
 	
 	// the second thing that we have to do is check if this user is signed in
 	if (!window.localStorage.getItem("acstoken")) {
