@@ -2,6 +2,31 @@ function gebi(id) {
 	return document.getElementById(id);
 } 
 
+// thank you to https://www.w3schools.com/js/js_cookies.asp
+// for the cookie get/set code
+function setCookie(cname, cvalue, exdays) {
+  const d = new Date();
+  d.setTime(d.getTime() + (exdays*24*60*60*1000));
+  let expires = "expires="+ d.toUTCString();
+  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
+function getCookie(cname) {
+  let name = cname + "=";
+  let decodedCookie = decodeURIComponent(document.cookie);
+  let ca = decodedCookie.split(';');
+  for(let i = 0; i <ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
+
 function startUpDesktopListeners() {
 	const zoomableDiv = document.getElementById('zoomableDiv');
 	
@@ -20,8 +45,8 @@ function startUpDesktopListeners() {
 	});
 	document.addEventListener("mousemove", function(evt) {
 		if (beingHeld) {
-			dX = -0.95 * (beganClickingX - evt.clientX) * (1/1);
-			dY = -0.95 * (beganClickingY - evt.clientY) * (1/1);
+			dX = window.mousemove_sens * (beganClickingX - evt.clientX) * (1/1);
+			dY = window.mousemove_sens * (beganClickingY - evt.clientY) * (1/1);
 			//console.log(`dX, dY = ${dX}, ${dY}`);
 			zoomableDiv.style.left = (Number(zoomableDiv.style.left.slice(0,-2)) + dX) + "px"; 
 			zoomableDiv.style.top = (Number(zoomableDiv.style.top.slice(0,-2)) + dY) + "px"; 
@@ -32,7 +57,7 @@ function startUpDesktopListeners() {
 	document.addEventListener("wheel", function(evt) {
 		evt.preventDefault();
 		//console.log(`dY_raw = ${evt.deltaY}`);
-		scale += (evt.deltaY * -0.0005);
+		scale += (evt.deltaY * window.wheel_sens);
 		zoomableDiv.style.transform = `scale(${scale})`;
 		gebi("zoom").innerHTML = `zoom: ${scale.toFixed(2)}`;
 	}, {passive: false});
@@ -205,6 +230,28 @@ function searchAndResolve(search_term) {
 }
 
 window.onload = function() {
+	if (!getCookie("vers2_nof12_reporting")) {
+		setCookie("vers2_nof12_reporting", "disabled", 40);
+		console.log("[window.onload] NoF12 Reporting automatically disabled by default.");
+	}
+	if (!getCookie("vers2_wheel_sens")) {
+		setCookie("vers2_wheel_sens", "-0.0005", 40);
+		console.log("[window.onload] Wheel sensitivity automatically set to -0.0005 by default.");
+	}
+	if (!getCookie("vers2_mousemove_sens")) {
+		console.log("[window.onload] Pan sensitivity automatically set to -0.95 by default.");
+		setCookie("vers2_mousemove_sens", "-0.95", 40);
+	}
+	
+	window.wheel_sens = Number(getCookie("vers2_wheel_sens"));
+	window.mousemove_sens = Number(getCookie("vers2_mousemove_sens"));
+	
+	gebi("wheel_sens").value = window.wheel_sens;
+	gebi("mousemove_sens").value = window.mousemove_sens;
+	gebi("curr_type_device").textContent = getCookie("devicePreference");
+	gebi("curr_type_legacy").textContent = getCookie("version_preference");
+	
+	
 	document.addEventListener('keydown', function(event) {
 	consoleElement = document.getElementById("console");
     // Check if the Shift key and Escape key are both pressed

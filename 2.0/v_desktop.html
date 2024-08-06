@@ -59,7 +59,7 @@ Click <a onclick='this.parentElement.style.display="none";' style='color: pink;'
 
 </div>
 
-<div id='show_landmark_data' class='popup'>
+<div id='show_landmark_data' class='popup' hidden>
 	<a onclick='this.parentElement.style.display="none";' style='color: red;' class='search noselect'><u>↓ Close menu ↓</u></a>
 	<br>
 	<br>
@@ -88,7 +88,7 @@ Click <a onclick='this.parentElement.style.display="none";' style='color: pink;'
 		<br>
 		<a class='search' style='font-size:20px;' onclick='openMenu("cfg", "auth_pref")'>> Authentication</a>
 		<br>
-		<a class='search' style='font-size:20px;' onclick='openMenu("cfg", "other_pref")'>> Other</a>
+		<a class='search' style='font-size:20px;' onclick='openMenu("cfg", "sens_pref")'>> Controls</a>
 		<br>
 		<a class='search'></a>
 		<br>
@@ -117,10 +117,10 @@ Click <a onclick='this.parentElement.style.display="none";' style='color: pink;'
 		Override device type preference:
 		<br>
 		<br>
-		<select>
+		<select id='dev_select'>
 			<option value='mobile'>Mobile</option>
 			<option value='desktop'>Desktop</option>
-			<option value='desktop'>Auto-Detect On Relaunch</option>
+			<option value=''>Auto-Detect On Relaunch</option>
 		</select>
 		<br>
 		<br>
@@ -130,21 +130,21 @@ Click <a onclick='this.parentElement.style.display="none";' style='color: pink;'
 		<br>
 		<br>
 		<h4>Legacy Version</h4>
-		Current version preference: <u id='curr_type_legacy' style='color: white'>[loading...]</u>
+		Current version preference: <u id='curr_type_legacy' style='color: white'>[loading...]</u>&nbsp;&nbsp;&nbsp;(1 = legacy, 2 = new)
 		<br>
 		Prefer legacy version over newer version:
 		<br>
 		<br>
-		<select>
-			<option value='modern'>No, use new version</option>
-			<option value='legacy'>Yes, use legacy version</option>
+		<select id='vers_select'>
+			<option value='2'>No, use new version (2)</option>
+			<option value='1'>Yes, use legacy version (1)</option>
 		</select>
 		<br>
 		<br>
 		<br>
 		<br>
 		<br>
-		<button style='color: lightgreen;'>Apply changes</button>
+		<button style='color: lightgreen;' onclick='setCookie("devicePreference", gebi("dev_select").value, 40); setCookie("version_preference", gebi("vers_select").value, 40); document.location = "/"'>Apply device/version preferences and reload</button>
    </div>
    <div class='config_menu cfg' id='auth_pref' hidden>
 		<h4>Sign Out</h4>
@@ -177,21 +177,16 @@ Click <a onclick='this.parentElement.style.display="none";' style='color: pink;'
 			</tr>
 		</table>
    </div>
-   <div class='config_menu cfg' id='other_pref' hidden>
-		<h4>No F12 Reporting</h4>
-		<button style='color: lightgreen;'>Enable</button>
-		<button style='color: red;'>Disable</button>
-		<button style='color: BBB;' onclick='document.getElementById("console").style.display = "block"; this.parentElement.parentElement.style.display = "none"'>Open</button>
-		Reload to apply this change.
+   <div class='config_menu cfg' id='sens_pref' hidden>
 		<br>
 		<br>
 		<h4>Input Sensitivity</h4>
-		Scroll (zoom) sensitivity: <input id='sens' value='[loading...]'>
+		Scroll (zoom) sensitivity: <input id='wheel_sens' value='[loading...]'>
 		<br>
-		Mouse/trackpad (pan) sensitivity: <input id='sens' value='[loading...]'>
+		Mouse/trackpad (pan) sensitivity: <input id='mousemove_sens' value='[loading...]'>
 		<br>
 		<br>
-		<button style='color: lightgreen'>Apply changes</button>
+		<button style='color: lightgreen' onclick='setCookie("vers2_wheel_sens", gebi("wheel_sens").value, 40); setCookie("vers2_mousemove_sens", gebi("mousemove_sens").value, 40); window.location.reload()'>Apply changes and reload</button>
 		<br>
 		<br>
 	    </div>
