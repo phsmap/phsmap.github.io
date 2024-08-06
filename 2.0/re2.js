@@ -764,10 +764,10 @@ class PVMap extends SVGManipulator {
                     to_replace_content = String(operators[0]).toLowerCase() != String(operators[2]).toLowerCase();
                     break;
                 case "#=":
-                    to_replace_content = Number(operators[0]).toLowerCase() == Number(operators[2]).toLowerCase();
+                    to_replace_content = Number(operators[0]) == Number(operators[2]);
                     break;
                 case "!#=":
-                    to_replace_content = Number(operators[0]).toLowerCase() != Number(operators[2]).toLowerCase();
+                    to_replace_content = Number(operators[0]) != Number(operators[2]);
                     break;
                 case "<":
                     to_replace_content = Number(operators[0]) < Number(operators[2]);
