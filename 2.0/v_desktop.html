@@ -1,0 +1,199 @@
+<link rel="stylesheet" href="desktop_viewer.css">
+<script src='re2.js'></script>
+<script src='v_desktop.js'></script>
+<script src='csv_reader.js'></script>
+<script src='re2_multi_instance_management.js'></script>
+<script src='authenticated_resource_retrieve.js'></script>
+<script>
+function openMenu(cn, open) {
+	c = document.getElementsByClassName(cn);
+	for (let i = 0; i < c.length; i++) {
+		c[i].style.display = "none";
+	}
+	document.getElementById(open).style.display = "block";
+}
+</script>
+
+<div class='mainbar noselect'>
+   <button style='font-size:20px;' onclick='document.getElementById("layer_menu").hidden = !document.getElementById("layer_menu").hidden'>Layers</button>
+   <button style='font-size:20px;' onclick='document.getElementById("search_resolution_modal").hidden = !document.getElementById("search_resolution_modal").hidden'>Find A Place</button>
+   <button style='font-size:20px;' onclick='document.getElementById("settings").style.display = "block";'>More...</button>
+</div>
+
+<div class='top_corner noselect' hidden id='layer_menu'>
+   <p id='feature_checkboxes'><u>Layers:</u></p>
+</div>
+
+<div class='bottom_corner noselect'>
+   <select>
+      <option value="1F">First Floor</option>
+      <option value="2F">Second Floor</option>
+      <option value="WC">Whole Campus</option>
+   </select>
+   <br>
+   <br>
+   <button onclick='resetViewport();'>Reset zoom and position</button>
+   <br>
+   <br>
+   <b id='selecting'>hovering: [none]</b>
+   &nbsp;
+   <b id='zoom'>zoom: 0.25</b>
+</div>
+
+<div id='zoomableDiv' style='position:absolute;width:100%;height:100%;top:0;left:0;z-index:1'></div>
+<div id='search_resolution_modal' class='search noselect' hidden>
+   <p class='noselect'>Enter a room #, locker #, staff member,<br> office (i.e. finance office), or landmark:</p>
+   <button style='color:red;' onclick='document.querySelectorAll(".srt_clearable").forEach(function(e){e.remove()}); Object.keys(window.mapSet.pvmaps).forEach(function(pvm){window.mapSet.pvmaps[pvm].map_dataset_object.clearFXAll()});document.getElementById("query").value=""'>Clear</button>
+   <input id='query' onkeydown='handleKeyDownQuery(event)'>
+   <button style='color:lightgreen;' onclick='searchAndResolve(document.getElementById("query").value)'>Go</button>
+   <p class='noselect' id='resolution_options' style='text-align: right;'>Click on a result below <br>to highlight it on the map.<br><br>
+   <p class='noselect'>Hover over the corresponding landmark <br>or press "Clear" to remove the highlight.</p>
+</div>
+
+<div id='console' class='ws_modal' style='font-family: "Lucida Console"' hidden>
+== No F12 Reporting ==
+If you use this feature, the regular console will no longer function as intended.
+
+Click <a onclick='this.parentElement.style.display="none";' style='color: pink;'><u>here</u></a> to close this menu.
+
+
+</div>
+
+<div id='show_landmark_data' class='popup'>
+	<a onclick='this.parentElement.style.display="none";' style='color: red;' class='search noselect'><u>↓ Close menu ↓</u></a>
+	<br>
+	<br>
+	<table style='margin: auto; background-color: #333333FF' id='lookup_table'>
+		<tr>
+			<td colspan='2' id='lookup_informal_name'>
+			parsed_shortname
+			</td>
+		</tr>
+		<tr style='text-align:center;'>	
+			<td><b>Attribute</b></td>
+			<td><b>Value</b></td>
+		</tr>
+	</table>
+</div>
+
+<div id='settings' class='ws_modal' style='color: white;white-space: normal; padding: 4px; display: none'>
+   <h1 style='text-align: center;'>App Settings, Export and Documentation</h1>
+   
+   <a onclick='this.parentElement.style.display="none";' style='color: red; text-align: center; position: fixed; right: 1%; top: 1%;' class='search'><u>Close menu</u></a>
+
+   <div style='border: 1px solid gray; position: fixed; width: 25%; height: 75%; left: 4%;'>
+		<b><u style='color:gold'>App Configuration</b></u>
+		<br>
+		<a class='search' style='font-size:20px;' onclick='openMenu("cfg", "client_pref")'>> Client Type</a>
+		<br>
+		<a class='search' style='font-size:20px;' onclick='openMenu("cfg", "auth_pref")'>> Authentication</a>
+		<br>
+		<a class='search' style='font-size:20px;' onclick='openMenu("cfg", "other_pref")'>> Other</a>
+		<br>
+		<a class='search'></a>
+		<br>
+		<br>
+		<b><u style='color:gold'>Documentation</b></u>
+		<br>
+		<a class='search' style='font-size:20px;'>> Important Notices</a>
+		<br>
+		<a class='search' style='font-size:20px;'>> Source Code</a>
+		<br>
+		<a class='search' style='font-size:20px;'>> pvme2.js Docs</a>		
+		<br>
+		<a class='search' style='font-size:20px;'>> Credits</a>
+		<br>
+		<br>
+		<b><u style='color:gold'>Export</b></u>
+		<br>
+		<a class='search' style='font-size:20px;'>> Map Image</a>
+		<br>
+		<a class='search' style='font-size:20px;'>> Landmark Data</a>
+		<br>
+   </div>
+   <div class='config_menu cfg' id='client_pref' hidden>
+		<h4>Device Type</h4>
+		Current device type preference: <u id='curr_type_device' style='color: white'>[loading...]</u><br>
+		Override device type preference:
+		<br>
+		<br>
+		<select>
+			<option value='mobile'>Mobile</option>
+			<option value='desktop'>Desktop</option>
+			<option value='desktop'>Auto-Detect On Relaunch</option>
+		</select>
+		<br>
+		<br>
+		<br>
+		(Tablet users should use the desktop client.)
+		<br>
+		<br>
+		<br>
+		<h4>Legacy Version</h4>
+		Current version preference: <u id='curr_type_legacy' style='color: white'>[loading...]</u>
+		<br>
+		Prefer legacy version over newer version:
+		<br>
+		<br>
+		<select>
+			<option value='modern'>No, use new version</option>
+			<option value='legacy'>Yes, use legacy version</option>
+		</select>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<button style='color: lightgreen;'>Apply changes</button>
+   </div>
+   <div class='config_menu cfg' id='auth_pref' hidden>
+		<h4>Sign Out</h4>
+		<button style='color: red;'>Sign out AND clear preference data</button>
+		<br>
+		<br>
+		<button style='color: red;'>Sign out</button>
+		<br>
+		<br>
+		<br>
+		<br>
+		<h4>Token</h4>
+		Information:
+		<br>
+		<br>
+		<table>
+			<tr>
+				<td>issuer</td>
+				<td>name</td>
+				<td>upn</td>
+				<td>issue time</td>
+				<td>expiry time</td>
+			</tr>
+			<tr style='font-family:monospace'>
+				<td id='tkn_name'>waiting...</td>
+				<td id='tkn_name'>N/A</td>
+				<td id='tkn_upn'>N/A</td>
+				<td id='tkn_iat'>N/A</td>
+				<td id='tkn_exp'>N/A</td>
+			</tr>
+		</table>
+   </div>
+   <div class='config_menu cfg' id='other_pref' hidden>
+		<h4>No F12 Reporting</h4>
+		<button style='color: lightgreen;'>Enable</button>
+		<button style='color: red;'>Disable</button>
+		<button style='color: BBB;' onclick='document.getElementById("console").style.display = "block"; this.parentElement.parentElement.style.display = "none"'>Open</button>
+		Reload to apply this change.
+		<br>
+		<br>
+		<h4>Input Sensitivity</h4>
+		Scroll (zoom) sensitivity: <input id='sens' value='[loading...]'>
+		<br>
+		Mouse/trackpad (pan) sensitivity: <input id='sens' value='[loading...]'>
+		<br>
+		<br>
+		<button style='color: lightgreen'>Apply changes</button>
+		<br>
+		<br>
+	    </div>
+</div>
+
