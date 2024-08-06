@@ -58,16 +58,16 @@ function go() {
 			if (window.onmobile) document.location = "/front/viewer.html";
 			else document.location = "front/viewer_desktop.html";
 		} else if (getCookie("version_preference") == "2") {
-			if (window.onmobile) document.location = "2.0/v_desktop.html";
-			else document.location = "2.0/v_mobile.html";
+			if (window.onmobile) document.location = "2.0/v_mobile.html";
+			else document.location = "2.0/v_desktop.html";
 		}
 	} else {
 		if (getCookie("version_preference") == "1") {
 			if (window.onmobile) document.location = "/auth2.0?redirectonsuccess=/front/viewer.html";
 			else document.location = "/auth2.0?redirectonsuccess=/front/viewer_desktop.html";
 		} else if (getCookie("version_preference") == "2") {
-			if (window.onmobile) document.location = "/auth2.0?redirectonsuccess=/2.0/v_desktop.html";
-			else document.location = "/auth2.0?redirectonsuccess=/2.0/v_mobile.html";
+			if (window.onmobile) document.location = "/auth2.0?redirectonsuccess=/2.0/v_mobile.html";
+			else document.location = "/auth2.0?redirectonsuccess=/2.0/v_desktop.html";
 		}
 	}
 }
