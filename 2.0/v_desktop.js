@@ -69,7 +69,7 @@ function startUpDesktopListeners() {
     let lastTouchX;
     let lastTouchY;
 
-    zoomableDiv.addEventListener('touchstart', function(event) {
+    document.getElementById("touchscreen").addEventListener('touchstart', function(event) {
       if (event.touches.length === 2) {
         event.preventDefault();
         // If two fingers touch the screen, calculate the initial distance between them
@@ -154,7 +154,7 @@ function populateLookupMenu(id) {
 			map_area = window.mapSet.activeMap.map_dataset_object.svg_id;
 			if (objectInReference.long_name) {
 				if (objectInReference.official_room_number) tc = `${objectInReference.long_name} (${map_area})`;
-				else tc = `${objectInReference.landmark_id} (${map_area})`;
+				else tc = `${objectInReference.long_name} (${map_area})`;
 			} 
 			else if (objectInReference.official_room_number) tc = `Rm ${objectInReference.official_room_number} (${map_area})`;
 			else tc = `${objectInReference.type}: ${objectInReference.landmark_id}`;
