@@ -69,7 +69,7 @@ function startUpDesktopListeners() {
     let lastTouchX;
     let lastTouchY;
 
-    document.getElementById("touchscreen").addEventListener('touchstart', function(event) {
+    zoomableDiv.addEventListener('touchstart', function(event) {
       if (event.touches.length === 2) {
         event.preventDefault();
         // If two fingers touch the screen, calculate the initial distance between them
@@ -324,7 +324,6 @@ window.onload = function() {
 			console.log(`F  ` + JSON.stringify(feature_data));
 
 			// This is stuff that isn't on the map main config file because it depends on the receiving application and not the map
-			map.single_click_callback = function(evt){};
 			map.double_click_callback = function(evt){populateLookupMenu(evt.target.id)};
 			map.svg_element_id = onboard_svg_id;
 			map.autogenerate_layer_checkboxes_under_element = "feature_checkboxes";

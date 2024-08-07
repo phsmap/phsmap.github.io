@@ -216,7 +216,6 @@ class PVMap extends SVGManipulator {
         this.mobile_default_y = initial_configuration_data.default_xy_mobile[1];
         this.mobile_default_zoom = initial_configuration_data.default_zoom_mobile;
         this.double_clickcallback = initial_configuration_data.double_click_callback;
-        this.single_clickcallback = initial_configuration_data.single_click_callback;
         this.autogen_layerboxes = initial_configuration_data.autogenerate_layer_checkboxes_under_element;
         // Create a globally accessible reference to this PVMap object for the purpose of setting callbacks
         window[this.svg_id] = this;
@@ -251,7 +250,19 @@ class PVMap extends SVGManipulator {
                 this.setCallbackParticularElement(this.featuredata[i].landmark_id, "onmouseup", function(evt) {
                     window[evt.target.parentElement.parentElement.id].changeBorder(evt.target.id);
                 });
-                this.setCallbackParticularElement(this.featuredata[i].landmark_id, "onclick", this.single_clickcallback);
+                this.setCallbackParticularElement(this.featuredata[i].landmark_id, "ontouchstart", function(evt) {
+					console.log("touchstart", evt);
+					window.lastTapX = evt.targetTouches[0].clientX;
+					window.lastTapY = evt.targetTouches[0].clientY;
+				});
+                this.setCallbackParticularElement(this.featuredata[i].landmark_id, "ontouchend", function(evt) {
+					console.log("touchend", evt);
+					var x = evt.changedTouches[0].clientX;
+					var y = evt.changedTouches[0].clientY;
+					if (x == window.lastTapX && y == window.lastTapY) {
+						window[evt.target.parentElement.parentElement.id].double_clickcallback(evt);
+					}
+				});
                 this.setCallbackParticularElement(this.featuredata[i].landmark_id, "ondblclick", this.double_clickcallback);
             }
         }
@@ -491,6 +502,19 @@ class PVMap extends SVGManipulator {
                 elem.dispatchEvent(clickEvent);
             }
         );
+		this.setCallbackParticularElement(new_id, "ontouchstart", function(evt) {
+			console.log("touchstart", evt);
+			window.lastTapX = evt.targetTouches[0].clientX;
+			window.lastTapY = evt.targetTouches[0].clientY;
+		});
+		this.setCallbackParticularElement(new_id, "ontouchend", function(evt) {
+			console.log("touchend", evt);
+			var x = evt.changedTouches[0].clientX;
+			var y = evt.changedTouches[0].clientY;
+			if (x == window.lastTapX && y == window.lastTapY) {
+				window[evt.target.parentElement.parentElement.parentElement.id].double_clickcallback(evt);
+			}
+		});
 
 
         console.log(`[${this.svg_id}][placeTextInPath] SVG element has ID # ${new_id}; new ID returned by fn.`);
