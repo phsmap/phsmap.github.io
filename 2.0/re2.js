@@ -255,10 +255,19 @@ class PVMap extends SVGManipulator {
 					window.lastTapY = evt.targetTouches[0].clientY;
 				});
                 this.setCallbackParticularElement(this.featuredata[i].landmark_id, "ontouchend", function(evt) {
-					var x = evt.changedTouches[0].clientX;
-					var y = evt.changedTouches[0].clientY;
-					if (x == window.lastTapX && y == window.lastTapY) {
-						window[evt.target.parentElement.parentElement.id].double_clickcallback(evt);
+					if (evt.changedTouches && evt.changedTouches.length > 0) { // because the "text element triggers attached path's ontouchend event" doesn't provide a changedTouches property, we can't always be sure that there was an x and y.
+						var x = evt.changedTouches[0].clientX;
+						var y = evt.changedTouches[0].clientY;
+					} else {
+						var x = -1;
+						var y = -1;
+					}
+					if (evt.manuallyTriggered || (x == window.lastTapX && y == window.lastTapY)) { // if it was manually triggered, we know that the event was fired by a text element relaying the message on and we should consider it a tap in the same location and thus fire the double click event
+						window[evt.target.parentElement.parentElement.id].changeBorder(evt.target.id);
+						setTimeout(function(){
+							window[evt.target.parentElement.parentElement.id].double_clickcallback(evt);
+							window[evt.target.parentElement.parentElement.id].clearFX(evt.target.id);
+						}, 100);
 					}
 				});
                 this.setCallbackParticularElement(this.featuredata[i].landmark_id, "ondblclick", this.double_clickcallback);
@@ -510,8 +519,9 @@ class PVMap extends SVGManipulator {
 			var y = evt.changedTouches[0].clientY;
 			if (x == window.lastTapX && y == window.lastTapY) {
 				var elem = window[evt.target.parentElement.parentElement.parentElement.id].retrieve_element_in_this_group(evt.target.parentElement.id.split("__")[1]);
-                var clickEvent = document.createEvent('MouseEvents');
-                clickEvent.initEvent('dblclick', true, true);
+                var clickEvent = document.createEvent('TouchEvent');
+                clickEvent.initEvent('touchend', true, true);
+				clickEvent.manuallyTriggered = true;
                 elem.dispatchEvent(clickEvent);
 			}
 		});
