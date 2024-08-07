@@ -153,7 +153,7 @@ function populateLookupMenu(id) {
 			tc = "(error!)";
 			map_area = window.mapSet.activeMap.map_dataset_object.svg_id;
 			if (objectInReference.long_name) {
-				if (objectInReference.official_room_number) tc = `${objectInReference.long_name}/Rm ${objectInReference.official_room_number} (${map_area})`;
+				if (objectInReference.official_room_number) tc = `${objectInReference.long_name} (${map_area})`;
 				else tc = `${objectInReference.landmark_id} (${map_area})`;
 			} 
 			else if (objectInReference.official_room_number) tc = `Rm ${objectInReference.official_room_number} (${map_area})`;
