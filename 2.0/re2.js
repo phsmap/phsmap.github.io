@@ -251,12 +251,10 @@ class PVMap extends SVGManipulator {
                     window[evt.target.parentElement.parentElement.id].changeBorder(evt.target.id);
                 });
                 this.setCallbackParticularElement(this.featuredata[i].landmark_id, "ontouchstart", function(evt) {
-					console.log("touchstart", evt);
 					window.lastTapX = evt.targetTouches[0].clientX;
 					window.lastTapY = evt.targetTouches[0].clientY;
 				});
                 this.setCallbackParticularElement(this.featuredata[i].landmark_id, "ontouchend", function(evt) {
-					console.log("touchend", evt);
 					var x = evt.changedTouches[0].clientX;
 					var y = evt.changedTouches[0].clientY;
 					if (x == window.lastTapX && y == window.lastTapY) {
@@ -478,6 +476,7 @@ class PVMap extends SVGManipulator {
         }
 
         // make it so that the text can also be used to activate the same callbacks
+		// (these callbacks ONLY work when the ID of the text is "text__(existing parent element)" -- if another format is used it will not find its way back to the correct parent
         this.setCallbackParticularElement(new_id, "onmouseover", function(evt) {
             var elem = window[evt.target.parentElement.parentElement.parentElement.id].retrieve_element_in_this_group(evt.target.parentElement.id.split("__")[1]); // this is a very roundabout way of being able to retrieve the non-text companion to this text element (which you can't reach just by using parentElement)
             elem.dispatchEvent(new Event('mouseover')); // once we've gone all the way around through the globally accessible object for this PVMap, dispatch its mouseover/whatever event
@@ -503,16 +502,17 @@ class PVMap extends SVGManipulator {
             }
         );
 		this.setCallbackParticularElement(new_id, "ontouchstart", function(evt) {
-			console.log("touchstart", evt);
 			window.lastTapX = evt.targetTouches[0].clientX;
 			window.lastTapY = evt.targetTouches[0].clientY;
 		});
 		this.setCallbackParticularElement(new_id, "ontouchend", function(evt) {
-			console.log("touchend", evt);
 			var x = evt.changedTouches[0].clientX;
 			var y = evt.changedTouches[0].clientY;
 			if (x == window.lastTapX && y == window.lastTapY) {
-				window[evt.target.parentElement.parentElement.parentElement.id].double_clickcallback(evt);
+				var elem = window[evt.target.parentElement.parentElement.parentElement.id].retrieve_element_in_this_group(evt.target.parentElement.id.split("__")[1]);
+                var clickEvent = document.createEvent('MouseEvents');
+                clickEvent.initEvent('dblclick', true, true);
+                elem.dispatchEvent(clickEvent);
 			}
 		});
 
