@@ -275,30 +275,39 @@ class PVMap extends SVGManipulator {
         }
         // Add a "registered elements" attribute to every layer data 
         for (let i = 0; i < this.layerdata.length; i += 1) {
-            this.layerdata[i].applicable_elements = [];
+            if (this.layerdata[i].layer_id) this.layerdata[i].applicable_elements = [];
         }
 
 
         // Initialize the layer data checkboxes, if the user has specified a parent element to stick the checkboxes in
         if (this.autogen_layerboxes) {
+			var container = PVMap.gebi(this.autogen_layerboxes);
+			if (!container) {
+				console.error(`[${this.svg_id}][initialize] The constructor could not find the HTML container element to append layer data checkboxes to while attempting to create layer checkboxes. Initialization failed.`);
+				return null;
+			}
+			
             for (let i = 0; i < this.layerdata.length; i += 1) {
-                // First, we have to create the actual checkbox element
-                var newCB = document.createElement('input');
-                newCB.type = "checkbox";
-                newCB.id = `${this.svg_id}__${this.layerdata[i].layer_id}`;
-                newCB.checked = this.layerdata[i].visible;
-                var newLB = document.createElement('label');
-                newLB.setAttribute("for", newCB.id);
-                newLB.textContent = `${this.layerdata[i].layer_name}`;
-                // Second, we have to append the checkbox and label to the container element
-                var container = PVMap.gebi(this.autogen_layerboxes);
-                if (!container) {
-                    console.error(`[${this.svg_id}][initialize] The constructor could not find the HTML container element to append layer data checkboxes to while attempting to create layer checkboxes. Initialization failed.`);
-                    return null;
-                }
-                container.append(document.createElement("br"));
-                container.append(newCB);
-                container.append(newLB);
+				if (this.layerdata[i].layer_id) {
+					// First, we have to create the actual checkbox element
+					var newCB = document.createElement('input');
+					newCB.type = "checkbox";
+					newCB.id = `${this.svg_id}__${this.layerdata[i].layer_id}`;
+					newCB.checked = this.layerdata[i].visible;
+					var newLB = document.createElement('label');
+					newLB.setAttribute("for", newCB.id);
+					newLB.textContent = `${this.layerdata[i].layer_name}`;
+					// Second, we have to append the checkbox and label to the container element
+					container.append(document.createElement("br"));
+					container.append(newCB);
+					container.append(newLB);
+				} else if (this.layerdata[i].category_name) {
+					container.append(document.createElement("br"));
+					container.append(document.createElement("br"));
+					var newH = document.createElement('u');
+					newH.textContent = this.layerdata[i].category_name;
+					container.append(newH);
+				}
             }
             // Now that all checkboxes are loaded in, we can now applyLayerCheckboxesForThisMap();
             this.applyLayerCheckboxesForThisMap();
@@ -468,7 +477,8 @@ class PVMap extends SVGManipulator {
                 //console.log((midpoint_of_text_box - midpoint_of_parent_bounds));
             }
         } else if (Array.isArray(font_size) && (!box_id || x > 0 || y > 0)) {
-            console.error(`[${this.svg_id}][placeTextInPath] Auto font size cannot be used when automatic central placement is not being used or the path_id is not specified.`)
+            console.error(`[${this.svg_id}][placeTextInPath] Auto font size cannot be used when automatic central placement is not being used or the path_id is not specified.`);
+			return null;
         } else {
             newTN.setAttributeNS(null, "font-size", font_size);
             this.group_container.append(newTN);
@@ -618,13 +628,14 @@ class PVMap extends SVGManipulator {
 
         // Erase the memory of the layer data's known members
         for (let i = 0; i < this.layerdata.length; i += 1) {
-            this.layerdata[i].applicable_elements = [];
+            if (this.layerdata[i].layer_id) this.layerdata[i].applicable_elements = [];
         }
 
         // Before we work on layer data, we need to update the visibility attributes of the layer data based on the checkboxes
         // (but we'll only do this if the user generated checkboxes...)
         if (this.autogen_layerboxes) {
             for (let i = 0; i < this.layerdata.length; i += 1) {
+				if (!this.layerdata[i].layer_id) continue;
                 this.layerdata[i].visible = PVMap.gebi(`${this.svg_id}__${this.layerdata[i].layer_id}`).checked;
                 console.log(`[${this.svg_id}][applyLayerCheckboxesForThisMap] Layer ${this.layerdata[i].layer_id} enabled: ${this.layerdata[i].visible}`);
             }
@@ -635,6 +646,7 @@ class PVMap extends SVGManipulator {
             currentObj = featuredata_workingcopy[i];
             console.log(`[${this.svg_id}][applyLayerCheckboxesForThisMap] Working on ${featuredata_workingcopy[i].landmark_id}...`);
             for (let j = 0; j < this.layerdata.length; j += 1) {
+				if (!this.layerdata[j].layer_id) continue;
                 console.log(`&& Layer ${this.layerdata[j].layer_id}`);
                 // First, we check if this particular landmark is a part of the given layer
                 var jointQueryCmd = this.layerdata[j].layer_instructions.split("=>");
@@ -739,6 +751,7 @@ class PVMap extends SVGManipulator {
             // (because the search queries attached to each layer look something like {$query,@=,$official_room_number}
             featuredata_workingcopy[i].query = search_term;
             for (let j = 0; j < this.layerdata.length; j++) {
+				if (!this.layerdata[j].layer_id) continue;
                 individualResult = false;
                 individualResult = this.helper_evaluateQuery(this.layerdata[j].layer_querying_conditions, featuredata_workingcopy[i])[0];
                 if (individualResult && !positiveResults.includes(featuredata_workingcopy[i].landmark_id)) positiveResults.push(featuredata_workingcopy[i].landmark_id);
