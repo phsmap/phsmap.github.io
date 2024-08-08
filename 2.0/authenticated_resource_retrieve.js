@@ -87,7 +87,7 @@ static authorized_httpGET(resource, callback, type = 'text') {
 				} else if (xhr.status == 401) {
 					alert("Your sign in was expired, invalid or missing. Press OK to go sign in.");
 					console.error(`[authorized_httpGET] HTTP 401: ${xhr.response}`);
-					//document.location = "/";
+					document.location = "/";
 				} else {
 					console.error(`[authorized_httpGET] HTTP !200: ${xhr.response}`);
 					alert("There was an error in retrieving data from the secure resource server. Please see the development console for more information.");
