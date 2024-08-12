@@ -44,11 +44,11 @@ function openMenu(cn, open) {
 <div id='zoomableDiv' style='position:absolute;width:100%;height:100%;top:0;left:0;z-index:1'></div>
 <div id='search_resolution_modal' class='search noselect' hidden>
    <p class='noselect'>Enter a room #, locker #, staff member,<br> office (i.e. finance office), or landmark:</p>
-   <button style='color:red;' onclick='document.querySelectorAll(".srt_clearable").forEach(function(e){e.remove()}); Object.keys(window.mapSet.pvmaps).forEach(function(pvm){window.mapSet.pvmaps[pvm].map_dataset_object.clearFXAll()});document.getElementById("query").value=""'>Clear</button>
+   <button style='color:red;' onclick='document.querySelectorAll(".srt_clearable").forEach(function(e){e.remove()}); Object.keys(window.mapSet.pvmaps).forEach(function(pvm){window.mapSet.pvmaps[pvm].map_dataset_object.clearFXAll(true)});document.getElementById("query").value=""'>Clear</button>
    <input id='query' onkeydown='handleKeyDownQuery(event)'>
    <button style='color:lightgreen;' onclick='searchAndResolve(document.getElementById("query").value)'>Go</button>
    <p class='noselect' id='resolution_options' style='text-align: right;'>Click on a result below <br>to highlight it on the map.<br><br>
-   <p class='noselect'>Hover over the corresponding landmark <br>or press "Clear" to remove the highlight.</p>
+   <p class='noselect'>Press "Clear" to remove the highlight.</p>
 </div>
 
 <div id='console' class='ws_modal' style='font-family: "Lucida Console"' hidden>

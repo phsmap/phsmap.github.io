@@ -377,10 +377,21 @@ class PVMap extends SVGManipulator {
         }
         elem.append(this.helper_generateAnimationNode(`flashBorder_width_vfx__${id}`, "stroke-width", `${width}`, "0.8s"));
         elem.append(this.helper_generateAnimationNode(`flashBorder_vfx__${id}`, "stroke", colors, rate));
-		console.log(permanent);
 		if (permanent) elem.querySelectorAll("animate").forEach(function(em){em.setAttributeNS(null, "permanent", "true")});
 		console.log(`[${this.svg_id}][flashBorder] OK, applied flashing border to ${id}.`);
     }
+	
+	changeBgd(id, color, permanent = false) {
+		var elem = this.retrieve_element_in_this_group(id);
+        if (!elem) {
+            console.error(`[${this.svg_id}][changeBgd] Unable to find element with ID ${id} during lookup.`)
+            return null;
+        }
+        elem.append(this.helper_generateAnimationNode(`changeBgd_fill_vfx__${id}`, "fill", `${color}`, "0.8s"));
+		if (permanent) elem.querySelectorAll("animate").forEach(function(em){em.setAttributeNS(null, "permanent", "true")});
+		elem.setAttributeNS(null, "fill-opacity", "1.0");
+		console.log(`[${this.svg_id}][changeBgd] OK, applied new bgd color to ${id}.`);
+	}
 
     // This will clear FX
     clearFX(id, clear_permanent = false) {
@@ -632,6 +643,7 @@ class PVMap extends SVGManipulator {
             currentObj.newFontSize = "";
             currentObj.newFont = "";
             currentObj.tc = "";
+			currentObj.newBgdColor = "transparent";
             id_to_feature_index[currentObj.landmark_id] = i;
         }
 
@@ -685,6 +697,14 @@ class PVMap extends SVGManipulator {
                             }
                         }
                         switch (command.split("(")[0]) {
+							case "set_background_color":
+								console.log(`  x set_background_color: ${params}`);
+								if (id_to_feature_index[params[0]] == undefined || id_to_feature_index[params[0]] == null || params.length != 2) {
+                                    console.warn(`  - Bad parameter #0 (ID of landmark to change styling of) or incorrect number of parameters. Will proceed, but may result in faulty layer rendering.`);
+                                    break;
+                                }
+								featuredata_workingcopy[id_to_feature_index[params[0]]].newBgdColor = params[1];
+								break;
                             case "set_semiauto_font_size":
                                 console.log(`  x set_semiauto_font_size: ${params}`);
                                 if (id_to_feature_index[params[0]] == undefined || id_to_feature_index[params[0]] == null || params.length != 3) {
@@ -737,7 +757,7 @@ class PVMap extends SVGManipulator {
             this.autoForEachElement(function(id) {
                 window.tco.removeElementWithId(id);
             }, "text__", true); // true because we are destroying children in this.group_container.children, which means a traditional for loop will not work
-			clearFXAll(); // if the current layers also happened to act on the styling of the parent path, we also remove those (i.e. reset the background from a transparent blue to clear)
+			this.clearFXAll(true); // if the current layers also happened to act on the styling of the parent path, we also remove those (i.e. reset the background from a transparent blue to clear)
         }
         for (let i = 0; i < featuredata_workingcopy.length; i += 1) {
             currentObj = featuredata_workingcopy[i];
@@ -747,6 +767,9 @@ class PVMap extends SVGManipulator {
                 if (!currentObj.newFont) currentObj.newTextColor = "lightgreen";
                 this.placeText(currentObj.tc, `text__${currentObj.landmark_id}`, currentObj.landmark_id, -2, -2, currentObj.newTextColor, currentObj.newFontSize, currentObj.newFont);
             }
+			if (currentObj.newBgdColor && currentObj.newBgdColor != "transparent") {
+				this.changeBgd(currentObj.landmark_id, currentObj.newBgdColor, true);
+			}
         }
     }
 
