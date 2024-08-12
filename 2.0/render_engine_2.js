@@ -345,7 +345,7 @@ class PVMap extends SVGManipulator {
     }
 
     // Helper for all of these
-    helper_obtainAnimationNode(id, attribute, values, duration) {
+    helper_generateAnimationNode(id, attribute, values, duration) {
         var newAni = document.createElementNS("http://www.w3.org/2000/svg", "animate");
         newAni.setAttributeNS(null, "attributeType", "XML");
         newAni.setAttributeNS(null, "repeatCount", "indefinite");
@@ -356,31 +356,35 @@ class PVMap extends SVGManipulator {
     }
 
     // This will set the border nondestructively
-    changeBorder(id, color = "#FFFF00FF", width = "8px") {
+    changeBorder(id, color = "#FFFF00FF", width = "8px", permanent = false) {
         var elem = this.retrieve_element_in_this_group(id);
         if (!elem) {
             console.error(`[${this.svg_id}][setBorder] Unable to find element with ID ${id} during lookup.`)
             return null;
         }
-        elem.append(this.helper_obtainAnimationNode(`staticBorder_vfx__${id}`, "stroke", color, "0.8s"));
-        elem.append(this.helper_obtainAnimationNode(`staticBorder_vfx__${id}`, "stroke-width", `${width}`, "0.8s"));
+        elem.append(this.helper_generateAnimationNode(`staticBorder_vfx__${id}`, "stroke", color, "0.8s"));
+        elem.append(this.helper_generateAnimationNode(`staticBorder_vfx__${id}`, "stroke-width", `${width}`, "0.8s"));
+		if (permanent) elem.querySelectorAll("animate").forEach(function(em){em.setAttributeNS(null, "permanent", "true")});
 		console.log(`[${this.svg_id}][changeBorder] OK, applied new border to ${id}.`);
     }
 
     // This will flash the border
-    flashBorder(id, colors = "#FFFF00FF;#999999FF", width = "15px", rate = "0.8s") {
+    flashBorder(id, colors = "#FFFF00FF;#999999FF", width = "15px", rate = "0.8s", permanent = false) {
         var elem = this.retrieve_element_in_this_group(id);
         if (!elem) {
             console.error(`[${this.svg_id}][flashBorder] Unable to find element with ID ${id} during lookup.`)
             return null;
         }
-        elem.append(this.helper_obtainAnimationNode(`flashBorder_width_vfx__${id}`, "stroke-width", `${width}`, "0.8s"));
-        elem.append(this.helper_obtainAnimationNode(`flashBorder_vfx__${id}`, "stroke", colors, rate));
+        elem.append(this.helper_generateAnimationNode(`flashBorder_width_vfx__${id}`, "stroke-width", `${width}`, "0.8s"));
+        elem.append(this.helper_generateAnimationNode(`flashBorder_vfx__${id}`, "stroke", colors, rate));
+		console.log(permanent);
+		if (permanent) elem.querySelectorAll("animate").forEach(function(em){em.setAttributeNS(null, "permanent", "true")});
 		console.log(`[${this.svg_id}][flashBorder] OK, applied flashing border to ${id}.`);
     }
 
     // This will clear FX
-    clearFX(id) {
+    clearFX(id, clear_permanent = false) {
+		window.clear_perm = clear_permanent;
         var elem = this.retrieve_element_in_this_group(id);
 		console.log(`[${this.svg_id}][clearFX] Clearing ${id} of FX...`);
         if (!elem) {
@@ -388,16 +392,21 @@ class PVMap extends SVGManipulator {
             return null;
         }
         elem.querySelectorAll("animate").forEach(function(em) {
-			console.log(`    + Clearing FX ${em}`);
-            em.remove();
+			if ((em.getAttributeNS(null, "permanent") != "true" && em.getAttributeNS(null, "permanent") != "yes") || window.clear_perm) {
+				console.log(`    + Clearing FX ${em}`);
+				em.remove();
+			}
         });
     }
 
-    clearFXAll() {
+    clearFXAll(clear_permanent = false) {
+		window.clear_perm = clear_permanent;
 		console.log(`[${this.svg_id}][clearFXAll] Clearing ALL FX`)
         this.group_container.querySelectorAll("animate").forEach(function(em) {
-			console.log(`    + Clearing FX ${em}`);
-            em.remove();
+			if ((em.getAttributeNS(null, "permanent") != "true" && em.getAttributeNS(null, "permanent") != "yes") || window.clear_perm) {
+				console.log(`    + Clearing FX ${em}`);
+				em.remove();
+			}
         });
     }
 
@@ -728,6 +737,7 @@ class PVMap extends SVGManipulator {
             this.autoForEachElement(function(id) {
                 window.tco.removeElementWithId(id);
             }, "text__", true); // true because we are destroying children in this.group_container.children, which means a traditional for loop will not work
+			clearFXAll(); // if the current layers also happened to act on the styling of the parent path, we also remove those (i.e. reset the background from a transparent blue to clear)
         }
         for (let i = 0; i < featuredata_workingcopy.length; i += 1) {
             currentObj = featuredata_workingcopy[i];

@@ -215,7 +215,7 @@ function searchAndResolve(search_term) {
 				window.mapSet.stowAway(window.mapSet.activeMap.map_dataset_object.svg_id);
 				window.mapSet.makeActive(evt.target.getAttribute("under_map"));
 				resetViewport();
-				window.mapSet.pvmaps[evt.target.getAttribute("under_map")].map_dataset_object.flashBorder(evt.target.getAttribute("on_id"));
+				window.mapSet.pvmaps[evt.target.getAttribute("under_map")].map_dataset_object.flashBorder(evt.target.getAttribute("on_id"), "#FFFF00FF;#999999FF", "15px", "0.8s", true);
 			}
 			newbr = document.createElement("br");
 			newbr.classList.add("srt_clearable");
