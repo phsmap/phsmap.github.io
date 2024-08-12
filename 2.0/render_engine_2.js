@@ -816,6 +816,9 @@ class PVMap extends SVGManipulator {
                 console.error(`  - [${this.svg_id}][evaluateQuery] Bad condition: malformed qualifiers: ${content}, operators = ${operators}`);
                 return null;
             }
+			operators[0] = operators[0].trim();
+			operators[1] = operators[1].trim();
+			if (operators[2]) operators[2] = operators[2].trim();
             console.log(`    + Checking ${content}`);
             if (operators[0].slice(0, 1) == "$") {
                 console.log(`    + $op0:${operators[0]} transformation:`);
