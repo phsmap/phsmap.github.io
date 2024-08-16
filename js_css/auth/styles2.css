@@ -1,0 +1,83 @@
+/* Reset default margins and paddings */
+body, html {
+    font-family: Arial, sans-serif;
+    background-color: #333; /* Dark background color */
+    color: #bbb; /* Light text color */
+}
+
+/* Container for login form */
+.login-container {
+    width: 85%;
+    margin: 20px auto; /* Center align and provide top margin */
+    padding: 20px;
+    background-color: #222; /* Darker container background */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Box shadow for depth */
+    border-radius: 8px; /* Rounded corners */
+	text-align: center;
+}
+
+/* Button */
+.login-container button {
+    padding: 10px;
+    border: none;
+    background-color: #4CAF50; /* Green button */
+    color: #eee; /* Light text color */
+    cursor: pointer;
+	font-size: 28px;
+}
+
+/* Button hover effect */
+.login-container button:hover {
+    background-color: #6CCF70; /* Darker green on hover */
+}
+
+h2 {
+	font-size: 34px;
+	color: #eee;
+} 
+
+/* Inserting this collapsed row between two flex items will make 
+ * the flex item that comes after it break to a new row */
+.break {
+  flex-basis: 100%;
+  height: 0;
+}
+
+a {
+	color: #bbb; 
+}
+
+a:hover {
+	color: #fff;
+}
+
+td {
+	border: 1px solid transparent;
+	width: 30%; 
+	padding: 10px;
+}
+
+.move {
+  animation-name: move;
+  animation-duration: 0.5s;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+
+@keyframes move {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  50.001% {
+    opacity: 0;
+    transform: translateX(100vw);
+  }
+  50.002% {
+    opacity: 1;
+    transform: translateX(100vw);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}

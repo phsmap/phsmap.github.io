@@ -1,61 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <link rel="stylesheet" href="/js_css/viewer/viewer_desktop_styles.css">
-     <style>
-        body {
-            animation: fadeInAnimation ease 2s;
-            animation-iteration-count: 1;
-            animation-fill-mode: forwards;
-			font-size: 18px;
-        }
-
-        @keyframes fadeInAnimation {
-            0% {
-                opacity: 0;
-            }
-
-            100% {
-                opacity: 1;
-            }
-        }
-    </style>
-	<title>Sign In Required: PHS Interactive Map</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PHS Interactive Map: Sign-In Required</title>
+    <link rel="stylesheet" href="/js_css/auth/styles2.css"> <!-- Link to your CSS file -->
+	<script src='/js_css/auth/auth2_bundle.js' defer></script>
 </head>
-
 <body>
 
-<img style='margin-left: auto; margin-right: auto; width: 50%; display: block;' src='/img/logo.webp'>
-
-<!-- background page -->
-<h1 style='text-align: center'>Sign In/Reauthentication Required</h1>
-<hr>
-<p style='text-align: center'><b>Remember to use your Microsoft account to sign in, and not your Google account.</b> (Students: the logins to your MS account are the same as your Google account; the only difference is that your Microsoft email address ends in ".org" instead of ".net")</p><br>
-
-<p style='text-align: center;'><button style='font-size: 2cm;' onclick='startSignIn()'>Proceed To Log In</button>
-<br>
-<br>
-<p style='text-align: center;color: red;'>*** This application NEVER saves, accesses or transmits your password. See this <a href='/info#useofdata'>page</a> for an explanation. ***</p>
-</p>
-
-
-<br>
-<br>
-
-<hr>
-
-<button hidden style='font-size: 24px;' onclick='document.getElementById("extrainfo").hidden = !document.getElementById("extrainfo").hidden'>Show/hide extra information</button>
-
-<div style='font-size: 18px;' id='extrainfo' hidden>
-<a href='/info#useofdata'>How is users' Microsoft account data used?</a>
-<br>
-<a href='/info#sensitiveinfo'>Why is a sign in necessary anyways?</a>
-<br>
-<br>
-To avoid having to constantly re-enter your logins, don't use incognito/private mode, say Yes when Microsoft asks if you want to stay signed in, and don't reload the map page once you're on it (once you've loaded the map page, you can continue to use it 
-even if your access token expires or you lose internet).
+<div class="login-container move">
+	<div style='text-align: center;'>
+		<!--img src='logo_standalone.png' width='15%' style='display:inline;'-->
+		<h2>PHS Interactive Map</h2>
+		<hr>
+	</div>
+	<table style='border-collapse: collapse; margin: 0 auto 0 auto'>
+		<tr style=''>
+			<td style='text-align: left;'>
+				<div style='text-align: center;'>
+					<h2>Sign in:</h2>
+				</div>
+				<ul>
+					<li>Remember to log in with your Microsoft account (@mcpsmd.<u>org</u>; see picture for explanation)</li>
+					<br>
+					<li style='color: red;'>Your password is NEVER accessed or saved by the PHS Interactive Map's login system.</li>
+					<br>
+					<li><a href='#'>How is my information used as a part of logging in?</a></li>
+					<br>
+					<li><a href='#'>Why does this application require a login?</a></li>
+				</ul>
+				<br>
+				<br>
+				<div style='text-align: center;'>
+					<button style='margin: 0 auto;' onclick='startSignIn()'>Proceed with signing in</button>
+				</div>
+				<br>
+				<br>
+				<div style='text-align: center;'>
+					<h2>Disclaimer:</h2>
+				</div>
+				<ul>
+					<li>Don't rely on this application as your sole source of information in an emergency.</li>
+					<br>
+					<li>Don't share map printouts, screenshots, datasets, etc. with anyone except for other MCPS students, staff and authorized visitors (parents, subs, etc). See "Why does this application require a login?" for an explanation.</li>
+				</ul>
+				</div>
+			</td>
+			<td style='text-align: center;'>
+				<div style='text-align: center;'>
+					<h2>Which logins do I use?</h2>
+				</div>
+				<img src='student_login.webp' width='400' style='padding: 15px;'>
+				<img src='staff_login.webp' width='400' style='padding: 15px;'>
+			</td>
+		</tr>
+	<table>
 </div>
 
-<script>
-</script>
-<script src='/js_css/auth/auth2_bundle.js' defer></script>
-
 </body>
+</html>
