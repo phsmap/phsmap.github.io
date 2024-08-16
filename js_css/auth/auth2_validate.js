@@ -34,7 +34,7 @@ function validateUserToken(accessToken) {
 				}			
 			} else {
 				document.getElementById("authorization_ismember").innerHTML = "ACCESS DENIED BECAUSE OF ERROR";
-				document.getElementById("authorization_error_box").innerHTML += `When calling the MS Graph API, the below error was returned. You will not be able to access secured resources from our backend; and therefore, we will not you to the next page.<br><br>`;
+				document.getElementById("authorization_error_box").innerHTML += `When calling the MS Graph API, the below error was returned. You will not be able to access secured resources from our backend; and therefore, we will not send you to the next page.<br><br>`;
 				document.getElementById("authorization_error_box").innerHTML += `HTTP ${status}<br>`;
 				document.getElementById("authorization_error_box").innerHTML += `${text}<br>`;
 			}
