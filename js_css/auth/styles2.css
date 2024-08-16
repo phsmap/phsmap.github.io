@@ -78,6 +78,7 @@ td {
     transform: translateX(100vw);
   }
   100% {
+	opacity: 1;
     transform: translateX(0);
   }
 }
