@@ -330,6 +330,10 @@ window.onload = function() {
 			
 			var m1 = new PVMap(map, layer_data, feature_data);
 			window.mapSet.addPVMap(m1);
+			var newOption = document.createElement("option");
+			newOption.value = map.svg_element_id;
+			newOption.textContent = map.map_screen_name;
+			document.getElementById("map_select").appendChild(newOption);
 		});
 		startUpDesktopListeners();
 		resetViewport();

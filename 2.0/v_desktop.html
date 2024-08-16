@@ -26,10 +26,7 @@ function openMenu(cn, open) {
 </div>
 
 <div class='bottom_corner noselect'>
-   <select>
-      <option value="1F">First Floor</option>
-      <option value="2F">Second Floor</option>
-      <option value="WC">Whole Campus</option>
+   <select id='map_select' onchange="window.mapSet.stowAway(window.mapSet.activeMap.map_dataset_object.svg_id); window.mapSet.makeActive(this.value); console.log(`OK! Changed the active map to ${this.value}`)">
    </select>
    <br>
    <br>
