@@ -1,26 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<title>PHS Interactive Map</title>
-<link rel="stylesheet" href="/js_css/viewer/viewer_desktop_styles.css">
-<script src='/js_css/index/index.js'></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PHS Interactive Map</title>
+    <link rel="stylesheet" href="/js_css/auth/styles2.css"> <!-- Link to your CSS file -->
+    <style>
+        /* Additional inline styles can be added here if needed */
+    </style>
+	<script src='/js_css/index/index.js'></script>
 </head>
-
 <body>
-
-<img style='margin-left: auto; margin-right: auto; width: 50%; display: block;' src='/img/logo.webp'>
-
-<!-- background page -->
-<h1 style='text-align: center'>Launching application...</h1>
-<hr>
-
-<!-- ns -->
-<noscript><h1>This application relies on Javascript. You will have to enable it to proceed.</h1></noscript>
-
-<!-- version select-->
-<div id='version_select' hidden>
-	<h1>Would you like to launch the current version of this application or a new version?</h1>
-	<p>(Your preference will automatically be saved.)</p>
-	<button id='vers1' onclick='setCookie("version_preference", "1", 400); window.location.reload()'>Current version</button>
-	<button id='vers1' onclick='setCookie("version_preference", "2", 400); window.location.reload()'>Experimental version</button>
-</div>
-
+	<div style='text-align:center'>
+		<h2>Launching application...</h2>
+	</div>
+	
+	<div id='version_select' class='login-container' hidden>
+		<h2>A new version of the map has been created. Would you like to use the new version or the old one?</h2>
+		<button id='vers1' onclick='setCookie("version_preference", "1", 400); window.location.reload()'>Legacy (older) version</button>
+		<br>
+		<br>
+		<br>
+		<button id='vers1' onclick='setCookie("version_preference", "2", 400); window.location.reload()'>Current version</button>
+		<br>
+		<br>
+		<p>You can change this preference at any time after logging in.</p>
+	</div>
 </body>
+</html>
