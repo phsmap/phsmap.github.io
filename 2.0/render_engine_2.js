@@ -423,6 +423,7 @@ class PVMap extends SVGManipulator {
 
     // This will place text in the middle of a given path 
     placeText(content, id = null, box_id = null, x = -1, y = -1, color = "#FFFF00", font_size = ["auto", 12, 24], font = "Arial") {
+		content = content.replaceAll("[comma]", ",").replaceAll("[newline]", "\n");
 		console.log(`[${this.svg_id}][placeTextInPath] Placing text: ${content} on ${box_id} with new ID # ${id}`);
         // The first thing we have to do is calculate the centroid of this path
         // Setting either x or y to a negative number will trigger auto place based on the box ID

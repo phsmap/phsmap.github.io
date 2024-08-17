@@ -144,7 +144,7 @@ function populateLookupMenu(id) {
 			newTD1 = document.createElement("td");
 			newTD2 = document.createElement("td");
 			newTD1.textContent = keys[i];
-			newTD2.textContent = objectInReference[keys[i]].replaceAll(";", "\n\n");
+			newTD2.textContent = objectInReference[keys[i]].replaceAll(";", "\n\n").replaceAll("[comma]", ",").replaceAll("[newline]", "\n");;
 			newTD2.style.whiteSpace = "pre-wrap";
 			newTR.appendChild(newTD1);
 			newTR.appendChild(newTD2);
