@@ -295,17 +295,26 @@ class PVMap extends SVGManipulator {
 					newCB.id = `${this.svg_id}__${this.layerdata[i].layer_id}`;
 					newCB.checked = this.layerdata[i].visible;
 					var newLB = document.createElement('label');
+					newLB.id = `${this.svg_id}__${PVMap.uniqueID()}`
 					newLB.setAttribute("for", newCB.id);
 					newLB.textContent = `${this.layerdata[i].layer_name}`;
 					// Second, we have to append the checkbox and label to the container element
-					container.append(document.createElement("br"));
+					var newBR = document.createElement("br");
+					newBR.id = `${this.svg_id}__${PVMap.uniqueID()}`;
+					container.append(newBR);
+					container.append(newBR);
 					container.append(newCB);
 					container.append(newLB);
 				} else if (this.layerdata[i].category_name) {
-					container.append(document.createElement("br"));
-					container.append(document.createElement("br"));
+					var newBR = document.createElement("br");
+					newBR.id = `${this.svg_id}__${PVMap.uniqueID()}`;
+					container.append(newBR);
+					var newBR2 = document.createElement("br");
+					newBR2.id = `${this.svg_id}__${PVMap.uniqueID()}`;
+					container.append(newBR2);
 					var newH = document.createElement('u');
 					newH.textContent = this.layerdata[i].category_name;
+					newH.id = `${this.svg_id}__${PVMap.uniqueID()}`;
 					container.append(newH);
 				}
             }
@@ -313,8 +322,12 @@ class PVMap extends SVGManipulator {
             this.applyLayerCheckboxesForThisMap();
 
             // Don't forget to add a button that applies changes
-            container.append(document.createElement("br"));
-            container.append(document.createElement("br"));
+            var newBR = document.createElement("br");
+			newBR.id = `${this.svg_id}__${PVMap.uniqueID()}`;
+			container.append(newBR);
+			var newBR2 = document.createElement("br");
+			newBR2.id = `${this.svg_id}__${PVMap.uniqueID()}`;
+			container.append(newBR2);
             var APB = document.createElement("button");
             APB.id = `${this.svg_id}__applybutton`;
             APB.onclick = function(evt) {
