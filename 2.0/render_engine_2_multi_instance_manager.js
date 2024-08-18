@@ -15,10 +15,15 @@ class PVMapGroup {
 			search_results: []
 		}
 		
-		// 2. If it's the first map that was loaded, make it the active map; otherwise stow it away
-		if (Object.keys(this.pvmaps).length == 1) this.makeActive(pvmap.svg_id);
-		else this.stowAway(pvmap.svg_id);
-		
+		// 2. If it's the FIRST map that was loaded, make it the active map; otherwise stow it away
+		if (Object.keys(this.pvmaps).length == 1) {
+			window.firstMap = this.pvmaps[pvmap.svg_id];
+			this.makeActive(pvmap.svg_id);
+		}
+		else {
+			this.stowAway(pvmap.svg_id);
+		}
+		this.activeMap = window.firstMap; // we do this because if you just stow away the map, it will set activeMap to null even though one is displayed on screen and you just took away the second one
 		
 		
 		return null;
