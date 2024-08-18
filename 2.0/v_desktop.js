@@ -128,6 +128,14 @@ function resetViewport() {
 	gebi("zoom").innerHTML = `zoom: ${scale.toFixed(2)}`;
 }
 
+function setViewport(x, y, zm) {
+	gebi("zoomableDiv").style.left = `${x}px`;
+	gebi("zoomableDiv").style.top = `${y}px`;
+	gebi("zoomableDiv").style.transform = `scale(${zm})`;
+	gebi("zoom").innerHTML = `zoom: ${zm}`;
+	let scale = zm;
+}
+
 function populateLookupMenu(id) {
 	document.getElementById("show_landmark_data").style.display = "block";
 	document.querySelectorAll('.landmark_datacell').forEach(e => e.remove());
@@ -335,8 +343,8 @@ window.onload = function() {
 			newOption.textContent = map.map_screen_name;
 			document.getElementById("map_select").appendChild(newOption);
 		});
-		startUpDesktopListeners();
 		resetViewport();
+		startUpDesktopListeners();
 	}, "text");
 	
 }

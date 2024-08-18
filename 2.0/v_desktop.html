@@ -26,7 +26,7 @@ function openMenu(cn, open) {
 </div>
 
 <div class='bottom_corner noselect'>
-   <select id='map_select' onchange="window.mapSet.stowAway(window.mapSet.activeMap.map_dataset_object.svg_id); window.mapSet.makeActive(this.value); console.log(`OK! Changed the active map to ${this.value}`)">
+   <select id='map_select' onchange="window.mapSet.stowAway(window.mapSet.activeMap.map_dataset_object.svg_id, Number(gebi('zoomableDiv').style.left.replaceAll('px', '')), Number(gebi('zoomableDiv').style.top.replaceAll('px', '')), Number(gebi('zoomableDiv').style.transform.replaceAll('scale(','').replaceAll(')',''))); c = window.mapSet.makeActive(this.value); console.log(c); setViewport(c[0], c[1], c[2]); console.log(`OK! Changed the active map to ${this.value}`)">
    </select>
    <br>
    <br>
@@ -35,7 +35,7 @@ function openMenu(cn, open) {
    <br>
    <b id='selecting'>hovering: [none]</b>
    &nbsp;
-   <b id='zoom'>zoom: 0.25</b>
+   <b id='zoom'>zoom: [none]</b>
 </div>
 
 <div id='zoomableDiv' style='position:absolute;width:100%;height:100%;top:0;left:0;z-index:1'></div>

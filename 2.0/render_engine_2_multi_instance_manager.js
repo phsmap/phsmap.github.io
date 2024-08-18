@@ -18,10 +18,11 @@ class PVMapGroup {
 		// 2. If it's the FIRST map that was loaded, make it the active map; otherwise stow it away
 		if (Object.keys(this.pvmaps).length == 1) {
 			window.firstMap = this.pvmaps[pvmap.svg_id];
+			this.stowAway(pvmap.svg_id, pvmap.desktop_default_x, pvmap.desktop_default_y, pvmap.desktop_default_zoom);
 			this.makeActive(pvmap.svg_id);
 		}
 		else {
-			this.stowAway(pvmap.svg_id);
+			this.stowAway(pvmap.svg_id, pvmap.desktop_default_x, pvmap.desktop_default_y, pvmap.desktop_default_zoom);
 		}
 		this.activeMap = window.firstMap; // we do this because if you just stow away the map, it will set activeMap to null even though one is displayed on screen and you just took away the second one
 		
