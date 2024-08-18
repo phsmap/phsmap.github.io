@@ -61,15 +61,15 @@ class PVMapGroup {
 		}
 		
 		// 1. Show the checkboxes
-		var checkboxes = document.querySelectorAll("input[type=checkbox][id*=first_floor__]");
+		var checkboxes = document.querySelectorAll(`input[type=checkbox][id*=${map_id}__]`);
 		for (let i = 0; i < checkboxes.length; i += 1) {
 			checkboxes[i].style.display = "";
 		}
-		var checkboxes = document.querySelectorAll("label[for*=first_floor__]");
+		var checkboxes = document.querySelectorAll(`label[for*=${map_id}__]`);
 		for (let i = 0; i < checkboxes.length; i += 1) {
 			checkboxes[i].style.display = "";
 		}
-		var checkboxes = document.querySelectorAll("button[id*=first_floor__]");
+		var checkboxes = document.querySelectorAll(`button[id*=${map_id}__]`);
 		for (let i = 0; i < checkboxes.length; i += 1) {
 			checkboxes[i].style.display = "";
 		}
