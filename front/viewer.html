@@ -84,6 +84,10 @@
 			<button class='topnav_button' onclick='setCookie("devicePreference", "desktop", 40); document.location = "/"'>Desktop</button>
 			<button class='topnav_button' onclick='setCookie("devicePreference", "mobile", 40); document.location = "/"'>Mobile</button>
 			<button class='topnav_button' onclick='setCookie("devicePreference", "", 40); document.location = "/"'>Auto</button><br><br>
+			<p>Use new version:</p>
+			<button class='topnav_button' onclick='setCookie("version_preference", "2", 40); document.location = "/"'>Use New Version</button>
+			<br>
+			<br>
 			<p>Change font size/family of map point labels:</p>
 			<input class='topnav_button' id='preferences_font_size'>
 			<button class='topnav_button' onclick='setCookie("fontPreference", gebi("preferences_font_size").value);window.all.mapNames.map(function(e,a,n){window.all[n[a]].objects.map(function(e,a,n){n[a].font&&2==n[a].type&&(n[a].font=gebi("preferences_font_size").value)})}),loadMap(window.all.currentMap,!1);'>Apply</button><br><br>
