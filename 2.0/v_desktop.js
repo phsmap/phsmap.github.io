@@ -349,3 +349,131 @@ window.onload = function() {
 	}, "text");
 	
 }
+
+function displayRoute(route) {
+	console.log(`route: ${JSON.stringify(route)}`);
+	window[route[0].split("::")[0]].changeBorder(route[0].split("::")[1], "red", "8px", true);
+	for (let i = 1; i < route.length; i++) {
+		var jump = route[i];
+		window[jump.split("::")[0]].changeBorder(jump.split("::")[1], "blue", "8px", true);
+	}
+	window[route[route.length - 1].split("::")[0]].changeBorder(route[route.length - 1].split("::")[1], "red", "8px", true);
+}
+
+function bestRoutes(routes) {
+	var lengths = [];
+	for (let i = 0; i < routes.length; i++) {
+		lengths.push(routes[i].length);
+	}
+	var cutOff = Math.min(...lengths);
+	console.log(cutOff);
+	var results = [];
+	for (let i = 0; i < routes.length; i++) {
+		if (routes[i].length <= cutOff) results.push(routes[i]);
+	}
+	return results;
+}
+
+function allRoutes(startNode, endNode) {
+	window.nodes = {};
+	window.mapNamespace = "";
+	// preprocessing with hallways (because these need to be loaded first) in order to "reverse-logic" hallway connection
+	Object.keys(window.mapSet.pvmaps).forEach(function(elem) {
+		elem = window.mapSet.pvmaps[elem];
+		window.mapNamespace = elem.map_dataset_object.svg_id;
+		elem.map_dataset_object.featuredata.forEach(function(elem2) {
+			if (elem2.landmark_id.includes("WW") == false) {
+				// do nothing, because this is another element that does not to be loaded yet
+			} else {
+				var attached_to = elem2.attached_to.split(";");
+				for (let i = 0; i < attached_to.length; i++) {
+					if (attached_to[i] == "") continue;
+					if (attached_to[i].includes("::") == false) attached_to[i] = `${window.mapNamespace}::${attached_to[i]}`;
+				}
+				window.nodes[`${window.mapNamespace}::${elem2.landmark_id}`] = structuredClone(attached_to);
+			}
+		});
+	});
+	
+	// now we can go ahead with the rest of the elements
+	Object.keys(window.mapSet.pvmaps).forEach(function(elem) {
+		elem = window.mapSet.pvmaps[elem];
+		window.mapNamespace = elem.map_dataset_object.svg_id;
+		elem.map_dataset_object.featuredata.forEach(function(elem2) {
+			if (false) {
+				
+			} else {
+				var attached_to = elem2.attached_to.split(";");
+				for (let i = 0; i < attached_to.length; i++) {
+					if (attached_to[i] == "") continue;
+					if (attached_to[i].includes("::") == false) attached_to[i] = `${window.mapNamespace}::${attached_to[i]}`;
+				}
+				for (let i = 0; i < attached_to.length; i++) {
+					// Because each WW element doesn't store a list of every room you can access from that hallway, we have to reverse this 
+					// information from the actual room's information
+					if (attached_to[i].length > 1) {
+						if (attached_to[i].split("::")[1].startsWith("WW")) {
+							//console.log("implicit connection WW: " + attached_to[i] + " and " + `${window.mapNamespace}::${elem2.landmark_id}; appending to ${JSON.stringify(window.nodes[attached_to[i]])}`);
+							if (!window.nodes[attached_to[i]]) {
+								console.log(`${attached_to[i]} isn't a real hallway, will not connect this hallway to this room`);
+							}
+							window.nodes[attached_to[i]].push(`${window.mapNamespace}::${elem2.landmark_id}`);
+						}
+					}
+				}
+				var cur_node = window.nodes[`${window.mapNamespace}::${elem2.landmark_id}`];
+				if (cur_node) cur_node.concat(structuredClone(attached_to));
+				else window.nodes[`${window.mapNamespace}::${elem2.landmark_id}`] = structuredClone(attached_to);
+			}
+		});
+	});
+	
+	Object.keys(window.nodes).forEach(function(elem) {
+		window.nodes[elem] = [...new Set(window.nodes[elem])];
+	});
+	
+	return graph_findAllRoutes(window.nodes, startNode, endNode);
+}
+
+function graph_findAllRoutes(nodes, startId, endId) {
+    let routes = []; // To store all possible routes
+    let visited = {}; // To keep track of visited nodes during traversal
+
+    // Helper function for DFS traversal
+    function dfs(currentId, path) {
+        // Mark the current node as visited
+        visited[currentId] = true;
+        path.push(currentId);
+
+        // If the current node is the destination, add the path to routes
+        if (currentId === endId) {
+            routes.push([...path]);
+        } else {
+            // Otherwise, continue DFS on unvisited neighbors
+            let neighbors = nodes[currentId];
+			if (!nodes[currentId]) {
+				console.log(`${currentId} is not a valid place and thus does not have neighbors. Back tracking...`);
+			} else {
+				for (let neighborId of neighbors) {
+					if (!visited[neighborId] && neighborId.length > 1 && window.nodes[neighborId]) {
+						dfs(neighborId, path);
+					} else if (neighborId.length < 1) {
+						//console.log(`${currentId} has encountered an empty neighbor node ID ${neighborId}, ignoring that...`);
+					} else if (!window.nodes[neighborId]) {
+						//console.log(`${currentId} has encountered an invalid or nonexistent node ID ${neighborId}, ignoring that...`);
+					}
+				}
+			}
+        }
+
+        // Backtrack: remove current node from path and mark it unvisited
+        path.pop();
+        visited[currentId] = false;
+		//console.log(`dead end: ${visited}`);
+    }
+
+    // Initialize DFS with the start node
+    dfs(startId, []);
+
+    return routes;
+}
