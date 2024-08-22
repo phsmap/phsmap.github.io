@@ -40,7 +40,7 @@ function openMenu(cn, open) {
 
 <div id='zoomableDiv' style='position:absolute;width:100%;height:100%;top:0;left:0;z-index:1'></div>
 <div id='search_resolution_modal' class='search noselect' hidden>
-   <p class='noselect'>Enter a room #, locker #, staff member,<br> office (i.e. finance office), or landmark:</p>
+   <p class='noselect'>Enter a room #, locker #, staff member last name,<br> office (i.e. finance office), or landmark:</p>
    <button style='color:red;' onclick='document.querySelectorAll(".srt_clearable").forEach(function(e){e.remove()}); Object.keys(window.mapSet.pvmaps).forEach(function(pvm){window.mapSet.pvmaps[pvm].map_dataset_object.clearFXAll(true)});document.getElementById("query").value=""'>Clear</button>
    <input id='query' onkeydown='handleKeyDownQuery(event)'>
    <button style='color:lightgreen;' onclick='document.getElementById("searchstatus").hidden = false; searchAndResolve(document.getElementById("query").value); document.getElementById("searchstatus").hidden = true; '>Go</button>
