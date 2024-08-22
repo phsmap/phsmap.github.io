@@ -1,6 +1,6 @@
 /* Reset default margins and paddings */
 body, html {
-    font-family: Arial, sans-serif;
+    font-family: "Arial", sans-serif;
     background-color: #333; /* Dark background color */
     color: #bbb; /* Light text color */
 }
@@ -34,6 +34,7 @@ body, html {
 h2 {
 	font-size: 34px;
 	color: #eee;
+	font-family: monospace;
 } 
 
 /* Inserting this collapsed row between two flex items will make 

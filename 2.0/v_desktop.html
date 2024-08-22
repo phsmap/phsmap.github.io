@@ -43,7 +43,9 @@ function openMenu(cn, open) {
    <p class='noselect'>Enter a room #, locker #, staff member,<br> office (i.e. finance office), or landmark:</p>
    <button style='color:red;' onclick='document.querySelectorAll(".srt_clearable").forEach(function(e){e.remove()}); Object.keys(window.mapSet.pvmaps).forEach(function(pvm){window.mapSet.pvmaps[pvm].map_dataset_object.clearFXAll(true)});document.getElementById("query").value=""'>Clear</button>
    <input id='query' onkeydown='handleKeyDownQuery(event)'>
-   <button style='color:lightgreen;' onclick='searchAndResolve(document.getElementById("query").value)'>Go</button>
+   <button style='color:lightgreen;' onclick='document.getElementById("searchstatus").hidden = false; searchAndResolve(document.getElementById("query").value); document.getElementById("searchstatus").hidden = true; '>Go</button>
+   <br>
+   <b id='searchstatus' hidden>SEARCHING...</b>
    <p class='noselect' id='resolution_options' style='text-align: right;'>Click on a result below <br>to highlight it on the map.<br><br>
    <p class='noselect'>Press "Clear" to remove the highlight.</p>
 </div>
