@@ -147,7 +147,7 @@ class SVGManipulator {
         if (!elem) {
             console.error(`[svgmanipulator][${this.svg_id}][retrieve_property] Could not find element with ID ${id} to lookup.`);
             return null;
-        } else return SVGManipulator.gebi(id).getAttributeNS(null, attribute);
+        } else return elem.getAttributeNS(null, attribute);
     }
 
     retrieve_element_in_this_group(id, suppress_error) {
@@ -166,7 +166,7 @@ class SVGManipulator {
             console.error(`[svgmanipulator][${this.svg_id}][set_property] Could not find element with ID ${id} to modify.`);
             return null;
         }
-        SVGManipulator.gebi(id).setAttributeNS(null, attribute, value);
+        elem.setAttributeNS(null, attribute, value);
     }
 
     remove_property(id, attribute) {
@@ -175,7 +175,7 @@ class SVGManipulator {
             console.error(`[svgmanipulator][${this.svg_id}][remove_property] Could not find element with ID ${id} to remote attributes on.`);
             return null;
         }
-        SVGManipulator.gebi(id).removeAttributeNS(null, attribute);
+        elem.removeAttributeNS(null, attribute);
     }
 
     export_document() {
@@ -442,6 +442,7 @@ class PVMap extends SVGManipulator {
         // Setting either x or y to a negative number will trigger auto place based on the box ID
         if ((x < 0 || y < 0) && box_id) {
             var centroid = this.helper_calculatePathCentroid(box_id);
+			console.log(centroid);
             if (!centroid) {
                 console.error(`[${this.svg_id}][placeTextInPath] Unable to place text in the center of this element. Place text fails.`);
                 return null;
@@ -491,7 +492,7 @@ class PVMap extends SVGManipulator {
         // It also makes accounts for multiline text offsetting the text downwards
         if (Array.isArray(font_size) && font_size.length == 3 && font_size[0] == "auto" && box_id) {
             // calculate appropriate text size based off the bbox of the parent
-            var bounds = PVMap.gebi(box_id).getBBox();
+            var bounds = this.retrieve_element_in_this_group(box_id).getBBox();
             newTN.setAttributeNS(null, "font-size", bounds.height); // set it initially so that the font is as tall as the destination path
             this.group_container.append(newTN);
             var desired_width_of_text = bounds.width * 0.8;
@@ -502,9 +503,9 @@ class PVMap extends SVGManipulator {
             newTN.setAttributeNS(null, "font-size", new_font_size); // once we have the desired font size, set it
             // account for multiline text shift
             if (box_id && x < 0 && y < 0) {
-                var parent_bounds = PVMap.gebi(box_id).getBBox();
+                var parent_bounds = this.retrieve_element_in_this_group(box_id).getBBox();
                 var midpoint_of_parent_bounds = parent_bounds.y + (parent_bounds.height / 2);
-                var text_box_bounds = PVMap.gebi(new_id).getBBox();
+                var text_box_bounds = this.retrieve_element_in_this_group(new_id).getBBox();
                 var midpoint_of_text_box = text_box_bounds.y + (text_box_bounds.height / 2);
                 newTN.setAttributeNS(null, "y", centroid[1] - (midpoint_of_text_box - midpoint_of_parent_bounds));
                 //console.log(centroid[1] - (midpoint_of_text_box - midpoint_of_parent_bounds));
@@ -518,9 +519,9 @@ class PVMap extends SVGManipulator {
             this.group_container.append(newTN);
             // account for multiline text shift
             if (box_id && x < 0 && y < 0) {
-                var parent_bounds = PVMap.gebi(box_id).getBBox();
+                var parent_bounds = this.retrieve_element_in_this_group(box_id).getBBox();
                 var midpoint_of_parent_bounds = parent_bounds.y + (parent_bounds.height / 2);
-                var text_box_bounds = PVMap.gebi(new_id).getBBox();
+                var text_box_bounds = this.retrieve_element_in_this_group(new_id).getBBox();
                 var midpoint_of_text_box = text_box_bounds.y + (text_box_bounds.height / 2);
                 newTN.setAttributeNS(null, "y", centroid[1] - (midpoint_of_text_box - midpoint_of_parent_bounds));
                 console.log(centroid[1] - (midpoint_of_text_box - midpoint_of_parent_bounds));
