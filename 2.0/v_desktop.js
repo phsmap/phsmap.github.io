@@ -147,7 +147,7 @@ function populateLookupMenu(id) {
 	table_element = document.getElementById("lookup_table");
 	keys = Object.keys(objectInReference);
 	for (let i = 0; i < keys.length; i++) {
-		if (objectInReference[keys[i]] && objectInReference[keys[i]] != ""  && ["landmark_id", "search_terms", "physical_location"].includes(keys[i]) == false) {
+		if (objectInReference[keys[i]] && objectInReference[keys[i]] != ""  && ["landmark_id", "search_terms", "physical_location", "attached_to"].includes(keys[i]) == false) {
 			newTR = document.createElement("tr");
 			newTD1 = document.createElement("td");
 			newTD2 = document.createElement("td");
