@@ -654,10 +654,10 @@ function navhelper_navstart() {
 	var rts = bestRoutes(allRoutes(window.navhelper.origin, window.navhelper.destination,false)); 
 	if (rts.length > 0) {displayRoute(rts[0])} 
 	else {
-		alert("No route found! Please note that only classrooms, offices, major landmarks and doors are navigable -- mechanical rooms and certain other features cannot be navigated to using Nav Helper.")
 		eraseRoute();
-		navhelper_clearnodes();
-		}
+		alert("No route found! Please note that only classrooms, offices, major landmarks and doors are navigable -- mechanical rooms and certain other features cannot be navigated to using Nav Helper.")
+		setTimeout(navhelper_clearnodes, 1000);
+	}
 }
 
 function navhelper_addarrows(target_direction, lineID, direction_neutral = false, auto_trim = false, color = "cyan", measure_from = "arrowhead") {
