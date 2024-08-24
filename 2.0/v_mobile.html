@@ -18,8 +18,9 @@ function openMenu(cn, open) {
 
 <select id='map_select' onchange="window.mapSet.stowAway(window.mapSet.activeMap.map_dataset_object.svg_id, Number(gebi('zoomableDiv').style.left.replaceAll('px', '')), Number(gebi('zoomableDiv').style.top.replaceAll('px', '')), Number(gebi('zoomableDiv').style.transform.replaceAll('scale(','').replaceAll(')',''))); c = window.mapSet.makeActive(this.value); console.log(c); setViewport(c[0], c[1], c[2]); console.log(`OK! Changed the active map to ${this.value}`)" style='width: 100%; position: fixed; top:0%; left: 0%; font-size: 52px; text-align: center;'>
 </select>
-<button onclick='resetViewport();' style='position: fixed; width: 50%; left: 0%; bottom: 0%; font-size: 38px;'>Zoom + Pan Reset</button>
-<button onclick='document.getElementById("mainmenu").style.display = "block"' style='position: fixed; width: 50%; right: 0%; bottom: 0%; font-size: 38px;'>Main Menu</button>
+<button onclick='resetViewport();' style='position: fixed; width: 33%; left: 0%; bottom: 0%; font-size: 38px;'>Zoom and <br>Pan Reset</button>
+<button onclick='eraseRoute();Object.keys(window.mapSet.pvmaps).forEach(function(pvm){window.mapSet.pvmaps[pvm].map_dataset_object.clearFXAll(true)});' style='position: fixed; width: 33%; left: 33%; bottom: 0%; font-size: 38px;'>Clear Search/NH</button>
+<button onclick='document.getElementById("mainmenu").style.display = "block"' style='position: fixed; width: 34%; right: 0%; bottom: 0%; font-size: 38px;'>Open Main <br>Menu</button>
 
 <div id='hiddenItems' hidden>
    <b id='selecting'>hovering: [none]</b>
@@ -40,22 +41,15 @@ Click <a onclick='this.parentElement.style.display="none";' style='color: pink;'
 	<a onclick='this.parentElement.style.display="none";' style='color: red;' class='search noselect'><u>↓ Close menu ↓</u></a>
 	<br>
 	<br>
-	<b>Nav Helper: </b>
-	<button style='color: lightblue;' id='set_nav_origin' onclick='navhelper_addnode(this.getAttribute("mapname"), this.getAttribute("landmarkid"), "origin"); this.parentElement.style.display="none";'>Set as origin</button>&nbsp;
-	<button style='color: lightblue;' id='set_nav_destination' onclick='navhelper_addnode(this.getAttribute("mapname"), this.getAttribute("landmarkid"), "destination"); this.parentElement.style.display="none";'>Set as destination</button>&nbsp;
-	<b>Debug: </b>
-	<button style='color: gray;' id='dbg_copy' onclick='navigator.clipboard.writeText(this.getAttribute("landmarkid"));'>Copy landmark ID</button>&nbsp;
-	<button style='color: gray;' id='dbg_illuminate' onclick='illuminateNeighbors(this.getAttribute("landmarkid"))'>Illuminate neighbors</button>&nbsp;
+	<h2 id='lookup_informal_name'>parsed_shortname</h2>
+	<p>Actions:</p>
+	<button style='color: lightblue; font-size: 36px;' class='mainmenu' id='set_nav_origin' onclick='navhelper_addnode(this.getAttribute("mapname"), this.getAttribute("landmarkid"), "origin"); this.parentElement.style.display="none";'>🧭 Nav Helper: Set as origin</button>
+	<button style='color: lightblue; font-size: 36px;' class='mainmenu' id='set_nav_destination' onclick='navhelper_addnode(this.getAttribute("mapname"), this.getAttribute("landmarkid"), "destination"); this.parentElement.style.display="none";'>🧭 Nav Helper: Set as destination</button>
+	<button style='color: gray; font-size: 36px;' class='mainmenu' id='dbg_copy' onclick='navigator.clipboard.writeText(this.getAttribute("landmarkid"));'>🔧 Debug: Copy landmark ID</button>
+	<button style='color: gray; font-size: 36px;' class='mainmenu' id='dbg_illuminate' onclick='illuminateNeighbors(this.getAttribute("landmarkid"))'>🔧 Debug: Illuminate neighbors</button>
 	<br>
-	<br>
-	<br>
-	<br>
+	<p>Information:</p>
 	<table style='margin: auto; background-color: #333333FF; width: 80%; overflow: scroll;' id='lookup_table'>
-		<tr>
-			<td colspan='2' id='lookup_informal_name' style='text-align:center;background-color:transparent;color:white; font-size:24px;'>
-			parsed_shortname
-			</td>
-		</tr>
 		<tr style='text-align:left;background-color:black'>	
 			<td><b style='color:gold;'>Attribute</b></td>
 			<td><b style='color:gold;'>Value</b></td>
@@ -102,7 +96,7 @@ Click <a onclick='this.parentElement.style.display="none";' style='color: pink;'
    <div class='noselect' id='resolution_options' style='text-align: left;'>
    </div>
    <br>
-   Click the red "Clear" in this menu or "Clear Search/Nav Helper" on the bottom bar to clear the highlight.
+   Click the red "Clear" in this menu or "Clear Search/NH" on the bottom bar to clear the highlight.
 </div>
 
 <div id='navsearch' class='menu' hidden>
