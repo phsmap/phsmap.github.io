@@ -490,7 +490,7 @@ class PVMap extends SVGManipulator {
                 var newTS = document.createElementNS("http://www.w3.org/2000/svg", "tspan");
                 newTS.setAttributeNS(null, "x", centroid[0]);
                 if (i == 0) newTS.setAttributeNS(null, "dy", "0px");
-                else newTS.setAttributeNS(null, "dy", "10px");
+                else newTS.setAttributeNS(null, "dy", "1em");
                 newTS.textContent = lines[i];
                 newTN.appendChild(newTS);
             }
