@@ -367,7 +367,11 @@ window.onload = function() {
 	}, "text");
 	
 	// apparently re-rendering the map fixes text rendering issues that affect iOS spesifically
-	var rt = window.mapSet.activeMap.map_dataset_object.svg_id; window.mapSet.stowAway(rt); setTimeout(function(){window.mapSet.makeActive(rt)}, 100)
+	if (window.mapSet) {
+			var rt = window.mapSet.activeMap.map_dataset_object.svg_id; 
+			window.mapSet.stowAway(rt); 
+			setTimeout(function(){window.mapSet.makeActive(rt)}, 100)
+	}
 	
 }
 
