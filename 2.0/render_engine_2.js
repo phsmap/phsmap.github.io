@@ -639,10 +639,22 @@ class PVMap extends SVGManipulator {
 
     // This is a function that takes in SVG path data and extracts the coordinates out of the pen movement/styling commands 
     helper_pathDatatoVertices(pathData) {
-        function splitByLetter(inputString) {
-            //const segments = inputString.split(/(?=[a-zA-Z])(?<=[^a-zA-Z])|(?=[^a-zA-Z])(?<=[a-zA-Z])/); // regex by ChatGPT
-			const segments = "";
-            return segments.filter(segment => segment.trim() !== '');
+        function splitByLetter(str) {
+			var acc = [];
+	
+			var split_up = str.split(/(?=[a-zA-Z])/);
+			console.log(split_up);
+			
+			for (let i = 0; i < split_up.length; i ++) {
+				if (split_up[i].length > 1 && /[a-zA-Z]/.exec(split_up[i])) {
+					acc.push(split_up[i].slice(0,1));
+					acc.push(split_up[i].slice(1));
+				} else {
+					acc.push(split_up[i]);
+				}
+			}
+			
+			return acc;
         }
 
         var cut_up = splitByLetter(pathData);

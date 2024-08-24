@@ -70,12 +70,13 @@ function startUpDesktopListeners() {
     let scale = 1;
     let lastTouchX;
     let lastTouchY;
+	let initialTouchDistance;
 
     zoomableDiv.addEventListener('touchstart', function(event) {
       if (event.touches.length === 2) {
         event.preventDefault();
         // If two fingers touch the screen, calculate the initial distance between them
-        initialTouchDistance = Math.hypot(
+		  initialTouchDistance = Math.hypot(
           event.touches[0].clientX - event.touches[1].clientX,
           event.touches[0].clientY - event.touches[1].clientY
         );
