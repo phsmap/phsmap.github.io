@@ -139,6 +139,26 @@ function setViewport(x, y, zm) {
 	let scale = zm;
 }
 
+function illuminateNeighbors(id) {
+	function getRandomColor() {
+	  var letters = '0123456789ABCDEF';
+	  var color = '#';
+	  for (var i = 0; i < 6; i++) {
+		color += letters[Math.floor(Math.random() * 16)];
+	  }
+	  return color;
+	}
+	
+	window.rcolor = getRandomColor();
+
+	var objectInReference = window.mapSet.activeMap.map_dataset_object.lookupFeatureObject(id);
+	window.mapSet.activeMap.map_dataset_object.changeBorder(id, window.rcolor, "8px", false);
+	var neighbors = objectInReference.attached_to.split(";");
+	neighbors.forEach(function(elem) {
+		window.mapSet.activeMap.map_dataset_object.changeBorder(elem, window.rcolor, "8px", false);
+	})
+}
+
 function populateLookupMenu(id) {
 	document.getElementById("show_landmark_data").style.display = "block";
 	document.querySelectorAll('.landmark_datacell').forEach(e => e.remove());
@@ -157,6 +177,8 @@ function populateLookupMenu(id) {
 	
 	document.getElementById("set_nav_origin").setAttribute("landmarkid", `${id}`);
 	document.getElementById("set_nav_destination").setAttribute("landmarkid", `${id}`);
+	document.getElementById("dbg_copy").setAttribute("landmarkid", `${id}`);
+	document.getElementById("dbg_illuminate").setAttribute("landmarkid", `${id}`);
 	
 	var table_element = document.getElementById("lookup_table");
 	var keys = Object.keys(objectInReference);
@@ -324,7 +346,7 @@ window.onload = function() {
 			document.getElementById("console").innerHTML += "<br><br>";
 		}
 
-		console.warn = function(content) {
+		console.error = function(content) {
 			document.getElementById("console").innerHTML += `<b style="color:red">${content}</b>`;
 			document.getElementById("console").innerHTML += "<br><br>";
 		}

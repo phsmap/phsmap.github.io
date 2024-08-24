@@ -65,11 +65,11 @@ Click <a onclick='this.parentElement.style.display="none";' style='color: pink;'
 	<br>
 	<br>
 	<b>Nav Helper: </b>
-	<button style='color: lightblue;' id='set_nav_origin' onclick='navhelper_addnode(this.getAttribute("mapname"), this.getAttribute("landmarkid"), "origin")'>Set as origin</button>&nbsp;
-	<button style='color: lightblue;' id='set_nav_destination' onclick='navhelper_addnode(this.getAttribute("mapname"), this.getAttribute("landmarkid"), "destination")'>Set as destination</button>&nbsp;
+	<button style='color: lightblue;' id='set_nav_origin' onclick='navhelper_addnode(this.getAttribute("mapname"), this.getAttribute("landmarkid"), "origin"); this.parentElement.style.display="none";'>Set as origin</button>&nbsp;
+	<button style='color: lightblue;' id='set_nav_destination' onclick='navhelper_addnode(this.getAttribute("mapname"), this.getAttribute("landmarkid"), "destination"); this.parentElement.style.display="none";'>Set as destination</button>&nbsp;
 	<b>Debug: </b>
-	<button style='color: gray;'>Copy landmark ID</button>&nbsp;
-	<button style='color: gray;'>Illuminate neighbors</button>&nbsp;
+	<button style='color: gray;' id='dbg_copy' onclick='navigator.clipboard.writeText(this.getAttribute("landmarkid"));'>Copy landmark ID</button>&nbsp;
+	<button style='color: gray;' id='dbg_illuminate' onclick='illuminateNeighbors(this.getAttribute("landmarkid"))'>Illuminate neighbors</button>&nbsp;
 	<br>
 	<br>
 	<br>
@@ -110,6 +110,9 @@ Click <a onclick='this.parentElement.style.display="none";' style='color: pink;'
 		<button style='color:white;font-size:14'>Search for origin/destination</button><br>
 		<button style='color:gray; background-color: #333; font-size:14' id='navstart' onclick='displayRoute(bestRoutes(allRoutes(window.navhelper.origin, window.navhelper.destination,false))[0])'>Start Nav Helper</button><br>
 		<button style='color:red; font-size:14' id='navstart' onclick='eraseRoute(); navhelper_clearnodes();'>Erase route + stop Nav Helper</button>
+		<br>
+		<br>
+		<br>
 	</div>
 </div>
 
@@ -126,6 +129,8 @@ Click <a onclick='this.parentElement.style.display="none";' style='color: pink;'
 		<a class='search' style='font-size:20px;' onclick='openMenu("cfg", "auth_pref")'>> Authentication</a>
 		<br>
 		<a class='search' style='font-size:20px;' onclick='openMenu("cfg", "sens_pref")'>> Controls</a>
+		<br>
+		<a class='search' style='font-size:20px;' onclick='openMenu("cfg", "special_pref")'>> Advanced</a>
 		<br>
 		<a class='search'></a>
 		<br>
@@ -226,7 +231,17 @@ Click <a onclick='this.parentElement.style.display="none";' style='color: pink;'
 		<br>
 		<br>
 		<br>
-		<button style='color:gray' onclick='var rt = window.mapSet.activeMap.map_dataset_object.svg_id; window.mapSet.stowAway(rt); setTimeout(function(){window.mapSet.makeActive(rt)}, 250)'>Reload current map</button>
-	    </div>
+	</div>
+	<div class='config_menu cfg' id='special_pref' hidden>
+		<h1>Debug Items:</h1>
+		<button style='color:gray' onclick='var rt = window.mapSet.activeMap.map_dataset_object.svg_id; window.mapSet.stowAway(rt); setTimeout(function(){window.mapSet.makeActive(rt)}, 250)'>Stow / reload</button>
+		<br>
+		<br>
+		<button style='color:gray' onclick='window.mapSet.activeMap.map_dataset_object.applyLayerCheckboxesForThisMap()'>Apply layer checkboxes</button>
+		<br>
+		<br>
+		<p>Remember! These buttons act ONLY on the currently loaded map (pointed to by window.mapSet.activeMap)</p>
+		<p>Individual controls for "illuminate neighbors" and "get ID" can be found in the double click menu.</p>
+	</div>
 </div>
 
