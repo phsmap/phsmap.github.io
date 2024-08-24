@@ -575,6 +575,26 @@ class PVMap extends SVGManipulator {
         //console.log(`[${this.svg_id}][placeTextInPath] SVG element has ID # ${new_id}; new ID returned by fn.`);
         return new_id;
     }
+	
+	helper_calculateLineMidpoint(id) {
+		var elem = this.retrieve_element_in_this_group(id);
+		if (!elem) {
+            console.error(`[${this.svg_id}][calculateLineMidpoint] Unable to lookup path data for object with ID ${id}.`);
+            return null;
+        }
+		var bbox = elem.getBBox();
+		return [bbox.x + (0.5 * bbox.width), bbox.y + (0.5 * bbox.height)];
+	}
+	
+	helper_calculateLineOrigin(id) {
+		var elem = this.retrieve_element_in_this_group(id);
+		if (!elem) {
+            console.error(`[${this.svg_id}][calculateLineOrigin] Unable to lookup path data for object with ID ${id}.`);
+            return null;
+        }
+		var path = this.retrieve_property(id, "d");
+		return path.split("l")[0].replaceAll("m", "").split(" ");
+	}
 
     // Taken from d3.js's polygon tools, src: https://github.com/d3/d3-polygon/blob/main/src/centroid.js
     // Calculates the center of a path
@@ -787,6 +807,19 @@ class PVMap extends SVGManipulator {
 			}
         }
     }
+	
+	clearLayerGeneratedText(id) {
+        this.group_container.querySelectorAll(`[id*=text__${id}]`).forEach(function(em) {
+			em.remove();
+        });
+	}
+	
+	clearAllLayerGeneratedText() {
+		window.tco = this;
+        this.autoForEachElement(function(id) {
+			window.tco.removeElementWithId(id);
+        }, "text__", true);
+	}
 
     searchForInThisMap(search_term) {
         // like in applyLayerCheckboxesForThisMap, we also want a copy of the data so we do not inadvertently modify outside variables in doing our work 
@@ -921,7 +954,7 @@ class PVMap extends SVGManipulator {
             if (broken_up_by_and_operator[i].includes("false")) {
                 // it's fine, this particular side of the OR statement didn't come true
             } else {
-				console.error(`  + [${this.svg_id}][evaluateQuery] Check passed for ${feature.landmark_id}: ${conditions_and_instructions[0]} from ${layer_query}`);
+				//console.log(`  + [${this.svg_id}][evaluateQuery] Check passed for ${feature.landmark_id}: ${conditions_and_instructions[0]} from ${layer_query}`);
 				return [true, conditions_and_instructions[0]];
 			}
         }

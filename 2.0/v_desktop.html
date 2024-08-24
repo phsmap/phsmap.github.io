@@ -1,9 +1,10 @@
+<meta charset="UTF-8">
 <link rel="stylesheet" href="desktop_viewer.css">
-<script src='render_engine_2.js'></script>
-<script src='v_desktop.js'></script>
-<script src='csv_reader.js'></script>
-<script src='render_engine_2_multi_instance_manager.js'></script>
-<script src='authenticated_resource_retrieve.js'></script>
+<script charset="UTF-8" src='render_engine_2.js'></script>
+<script charset="UTF-8" src='v_desktop.js'></script>
+<script charset="UTF-8" src='csv_reader.js'></script>
+<script charset="UTF-8" src='render_engine_2_multi_instance_manager.js'></script>
+<script charset="UTF-8" src='authenticated_resource_retrieve.js'></script>
 <title>(desktop 2.0) PHS Interactive Map</title>
 <script>
 function openMenu(cn, open) {
@@ -63,6 +64,16 @@ Click <a onclick='this.parentElement.style.display="none";' style='color: pink;'
 	<a onclick='this.parentElement.style.display="none";' style='color: red;' class='search noselect'><u>↓ Close menu ↓</u></a>
 	<br>
 	<br>
+	<b>Nav Helper: </b>
+	<button style='color: lightblue;' id='set_nav_origin' onclick='navhelper_addnode(this.getAttribute("mapname"), this.getAttribute("landmarkid"), "origin")'>Set as origin</button>&nbsp;
+	<button style='color: lightblue;' id='set_nav_destination' onclick='navhelper_addnode(this.getAttribute("mapname"), this.getAttribute("landmarkid"), "destination")'>Set as destination</button>&nbsp;
+	<b>Debug: </b>
+	<button style='color: gray;'>Copy landmark ID</button>&nbsp;
+	<button style='color: gray;'>Illuminate neighbors</button>&nbsp;
+	<br>
+	<br>
+	<br>
+	<br>
 	<table style='margin: auto; background-color: #333333FF; width: 80%; overflow: scroll;' id='lookup_table'>
 		<tr>
 			<td colspan='2' id='lookup_informal_name' style='text-align:center;background-color:transparent;color:white; font-size:24px;'>
@@ -74,6 +85,32 @@ Click <a onclick='this.parentElement.style.display="none";' style='color: pink;'
 			<td><b style='color:gold;'>Value</b></td>
 		</tr>
 	</table>
+</div>
+
+<div id='navsettings' class='nav_menu' style='color:white;background-color:transparent;'>
+
+	<div id='navstatus'>Nav Helper Status: 
+	<b id='navstatus2' style='color:gray;'>No origin or destination</b>
+	</div>
+	
+	<a style='color:gold;' class='search' onclick='document.getElementById("navroute").hidden = !document.getElementById("navroute").hidden; document.getElementById("navactions").hidden = !document.getElementById("navactions").hidden; '><u>↓ Show/Hide Nav Helper Menu ↓</u></a>
+	
+	<div id='navroute' hidden>
+	<br>
+	<br>
+	Route:
+	<b id='navstopA'>...</b>
+	<b id='navarrow'>to</b>
+	<b id='navstopB'>...</b>
+	</div>
+
+	<br>
+	
+	<div id='navactions' hidden>Actions:<br>
+		<button style='color:white;font-size:14'>Search for origin/destination</button><br>
+		<button style='color:gray; background-color: #333; font-size:14' id='navstart' onclick='displayRoute(bestRoutes(allRoutes(window.navhelper.origin, window.navhelper.destination,false))[0])'>Start Nav Helper</button><br>
+		<button style='color:red; font-size:14' id='navstart' onclick='eraseRoute(); navhelper_clearnodes();'>Erase route + stop Nav Helper</button>
+	</div>
 </div>
 
 <div id='settings' class='ws_modal' style='color: white;white-space: normal; padding: 4px; display: none'>

@@ -144,6 +144,17 @@ function populateLookupMenu(id) {
 		alert(`On populateLookupMenu( ${id} ), could not find the corresponding object on the active map.`);
 		return null;
 	}
+	
+	
+	document.getElementById("set_nav_origin").setAttribute("fullnode", `${window.mapSet.activeMap.map_dataset_object.svg_id}::${id}`);
+	document.getElementById("set_nav_destination").setAttribute("fullnode", `${window.mapSet.activeMap.map_dataset_object.svg_id}::${id}`);
+	
+	document.getElementById("set_nav_origin").setAttribute("mapname", `${window.mapSet.activeMap.map_dataset_object.svg_id}`);
+	document.getElementById("set_nav_destination").setAttribute("mapname", `${window.mapSet.activeMap.map_dataset_object.svg_id}`);
+	
+	document.getElementById("set_nav_origin").setAttribute("landmarkid", `${id}`);
+	document.getElementById("set_nav_destination").setAttribute("landmarkid", `${id}`);
+	
 	table_element = document.getElementById("lookup_table");
 	keys = Object.keys(objectInReference);
 	for (let i = 0; i < keys.length; i++) {
@@ -241,6 +252,10 @@ function searchAndResolve(search_term) {
 window.onload = function() {
 	
 	console.log("[window.onload] Starting up!");
+	
+	window.navhelper = {};
+	navhelper.origin = null;
+	navhelper.destination = null;
 	
 	if (!getCookie("vers2_nof12_reporting")) {
 		setCookie("vers2_nof12_reporting", "disabled", 40);
@@ -350,14 +365,37 @@ window.onload = function() {
 	
 }
 
+function eraseRoute() {
+	for (let i = 0; i < Object.keys(window.mapSet.pvmaps).length; i++) {
+		window[Object.keys(window.mapSet.pvmaps)[i]].applyLayerCheckboxesForThisMap(true);
+		var arrows = Array.prototype.slice.call(window[Object.keys(window.mapSet.pvmaps)[i]].group_container.getElementsByClassName("navhelper_arrows"));
+		for (let j = 0; j < arrows.length; j++) {
+			arrows[j].remove();
+		}
+	}
+}
+
 function displayRoute(route) {
 	console.log(`route: ${JSON.stringify(route)}`);
-	window[route[0].split("::")[0]].changeBorder(route[0].split("::")[1], "red", "8px", true);
-	for (let i = 1; i < route.length; i++) {
+	window[route[0].split("::")[0]].changeBorder(route[0].split("::")[1], "lime", "8px", true);
+	for (let i = 1; i < route.length - 1; i++) {
 		var jump = route[i];
-		window[jump.split("::")[0]].changeBorder(jump.split("::")[1], "blue", "8px", true);
+		console.log(route[i], route[i + 1], navhelper_calculateDisplacementDirection(route[i], route[i + 1]));
+		
+		var auto_trim = false;
+		var truncate = "";
+		if (i == route.length - 2) {
+			auto_trim = route[i + 1];
+			truncate = "arrowhead";
+		} else if (i == 1) {
+			auto_trim = route[i - 1];
+			truncate = "base";
+		}
+		
+		if (jump.split("::")[1].includes("WW")) navhelper_addarrows((i == route.length - 2) ? navhelper_calculateDisplacementDirection(route[i - 1], route[i + 1]) : navhelper_calculateDisplacementDirection(route[i], route[i + 1]), jump, false, auto_trim, "cyan", truncate);
+		else window[jump.split("::")[0]].changeBorder(jump.split("::")[1], "cyan", "8px", true);
 	}
-	window[route[route.length - 1].split("::")[0]].changeBorder(route[route.length - 1].split("::")[1], "red", "8px", true);
+	window[route[route.length - 1].split("::")[0]].changeBorder(route[route.length - 1].split("::")[1], "lime", "8px", true);
 }
 
 function bestRoutes(routes) {
@@ -476,4 +514,231 @@ function graph_findAllRoutes(nodes, startId, endId) {
     dfs(startId, []);
 
     return routes;
+}
+
+function navhelper_addnode(namespace, nodeID, origin_destination) {
+	if (origin_destination == "origin") {
+		window.navhelper.origin = `${namespace}::${nodeID}`;
+		gebi("navstopA").innerText = window.navhelper.origin
+	} else if (origin_destination == "destination") {
+		window.navhelper.destination = `${namespace}::${nodeID}`;
+		gebi("navstopB").innerText = window.navhelper.destination;
+	}
+
+	if (window.navhelper.origin && window.navhelper.destination) {
+		gebi("navstatus2").innerHTML = "<b style='color:lime;'>Ready.</b>"	
+		gebi("navstart").style.color = 'lightgreen';
+		gebi("navstart").style.backgroundColor = '';
+	}
+	if (window.navhelper.origin && !window.navhelper.destination) {
+		gebi("navstatus2").innerHTML = "<b style='color:yellow;'>Waiting for user to select a destination...</b>"	
+		gebi("navstart").style.color = 'gray';
+		gebi("navstart").style.backgroundColor = '#333';
+	}
+	if (!window.navhelper.origin && window.navhelper.destination) {
+		gebi("navstatus2").innerHTML = "<b style='color:yellow;'>Waiting for user to select an origin...</b>"	
+		gebi("navstart").style.color = 'gray';
+		gebi("navstart").style.backgroundColor = '#333';
+	}
+	if (!window.navhelper.origin && !window.navhelper.destination) {
+		gebi("navstatus2").innerHTML = "<b style='color:yellow;'>No origin or destination</b>"	
+		gebi("navstart").style.color = 'gray';
+		gebi("navstart").style.backgroundColor = '#333';
+	}
+}
+
+function navhelper_clearnodes() {
+	gebi("navstatus2").innerHTML = "<b style='color:gray;'>No origin or destination</b>"	
+	gebi("navstart").style.color = 'gray';
+	gebi("navstart").style.backgroundColor = '#333';
+	gebi("navstopA").innerText = "...";
+	gebi("navstopB").innerText = "...";
+	window.navhelper.origin = null;
+	window.navhelper.destination = null;
+}
+
+function navhelper_addarrows(target_direction, lineID, direction_neutral = false, auto_trim = false, color = "cyan", measure_from = "arrowhead") {
+	var lineDirection = navhelper_determineLineDirection(lineID);
+	if (!lineDirection) return null;
+	
+	if (
+	(lineDirection.includes("N") && target_direction.includes("N")) ||
+	(lineDirection.includes("S") && target_direction.includes("S")) ||
+	(lineDirection.includes("E") && target_direction.includes("E")) ||
+	(lineDirection.includes("W") && target_direction.includes("W"))
+	) {
+		// do nothing, since the path already points the right way
+	} else {
+		// reverse the path so that it points the other way and aligns with the way we want it go to
+		var path = window[lineID.split("::")[0]].retrieve_element_in_this_group(lineID.split("::")[1]).getAttributeNS(null, "d");
+		var line_origin = path.split("l")[0].replaceAll("m", "").split(" ");
+		var line_destination = [Number(line_origin[0]) + Number(path.split("l")[1].split(" ")[0]), Number(line_origin[1]) + Number(path.split("l")[1].split(" ")[1])];
+		var line_vector = [Number(path.split("l")[1].split(" ")[0]), Number(path.split("l")[1].split(" ")[1])];
+		var new_cmd = `m${line_destination[0]} ${line_destination[1]}l${line_vector[0] * -1} ${line_vector[1] * -1}`;
+		window[lineID.split("::")[0]].retrieve_element_in_this_group(lineID.split("::")[1]).setAttributeNS(null, "d", new_cmd);
+		console.log("reversed: "+lineID);
+		lineDirection = navhelper_determineLineDirection(lineID);
+	}
+	
+	var newTN = document.createElementNS("http://www.w3.org/2000/svg", "text");
+	var newTXP = document.createElementNS("http://www.w3.org/2000/svg", "textPath");
+	newTXP.setAttributeNS(null, "href", "#" + window[lineID.split("::")[0]].retrieve_element_in_this_group(lineID.split("::")[1]).id);
+	newTXP.setAttributeNS(null, "stroke", color);
+	newTXP.setAttributeNS(null, "font-size", "24px");
+	newTXP.setAttributeNS(null, "dominant-baseline", "middle");
+	
+	// account for automatic trim for a room
+	var cut = 0;
+	if (auto_trim) {
+		console.log(`auto trimming to meet ${auto_trim}`)
+		if (auto_trim.split("::").length != 2) {
+			console.error(`[core-navhelper][addArrows] Malformed room_trim_to ID ${auto_trim}`);
+			return null;
+		}
+		var trim_to_room = window[auto_trim.split("::")[0]].helper_calculatePathCentroid(auto_trim.split("::")[1]);
+		if (!trim_to_room) {
+			// if we couldn't look up the center point of the "trim-to" marker, it could also be a line and thus we should get the origin of that line
+			var trim_to_room = window[auto_trim.split("::")[0]].helper_calculateLineOrigin(auto_trim.split("::")[1]);
+			if (!trim_to_room) {
+				// if it wasn't a line OR a polygon, then error out  
+				console.error(`[core-navhelper][addArrows] No ctrpoint found: ${trim_to_room}`);
+				return null;
+			}
+		}
+		console.log(`auto trimming to meet ${trim_to_room}`);
+		
+		var path = window[lineID.split("::")[0]].retrieve_element_in_this_group(lineID.split("::")[1]).getAttributeNS(null, "d");
+		var line_origin = path.split("l")[0].replaceAll("m", "").split(" ");
+		var line_destination = [Number(line_origin[0]) + Number(path.split("l")[1].split(" ")[0]), Number(line_origin[1]) + Number(path.split("l")[1].split(" ")[1])];
+		if (measure_from == "arrowhead") {
+			console.log("cutting off the arrowhead... mode detected: "+lineDirection);
+			if (lineDirection == "S") {
+				cut = (line_destination[1] - trim_to_room[1]);
+			}
+			if (lineDirection == "N") {
+				cut = trim_to_room[1] - line_destination[1];
+			}
+			if (lineDirection == "E") {
+				cut = line_destination[0] - trim_to_room[0];
+			}
+			if (lineDirection == "W") {
+				cut = trim_to_room[0] - line_destination[0];
+			}
+			console.log("cut: " + cut);
+		} else {
+			console.log("cutting off the arrowhead... mode detected: "+lineDirection);
+			if (lineDirection == "S") {
+				cut = (line_origin[1] - trim_to_room[1]);
+			}
+			if (lineDirection == "N") {
+				cut = trim_to_room[1] - line_origin[1];
+			}
+			if (lineDirection == "E") {
+				cut = line_origin[0] - trim_to_room[0];
+			}
+			if (lineDirection == "W") {
+				cut = trim_to_room[0] - line_origin[0];
+			}
+			console.log("cut: " + cut);
+		}
+	}
+	
+	var repeatNumber = (window[lineID.split("::")[0]].retrieve_element_in_this_group(lineID.split("::")[1]).getTotalLength() - cut) / 20;
+	var repeatNumberNoCut = (window[lineID.split("::")[0]].retrieve_element_in_this_group(lineID.split("::")[1]).getTotalLength()) / 20;
+	
+	newTXP.textContent = "";
+	
+	if (cut > 0) {
+		try {
+			if (!direction_neutral) newTXP.textContent += " → ".repeat(repeatNumber - 1);
+			else newTXP.textContent += " -- ".repeat(repeatNumber - 1);
+		} catch(error) {
+			if (!direction_neutral) newTXP.textContent += " → ".repeat(repeatNumberNoCut - 1);
+			else newTXP.textContent += " -- ".repeat(repeatNumberNoCut - 1);
+		}
+	}
+	else if (cut <= 0) {
+		if (!direction_neutral) newTXP.textContent += " → ".repeat(repeatNumberNoCut - 1);
+		else newTXP.textContent += " -- ".repeat(repeatNumberNoCut - 1);
+		newTXP.setAttributeNS(null, "startOffset", cut * -1);
+	}
+	newTXP.textContent += "";
+	newTN.classList.add("navhelper_arrows");
+	newTN.appendChild(newTXP);
+	window[lineID.split("::")[0]].group_container.appendChild(newTN);
+	return newTN;
+
+}
+
+function navhelper_determineLineDirection(id) {
+	if (id.split("::").length != 2) {
+		console.error(`[core-navhelper][calculateLineDirection] Malformed ID ${id}`);
+		return null;
+	}
+	var path_data = window[id.split("::")[0]].retrieve_property(id.split("::")[1], "d");
+	if (!path_data) {
+		console.error(`[core-navhelper][calculateLineDirection] Unable to lookup path data for object with ID ${id}.`);
+		return null;
+	}
+	var path_data_list = path_data.split("l");
+	if (path_data_list.length != 2) {
+		console.error(`[core-navhelper][calculateLineDirection] This is not a line in m...l... format (move pointer and move to a point relative to the pointer location), calculate direction fails.`);
+		return null;
+	}
+	var command = path_data_list[1].split(" ");
+	var x_component = Number(command[0]);
+	var y_component = Number(command[1]);
+	console.log(x_component, y_component);
+	
+	if (x_component == 0 && y_component > 0) return "S";
+	if (x_component == 0 && y_component < 0) return "N";
+	if (x_component < 0 && y_component == 0) return "W";
+	if (x_component > 0 && y_component == 0) return "E";
+	
+	if (x_component > 0 && y_component < 0) return "NE";
+	if (x_component > 0 && y_component > 0) return "SE";
+	if (x_component < 0 && y_component < 0) return "NW";
+	if (x_component < 0 && y_component > 0) return "SW";
+	
+	if (x_component == 0 && y_component == 0) return null;
+}
+
+function navhelper_calculateDisplacementDirection(id1, id2) {
+	if (id1.split("::").length != 2) {
+		console.error(`[core-navhelper][calculateDisplacementDirection] Malformed ID 1 ${id}`);
+		return null;
+	}
+	var midPoint1 = window[id1.split("::")[0]].helper_calculatePathCentroid(id1.split("::")[1]);
+	if (!midPoint1) midPoint1 = window[id1.split("::")[0]].helper_calculateLineMidpoint(id1.split("::")[1]); // if calculatePathCentroid didn't work, the object could be a line instead, so let's get that midpoint before we declare that the path is invalid
+	
+	if (id1.split("::").length != 2) {
+		console.error(`[core-navhelper][calculateDisplacementDirection] Malformed ID 2 ${id}`);
+		return null;
+	}
+	var midPoint2 = window[id2.split("::")[0]].helper_calculatePathCentroid(id2.split("::")[1]);
+	if (!midPoint2) midPoint2 = window[id2.split("::")[0]].helper_calculateLineMidpoint(id2.split("::")[1]);
+	
+	if (!midPoint1 || !midPoint2) {
+		console.error(`[core-navhelper][calculateDisplacementDirection] Bad midpoint calculations, cannot proceed with calculating displacement on the plane: ${midPoint1} , ${midPoint2}`);
+		return null;
+	}
+	
+	var x_component = midPoint2[0] - midPoint1[0]; 
+	var y_component = midPoint2[1] - midPoint1[1]; 
+	
+	if (Math.abs(x_component) < 25) x_component = 0; // if magnitude of displacement X or displacement Y between two objects is within 25px, we can just call them in line and not say that there's any displaceent on that axis
+	if (Math.abs(y_component) < 25) y_component = 0;
+	
+	if (x_component == 0 && y_component > 0) return "S";
+	if (x_component == 0 && y_component < 0) return "N";
+	if (x_component < 0 && y_component == 0) return "W";
+	if (x_component > 0 && y_component == 0) return "E";
+	
+	if (x_component > 0 && y_component < 0) return "NE";
+	if (x_component > 0 && y_component > 0) return "SE";
+	if (x_component < 0 && y_component < 0) return "NW";
+	if (x_component < 0 && y_component > 0) return "SW";
+	
+	if (x_component == 0 && y_component == 0) return null;
+	
 }

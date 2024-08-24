@@ -102,6 +102,14 @@ div.bottom_corner {
 	font-family: "Lucida Console"
 }
 
+div.nav_menu {
+	position: fixed;
+	text-align: left;
+	left: 1%;
+	bottom: 1%;
+	z-index: 420690000;
+}
+
 svg text {
    -webkit-user-select: none;
    -moz-user-select: none;
