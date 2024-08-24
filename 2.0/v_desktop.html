@@ -87,6 +87,47 @@ Click <a onclick='this.parentElement.style.display="none";' style='color: pink;'
 	</table>
 </div>
 
+<div id='navsearch' class='popup' hidden>
+	<a onclick='this.parentElement.style.display="none";' style='color: red;' class='search noselect'><u>↓ Close menu ↓</u></a>
+	<br>
+	<br>
+	
+	<b style='display:inline'>Selected: <h2 style='display:inline' id='navsearchselect'>(nothing selected yet)</h2></b>&nbsp;&nbsp;&nbsp;
+	
+	<b id='navsearchbuttons' style='display:none'>
+		<button style='color: lightblue;' id='navsearch_set_origin' onclick='navhelper_addnode(this.getAttribute("navhelper_namespace"), this.getAttribute("navhelper_landmarkid"), "origin")'>Set as origin</button>&nbsp;
+		<button style='color: lightblue;' id='navsearch_set_destination' onclick='navhelper_addnode(this.getAttribute("navhelper_namespace"), this.getAttribute("navhelper_landmarkid"), "destination");'>Set as destination</button>&nbsp;
+	</b>
+	
+	<hr>
+	
+	<button style='font-size: 24px; color: red' onclick="
+		document.querySelectorAll('.nh_resolve_clearable').forEach(e => e.remove());
+		document.getElementById('navsearch_textbox').value = '';
+		document.getElementById('navsearchselect').innerText = '(nothing selected yet)';
+		document.getElementById('navsearchbuttons').style.display = 'none';
+	">Clear</button>&nbsp;&nbsp;
+	
+	<input id='navsearch_textbox' style='font-size: 24px;'>&nbsp;&nbsp;
+	
+	<button style='font-size: 24px; color: lightgreen' onclick='
+	searchAndResolve(document.getElementById("navsearch_textbox").value, "navsearchresults", "nh_resolve_clearable", function(evt){
+		document.getElementById("navsearch_set_destination").setAttribute("navhelper_namespace", evt.target.getAttribute("under_map"));
+		document.getElementById("navsearch_set_destination").setAttribute("navhelper_landmarkid", evt.target.getAttribute("on_id"));
+		document.getElementById("navsearch_set_origin").setAttribute("navhelper_namespace", evt.target.getAttribute("under_map"));
+		document.getElementById("navsearch_set_origin").setAttribute("navhelper_landmarkid", evt.target.getAttribute("on_id"));
+		document.getElementById("navsearchbuttons").style.display = "inline";
+		document.getElementById("navsearchselect").innerText = evt.target.innerText;
+	});
+	'>Search</button>	
+
+	
+	<div id='navsearchresults'>
+	
+	</div>
+</div>
+
+
 <div id='navsettings' class='nav_menu noselect' style='color:white;background-color:transparent;'>
 
 	<div id='navstatus'>Nav Helper Status: 
@@ -107,8 +148,10 @@ Click <a onclick='this.parentElement.style.display="none";' style='color: pink;'
 	<br>
 	
 	<div id='navactions' hidden>Actions:<br>
-		<button style='color:white;font-size:14'>Search for origin/destination</button><br>
-		<button style='color:gray; background-color: #333; font-size:14' id='navstart' onclick='displayRoute(bestRoutes(allRoutes(window.navhelper.origin, window.navhelper.destination,false))[0])'>Start Nav Helper</button><br>
+		<button style='color:white;font-size:14' onclick='document.getElementById("navsearch").style.display = "block";'>Search for origin/destination</button>&nbsp;
+		<button style='color:gray; background-color: #333; font-size:14' id='navstart' onclick='var rts = bestRoutes(allRoutes(window.navhelper.origin, window.navhelper.destination,false)); if (rts.length > 0) {displayRoutes(rts[0])} else {alert("No route found! Please note that only classrooms, offices, major landmarks and doors are navigable -- mechanical rooms and certain other features cannot be navigated to using Nav Helper.")}'>Start Nav Helper</button>
+		<br>
+		<br>
 		<button style='color:red; font-size:14' id='navstart' onclick='eraseRoute(); navhelper_clearnodes();'>Erase route + stop Nav Helper</button>
 		<br>
 		<br>

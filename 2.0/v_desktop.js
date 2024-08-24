@@ -160,6 +160,18 @@ function illuminateNeighbors(id) {
 }
 
 function populateLookupMenu(id) {
+	var keys = Object.keys(window.advances);
+	for (let i = 0; i < keys.length; i++) {
+		console.log(key, id);
+		var key = keys[i]
+		if (key.split("::")[1] == id && key.split("::")[0] == window.mapSet.activeMap.map_dataset_object.svg_id) {
+			window.mapSet.stowAway(window.mapSet.activeMap.map_dataset_object.svg_id, Number(gebi('zoomableDiv').style.left.replaceAll('px', '')), Number(gebi('zoomableDiv').style.top.replaceAll('px', '')), Number(gebi('zoomableDiv').style.transform.replaceAll('scale(','').replaceAll(')','')));
+			window.mapSet.makeActive(window.advances[key].split("::")[0]);
+			document.getElementById("map_select").value = window.mapSet.activeMap.map_dataset_object.svg_id;
+			return null;
+		}
+	}
+					
 	document.getElementById("show_landmark_data").style.display = "block";
 	document.querySelectorAll('.landmark_datacell').forEach(e => e.remove());
 	var objectInReference = window.mapSet.activeMap.map_dataset_object.lookupFeatureObject(id);
@@ -212,17 +224,17 @@ function handleKeyDownQuery(ev) {
 	if (ev.key == "Enter") searchAndResolve(ev.target.value);
 }
 
-function searchAndResolve(search_term) {
+function searchAndResolve(search_term, containing_body = "resolution_options", special_class_name = 'srt_clearable', callback = null) {
 	if (!search_term) {
 		alert("Search term cannot be empty!");
 		return null;
 	}
 	var results = window.mapSet.searchAllMaps(search_term);
 	console.log(results);
-	var pBody = document.getElementById("resolution_options");
+	var pBody = document.getElementById(containing_body);
 	var keys = Object.keys(results);
 	
-	document.querySelectorAll('.resolution_tr').forEach(e => e.remove());
+	//document.querySelectorAll('.resolution_tr').forEach(e => e.remove());
 	
 	var hits = 0
 	
@@ -251,19 +263,23 @@ function searchAndResolve(search_term) {
 			newA.textContent = tc;
 			newA.classList.add("noselect");
 			newA.classList.add("search");
-			newA.classList.add("srt_clearable");
+			newA.classList.add(special_class_name);
 			newA.setAttribute("under_map", map_area)
 			newA.setAttribute("on_id", landmark_id)
 			newA.style.color = "gold";
-			newA.onclick = function(evt) {
-				window.mapSet.stowAway(window.mapSet.activeMap.map_dataset_object.svg_id);
-				window.mapSet.makeActive(evt.target.getAttribute("under_map"));
-				resetViewport();
-				window.mapSet.pvmaps[evt.target.getAttribute("under_map")].map_dataset_object.flashBorder(evt.target.getAttribute("on_id"), "#FFFF00FF;#999999FF", "15px", "0.8s", true);
-				document.getElementById("map_select").value = evt.target.getAttribute("under_map");
+			if (typeof callback === "function") {
+				newA.onclick = callback;
+			} else {
+				newA.onclick = function(evt) {
+					window.mapSet.stowAway(window.mapSet.activeMap.map_dataset_object.svg_id, Number(gebi('zoomableDiv').style.left.replaceAll('px', '')), Number(gebi('zoomableDiv').style.top.replaceAll('px', '')), Number(gebi('zoomableDiv').style.transform.replaceAll('scale(','').replaceAll(')','')));
+					window.mapSet.makeActive(evt.target.getAttribute("under_map"));
+					resetViewport();
+					window.mapSet.pvmaps[evt.target.getAttribute("under_map")].map_dataset_object.flashBorder(evt.target.getAttribute("on_id"), "#FFFF00FF;#999999FF", "15px", "0.8s", true);
+					document.getElementById("map_select").value = evt.target.getAttribute("under_map");
+				}
 			}
 			var newbr = document.createElement("br");
-			newbr.classList.add("srt_clearable");
+			newbr.classList.add(special_class_name);
 			pBody.append();
 			pBody.append(newbr);
 			pBody.append(newA);
@@ -281,6 +297,7 @@ window.onload = function() {
 	window.navhelper = {};
 	navhelper.origin = null;
 	navhelper.destination = null;
+	window.advances = {};
 	
 	if (!getCookie("vers2_nof12_reporting")) {
 		setCookie("vers2_nof12_reporting", "disabled", 40);
@@ -409,6 +426,17 @@ function eraseRoute() {
 function displayRoute(route) {
 	console.log(`route: ${JSON.stringify(route)}`);
 	window[route[0].split("::")[0]].changeBorder(route[0].split("::")[1], "lime", "8px", true);
+	var rt = window.mapSet.activeMap.map_dataset_object.svg_id; 
+	window.mapSet.stowAway(rt);
+	window.mapSet.makeActive(route[0].split("::")[0]);
+	resetViewport();
+	
+	
+	if (route.join().includes("::SW-")) {
+		alert("This route requires changing floors. To switch the map to the other floor, double tap the flashing red staircase or use the map switcher at the bottom right.");
+	}
+	window.advances = {};
+	
 	for (let i = 1; i < route.length - 1; i++) {
 		var jump = route[i];
 		console.log(route[i], route[i + 1], navhelper_calculateDisplacementDirection(route[i], route[i + 1]));
@@ -423,8 +451,20 @@ function displayRoute(route) {
 			truncate = "base";
 		}
 		
-		if (jump.split("::")[1].includes("WW")) navhelper_addarrows((i == route.length - 2) ? navhelper_calculateDisplacementDirection(route[i - 1], route[i + 1]) : navhelper_calculateDisplacementDirection(route[i], route[i + 1]), jump, false, auto_trim, "cyan", truncate);
-		else window[jump.split("::")[0]].changeBorder(jump.split("::")[1], "cyan", "8px", true);
+		if (jump.split("::")[1].includes("WW-")) navhelper_addarrows((i == route.length - 2) ? navhelper_calculateDisplacementDirection(route[i - 1], route[i + 1]) : navhelper_calculateDisplacementDirection(route[i], route[i + 1]), jump, false, auto_trim, "cyan", truncate);
+		else {
+			if (jump.split("::")[1].includes("SW-")) {
+				window[jump.split("::")[0]].changeBorder(jump.split("::")[1], "cyan", "8px", true);
+				window[jump.split("::")[0]].flashBorder(jump.split("::")[1], "red;cyan", "8px", "0.9", true);
+				
+				window.advances[jump] = route[i + 1];
+				
+				// we don't have to set a custom callback here because the code for switching over to another map when you double tap a blinking red 
+				// is in populateLookupMenu, the default callback fn
+			} else {
+				window[jump.split("::")[0]].changeBorder(jump.split("::")[1], "cyan", "8px", true);
+			}
+		}
 	}
 	window[route[route.length - 1].split("::")[0]].changeBorder(route[route.length - 1].split("::")[1], "lime", "8px", true);
 }
@@ -586,6 +626,7 @@ function navhelper_clearnodes() {
 	gebi("navstopB").innerText = "...";
 	window.navhelper.origin = null;
 	window.navhelper.destination = null;
+	window.advances = {};
 }
 
 function navhelper_addarrows(target_direction, lineID, direction_neutral = false, auto_trim = false, color = "cyan", measure_from = "arrowhead") {
