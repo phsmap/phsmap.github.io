@@ -513,7 +513,7 @@ class PVMap extends SVGManipulator {
                 var midpoint_of_parent_bounds = parent_bounds.y + (parent_bounds.height / 2);
                 var text_box_bounds = this.retrieve_element_in_this_group(new_id).getBBox();
                 var midpoint_of_text_box = text_box_bounds.y + (text_box_bounds.height / 2);
-                newTN.setAttributeNS(null, "y", centroid[1] - (midpoint_of_text_box - midpoint_of_parent_bounds));
+                //newTN.setAttributeNS(null, "y", centroid[1] - (midpoint_of_text_box - midpoint_of_parent_bounds));
                 //console.log(centroid[1] - (midpoint_of_text_box - midpoint_of_parent_bounds));
                 //console.log((midpoint_of_text_box - midpoint_of_parent_bounds));
             }
