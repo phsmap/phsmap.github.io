@@ -224,6 +224,9 @@ Click <a onclick='this.parentElement.style.display="none";' style='color: pink;'
 		<button style='color: lightgreen' onclick='setCookie("vers2_wheel_sens", gebi("wheel_sens").value, 40); setCookie("vers2_mousemove_sens", gebi("mousemove_sens").value, 40); window.location.reload()'>Apply changes and reload</button>
 		<br>
 		<br>
+		<br>
+		<br>
+		<button style='color:gray' onclick='var rt = window.mapSet.activeMap.map_dataset_object.svg_id; window.mapSet.stowAway(rt); setTimeout(function(){window.mapSet.makeActive(rt)}, 1000)'>Reload current map</button>
 	    </div>
 </div>
 
