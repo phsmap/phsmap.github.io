@@ -537,7 +537,7 @@ class PVMap extends SVGManipulator {
             var new_font_size = PVMap.clamp(Math.round(scaling_factor * bounds.height), font_size[1], font_size[2]);
             newTN.setAttributeNS(null, "font-size", new_font_size); // once we have the desired font size, set it
             // account for multiline text shift
-            if (box_id && x < 0 && y < 0) {
+            if (box_id && x < 0 && y < 0 && false) {
                 var parent_bounds = this.retrieve_element_in_this_group(box_id).getBBox();
                 var midpoint_of_parent_bounds = parent_bounds.y + (parent_bounds.height / 2);
                 var text_box_bounds = this.retrieve_element_in_this_group(new_id).getBBox();
