@@ -37,7 +37,7 @@ class SVGManipulator {
 			console.warn(`[svgmanipulator][${svg_element_id}] Bad SVG element ID.`);
 			return null;
 		} else {
-			console.log(`[svgmanipulator][${svg_element_id}] Got SVG element!`, this.svg_container);
+			//console.log(`[svgmanipulator][${svg_element_id}] Got SVG element!`, this.svg_container);
 		}
         this.svg_id = structuredClone(svg_element_id);
 
@@ -53,7 +53,7 @@ class SVGManipulator {
 
         window.assigned_ids = []
         this.giveAllElementsId(rewrite_id); // every element needs an ID so that user supplied callbacks can reference it
-        console.log(`[svgmanipulator][${this.svg_id}][initialization] OK! Just created a map element originating from ${this.svg_container.id} and consisting of ${this.group_container.children.length} elements.`);
+        //console.log(`[svgmanipulator][${this.svg_id}][initialization] OK! Just created a map element originating from ${this.svg_container.id} and consisting of ${this.group_container.children.length} elements.`);
     }
 
     giveAllElementsId(override_existing_id = false) {
@@ -72,8 +72,8 @@ class SVGManipulator {
                 newly_given_ids[new_id] = this.group_container.children[i];
             }
         }
-        console.log(`[svgmanipulator][${this.svg_id}][giveAllElementsId] OK! Just gave ${Object.keys(newly_given_ids).length} elements new IDs.`);
-        console.log(newly_given_ids);
+        //console.log(`[svgmanipulator][${this.svg_id}][giveAllElementsId] OK! Just gave ${Object.keys(newly_given_ids).length} elements new IDs.`);
+        //console.log(newly_given_ids);
     }
 
     setCallbacks(listener, callback, id_must_contain = "*") {
@@ -88,13 +88,13 @@ class SVGManipulator {
             }
         }
         // report stats
-        console.log(`[svgmanipulator][${this.svg_id}][setCallbacks] OK! Applied this callback to ${appliedTo.length} elements using the criteria "${id_must_contain}".`);
-        console.log(appliedTo);
+        //console.log(`[svgmanipulator][${this.svg_id}][setCallbacks] OK! Applied this callback to ${appliedTo.length} elements using the criteria "${id_must_contain}".`);
+        //console.log(appliedTo);
         return appliedTo;
     }
 
     setCallbackParticularElement(id, listener, callback) {
-        console.log(`[svgmanipulator][${this.svg_id}][setCallbackParticularElement] Attempting to set a callback to sub element ${id}`);
+        //console.log(`[svgmanipulator][${this.svg_id}][setCallbackParticularElement] Attempting to set a callback to sub element ${id}`);
         var elem = this.group_container.querySelector("#" + id);
         if (!elem) {
             console.warn(`[svgmanipulator][${this.svg_id}][setCallbackParticularElement] Unable to apply a callback to this particular element: ${id}`);
@@ -126,7 +126,7 @@ class SVGManipulator {
             window.texec = execute;
             window.idmcs = id_must_contain;
             [].slice.call(this.group_container.children).forEach(function(el) {
-                //console.log(el);
+                ////console.log(el);
                 if (el.id.includes(window.idmcs) || window.idmcs == "*") {
                     window.texec(el.id);
                     window.tatap.push(el.id);
@@ -134,8 +134,8 @@ class SVGManipulator {
             });
         }
         // report stats
-        console.log(`[svgmanipulator][${this.svg_id}][autoForEachElement] OK! Executed function ${execute.name} to ${appliedTo.length} elements using the criteria "${id_must_contain}".`);
-        console.log(appliedTo);
+        //console.log(`[svgmanipulator][${this.svg_id}][autoForEachElement] OK! Executed function ${execute.name} to ${appliedTo.length} elements using the criteria "${id_must_contain}".`);
+        //console.log(appliedTo);
         return appliedTo;
     }
 
@@ -201,14 +201,14 @@ class PVMap extends SVGManipulator {
         let svgElement = document.createElementNS(svgNS, "svg");
         var appRes = toAttachTo.appendChild(svgElement);
         svgElement.outerHTML = svg_content;
-        console.log(`[PVMap STATIC][loadSVGToDOMIfNotAlreadyLoaded] OK! Loaded ${svg_content.length} bytes of SVG map data into parent element ${parent_element}.`);
+        //console.log(`[PVMap STATIC][loadSVGToDOMIfNotAlreadyLoaded] OK! Loaded ${svg_content.length} bytes of SVG map data into parent element ${parent_element}.`);
 		var dp = new DOMParser();
 		return dp.parseFromString(svg_content, "application/xml").querySelector("svg").getAttributeNS(null, "id");
     }
 
     constructor(initial_configuration_data, toggleable_layer_data, feature_data) {
         super(initial_configuration_data.svg_element_id, false);
-        console.log(`[${this.svg_id}][initialization] Bound.`)
+        //console.log(`[${this.svg_id}][initialization] Bound.`)
             // Ideally, the maps that people are going to be loading will already have SVG elements with appropriate IDs (i.e. "RM:131A")
             // which means we should pass FALSE to "overwrite_all_id" in super( );
         this.featuredata = feature_data; // expected to be an array [0: ..., 1: ..., etc] of JSON objects with certain attributes such as landmark_id. used when displaying layers and also for searching. the reason why we do NOT make a copy and instead take a reference to an external object is so that the feature data can be updated automatically without having to notify PVMap objects that their map data has changed.
@@ -226,7 +226,7 @@ class PVMap extends SVGManipulator {
         // Create a globally accessible reference to this PVMap object for the purpose of setting callbacks
         window[this.svg_id] = this;
         // Make all the desired elements selectable (to be selectable, a certain SVG element needs to have a corresponding entry in featuredata with a matching landmark_id AND that entry has to be marked as a physical location)
-        console.log(`[${this.svg_id}][initialize] Reading dataset for registered places and making them selectable...`);
+        //console.log(`[${this.svg_id}][initialize] Reading dataset for registered places and making them selectable...`);
         for (let i = 0; i < this.featuredata.length; i += 1) {
             // Denote the index/position of this particular feature in featuredata (since featuredata is an array, if you want to look up, for instance, "CR-1139", there's no way to do that except go through every feature and use an if
             // So we will have a cached, ready to use list available for that functionaclity
@@ -234,7 +234,7 @@ class PVMap extends SVGManipulator {
 
             // Check to make sure that this registered place corresponds to a room on the map
             if (this.featuredata[i].physical_location != "yes") {
-                console.log(`[${this.svg_id}][initialize] Element ${this.featuredata[i].landmark_id} is not marked as a physical place that can be selected; will not attempt to find the corresponding place on the SVG map. Continuing...`);
+                //console.log(`[${this.svg_id}][initialize] Element ${this.featuredata[i].landmark_id} is not marked as a physical place that can be selected; will not attempt to find the corresponding place on the SVG map. Continuing...`);
                 continue;
             }
             // If the dataset says that this feature DOES CORRESPOND to a place on the map, try to set it's onhover listener
@@ -342,7 +342,7 @@ class PVMap extends SVGManipulator {
             APB.innerText = `Apply changes`;
             container.append(APB);
         } else {
-            console.log(`[${this.svg_id}][initialize] Will not create layer checkboxes and append them to webpage.`);
+            //console.log(`[${this.svg_id}][initialize] Will not create layer checkboxes and append them to webpage.`);
         }
     }
 
@@ -384,7 +384,7 @@ class PVMap extends SVGManipulator {
         elem.append(this.helper_generateAnimationNode(`staticBorder_vfx__${id}`, "stroke", color, "0.8s"));
         elem.append(this.helper_generateAnimationNode(`staticBorder_vfx__${id}`, "stroke-width", `${width}`, "0.8s"));
 		if (permanent) elem.querySelectorAll("animate").forEach(function(em){em.setAttributeNS(null, "permanent", "true")});
-		console.log(`[${this.svg_id}][changeBorder] OK, applied new border to ${id}.`);
+		//console.log(`[${this.svg_id}][changeBorder] OK, applied new border to ${id}.`);
     }
 
     // This will flash the border
@@ -397,7 +397,7 @@ class PVMap extends SVGManipulator {
         elem.append(this.helper_generateAnimationNode(`flashBorder_width_vfx__${id}`, "stroke-width", `${width}`, "0.8s"));
         elem.append(this.helper_generateAnimationNode(`flashBorder_vfx__${id}`, "stroke", colors, rate));
 		if (permanent) elem.querySelectorAll("animate").forEach(function(em){em.setAttributeNS(null, "permanent", "true")});
-		console.log(`[${this.svg_id}][flashBorder] OK, applied flashing border to ${id}.`);
+		//console.log(`[${this.svg_id}][flashBorder] OK, applied flashing border to ${id}.`);
     }
 	
 	changeBgd(id, color, permanent = false) {
@@ -409,21 +409,21 @@ class PVMap extends SVGManipulator {
         elem.append(this.helper_generateAnimationNode(`changeBgd_fill_vfx__${id}`, "fill", `${color}`, "0.8s"));
 		if (permanent) elem.querySelectorAll("animate").forEach(function(em){em.setAttributeNS(null, "permanent", "true")});
 		elem.setAttributeNS(null, "fill-opacity", "1.0");
-		console.log(`[${this.svg_id}][changeBgd] OK, applied new bgd color to ${id}.`);
+		//console.log(`[${this.svg_id}][changeBgd] OK, applied new bgd color to ${id}.`);
 	}
 
     // This will clear FX
     clearFX(id, clear_permanent = false) {
 		window.clear_perm = clear_permanent;
         var elem = this.retrieve_element_in_this_group(id);
-		console.log(`[${this.svg_id}][clearFX] Clearing ${id} of FX...`);
+		//console.log(`[${this.svg_id}][clearFX] Clearing ${id} of FX...`);
         if (!elem) {
             console.warn(`[${this.svg_id}][clearFX] Unable to find element with ID ${id} during lookup.`);
             return null;
         }
         elem.querySelectorAll("animate").forEach(function(em) {
 			if ((em.getAttributeNS(null, "permanent") != "true" && em.getAttributeNS(null, "permanent") != "yes") || window.clear_perm) {
-				console.log(`    + Clearing FX ${em}`);
+				//console.log(`    + Clearing FX ${em}`);
 				em.remove();
 			}
         });
@@ -431,10 +431,10 @@ class PVMap extends SVGManipulator {
 
     clearFXAll(clear_permanent = false) {
 		window.clear_perm = clear_permanent;
-		console.log(`[${this.svg_id}][clearFXAll] Clearing ALL FX`)
+		//console.log(`[${this.svg_id}][clearFXAll] Clearing ALL FX`)
         this.group_container.querySelectorAll("animate").forEach(function(em) {
 			if ((em.getAttributeNS(null, "permanent") != "true" && em.getAttributeNS(null, "permanent") != "yes") || window.clear_perm) {
-				console.log(`    + Clearing FX ${em}`);
+				//console.log(`    + Clearing FX ${em}`);
 				em.remove();
 			}
         });
@@ -443,12 +443,12 @@ class PVMap extends SVGManipulator {
     // This will place text in the middle of a given path 
     placeText(content, id = null, box_id = null, x = -1, y = -1, color = "#FFFF00", font_size = ["auto", 12, 24], font = "Arial") {
 		content = content.replaceAll("[comma]", ",").replaceAll("[newline]", "\n");
-		console.log(`[${this.svg_id}][placeTextInPath] Placing text: ${content} on ${box_id} with new ID # ${id}`);
+		//console.log(`[${this.svg_id}][placeTextInPath] Placing text: ${content} on ${box_id} with new ID # ${id}`);
         // The first thing we have to do is calculate the centroid of this path
         // Setting either x or y to a negative number will trigger auto place based on the box ID
         if ((x < 0 || y < 0) && box_id) {
             var centroid = this.helper_calculatePathCentroid(box_id);
-			console.log(centroid);
+			//console.log(centroid);
             if (!centroid) {
                 console.warn(`[${this.svg_id}][placeTextInPath] Unable to place text in the center of this element. Place text fails.`);
                 return null;
@@ -489,7 +489,7 @@ class PVMap extends SVGManipulator {
                 // 1. create multiple tspan elements
                 var newTS = document.createElementNS("http://www.w3.org/2000/svg", "tspan");
                 newTS.setAttributeNS(null, "x", centroid[0]);
-                newTS.setAttributeNS(null, "dy", "0.5em");
+                newTS.setAttributeNS(null, "dy", "0.95em");
                 newTS.textContent = lines[i];
                 newTN.appendChild(newTS);
             }
@@ -503,7 +503,7 @@ class PVMap extends SVGManipulator {
             this.group_container.append(newTN);
             var desired_width_of_text = bounds.width * 0.8;
             var initial_width_of_text = newTN.getBBox().width;
-            //console.log(desired_width_of_text, initial_width_of_text);
+            ////console.log(desired_width_of_text, initial_width_of_text);
             var scaling_factor = desired_width_of_text / initial_width_of_text;
             var new_font_size = PVMap.clamp(Math.round(scaling_factor * bounds.height), font_size[1], font_size[2]);
             newTN.setAttributeNS(null, "font-size", new_font_size); // once we have the desired font size, set it
@@ -514,8 +514,8 @@ class PVMap extends SVGManipulator {
                 var text_box_bounds = this.retrieve_element_in_this_group(new_id).getBBox();
                 var midpoint_of_text_box = text_box_bounds.y + (text_box_bounds.height / 2);
                 newTN.setAttributeNS(null, "y", centroid[1] - (midpoint_of_text_box - midpoint_of_parent_bounds));
-                //console.log(centroid[1] - (midpoint_of_text_box - midpoint_of_parent_bounds));
-                //console.log((midpoint_of_text_box - midpoint_of_parent_bounds));
+                ////console.log(centroid[1] - (midpoint_of_text_box - midpoint_of_parent_bounds));
+                ////console.log((midpoint_of_text_box - midpoint_of_parent_bounds));
             }
         } else if (Array.isArray(font_size) && (!box_id || x > 0 || y > 0)) {
             console.warn(`[${this.svg_id}][placeTextInPath] Auto font size cannot be used when automatic central placement is not being used or the path_id is not specified.`);
@@ -530,8 +530,8 @@ class PVMap extends SVGManipulator {
                 var text_box_bounds = this.retrieve_element_in_this_group(new_id).getBBox();
                 var midpoint_of_text_box = text_box_bounds.y + (text_box_bounds.height / 2);
                 newTN.setAttributeNS(null, "y", centroid[1] - (midpoint_of_text_box - midpoint_of_parent_bounds));
-                console.log(centroid[1] - (midpoint_of_text_box - midpoint_of_parent_bounds));
-                console.log((midpoint_of_text_box - midpoint_of_parent_bounds));
+                //console.log(centroid[1] - (midpoint_of_text_box - midpoint_of_parent_bounds));
+                //console.log((midpoint_of_text_box - midpoint_of_parent_bounds));
             }
         }
 
@@ -578,7 +578,7 @@ class PVMap extends SVGManipulator {
 		});
 
 
-        console.log(`[${this.svg_id}][placeTextInPath] SVG element has ID # ${new_id}; new ID returned by fn.`);
+        //console.log(`[${this.svg_id}][placeTextInPath] SVG element has ID # ${new_id}; new ID returned by fn.`);
         return new_id;
     }
 	
@@ -643,7 +643,7 @@ class PVMap extends SVGManipulator {
 			var acc = [];
 	
 			var split_up = str.split(/(?=[a-zA-Z])/);
-			console.log(split_up);
+			//console.log(split_up);
 			
 			for (let i = 0; i < split_up.length; i ++) {
 				if (split_up[i].length > 1 && /[a-zA-Z]/.exec(split_up[i])) {
@@ -712,17 +712,17 @@ class PVMap extends SVGManipulator {
             for (let i = 0; i < this.layerdata.length; i += 1) {
 				if (!this.layerdata[i].layer_id) continue;
                 this.layerdata[i].visible = PVMap.gebi(`${this.svg_id}__${this.layerdata[i].layer_id}`).checked;
-                console.log(`[${this.svg_id}][applyLayerCheckboxesForThisMap] Layer ${this.layerdata[i].layer_id} enabled: ${this.layerdata[i].visible}`);
+                //console.log(`[${this.svg_id}][applyLayerCheckboxesForThisMap] Layer ${this.layerdata[i].layer_id} enabled: ${this.layerdata[i].visible}`);
             }
         }
 
 
         for (let i = 0; i < featuredata_workingcopy.length; i += 1) {
             currentObj = featuredata_workingcopy[i];
-            console.log(`[${this.svg_id}][applyLayerCheckboxesForThisMap] Working on ${featuredata_workingcopy[i].landmark_id}...`);
+            //console.log(`[${this.svg_id}][applyLayerCheckboxesForThisMap] Working on ${featuredata_workingcopy[i].landmark_id}...`);
             for (let j = 0; j < this.layerdata.length; j += 1) {
 				if (!this.layerdata[j].layer_id) continue;
-                console.log(`&& Layer ${this.layerdata[j].layer_id}`);
+                //console.log(`&& Layer ${this.layerdata[j].layer_id}`);
                 // First, we check if this particular landmark is a part of the given layer
                 var jointQueryCmd = this.layerdata[j].layer_instructions.split("=>");
                 if (jointQueryCmd.length != 2) {
@@ -752,7 +752,7 @@ class PVMap extends SVGManipulator {
                         }
                         switch (command.split("(")[0]) {
 							case "set_background_color":
-								console.log(`  x set_background_color: ${params}`);
+								//console.log(`  x set_background_color: ${params}`);
 								if (id_to_feature_index[params[0]] == undefined || id_to_feature_index[params[0]] == null || params.length != 2) {
                                     console.warn(`  - Bad parameter #0 (ID of landmark to change styling of) or incorrect number of parameters. Will proceed, but may result in faulty layer rendering.`);
                                     break;
@@ -760,7 +760,7 @@ class PVMap extends SVGManipulator {
 								featuredata_workingcopy[id_to_feature_index[params[0]]].newBgdColor = params[1];
 								break;
                             case "set_semiauto_font_size":
-                                console.log(`  x set_semiauto_font_size: ${params}`);
+                                //console.log(`  x set_semiauto_font_size: ${params}`);
                                 if (id_to_feature_index[params[0]] == undefined || id_to_feature_index[params[0]] == null || params.length != 3) {
                                     console.warn(`  - Bad parameter #0 (ID of landmark to change styling of) or incorrect number of parameters. Will proceed, but may result in faulty layer rendering.`);
                                     break;
@@ -768,7 +768,7 @@ class PVMap extends SVGManipulator {
                                 featuredata_workingcopy[id_to_feature_index[params[0]]].newFontSize = ["auto", params[1], params[2]];
                                 break;
                             case "set_manual_font_size":
-                                console.log(`  x set_manual_font_size: ${params}`);
+                                //console.log(`  x set_manual_font_size: ${params}`);
                                 if (id_to_feature_index[params[0]] == undefined || id_to_feature_index[params[0]] == null || params.length != 2) {
                                     console.warn(`  - Bad parameter #0 (ID of landmark to change styling of) or incorrect number of parameters. Will proceed, but may result in faulty layer rendering.`);
                                     break;
@@ -776,7 +776,7 @@ class PVMap extends SVGManipulator {
                                 featuredata_workingcopy[id_to_feature_index[params[0]]].newFontSize = params[1];
                                 break;
                             case "set_font":
-                                console.log(`  x set_font: ${params}`);
+                                //console.log(`  x set_font: ${params}`);
                                 if (id_to_feature_index[params[0]] == undefined || id_to_feature_index[params[0]] == null || params.length != 2) {
                                     console.warn(`  - Bad parameter #0 (ID of landmark to change styling of) or incorrect number of parameters. Will proceed, but may result in faulty layer rendering.`);
                                     break;
@@ -784,7 +784,7 @@ class PVMap extends SVGManipulator {
                                 featuredata_workingcopy[id_to_feature_index[params[0]]].newFont = params[1];
                                 break;
                             case "set_text_color":
-                                console.log(`  x set_text_color: ${params}`);
+                                //console.log(`  x set_text_color: ${params}`);
                                 if (id_to_feature_index[params[0]] == undefined || id_to_feature_index[params[0]] == null || params.length != 2) {
                                     console.warn(`  - Bad parameter #0 (ID of landmark to change styling of) or incorrect number of parameters. Will proceed, but may result in faulty layer rendering.`);
                                     break;
@@ -792,7 +792,7 @@ class PVMap extends SVGManipulator {
                                 featuredata_workingcopy[id_to_feature_index[params[0]]].newTextColor = params[1];
                                 break;
                             case "cell_append_text":
-                                console.log(`  x cell_append_text: ${params}`);
+                                //console.log(`  x cell_append_text: ${params}`);
                                 if (id_to_feature_index[params[0]] == undefined || id_to_feature_index[params[0]] == null || params.length != 2) {
                                     console.warn(`  - Bad parameter #0 (ID of landmark to change styling of) or incorrect number of parameters. Will proceed, but may result in faulty layer rendering.`);
                                     break;
@@ -804,8 +804,8 @@ class PVMap extends SVGManipulator {
                 }
             }
         }
-        console.log(`[${this.svg_id}][applyLayerCheckboxesForThisMap] Finished applying layer commands to features. Will now push these changes to the SVG map. Changes made:`);
-        console.log(featuredata_workingcopy);
+        //console.log(`[${this.svg_id}][applyLayerCheckboxesForThisMap] Finished applying layer commands to features. Will now push these changes to the SVG map. Changes made:`);
+        //console.log(featuredata_workingcopy);
         if (clear_off_prior_addins) {
             window.tco = this;
             this.autoForEachElement(function(id) {
@@ -865,7 +865,7 @@ class PVMap extends SVGManipulator {
     // This is a separate function because it's multiple other functions (applyCheckbox, searchFor) use it, which means it makes sense to place it in a separate place instead of embedding it in one place. 
     // Remember that this function returns an array: the first element being a true/false and the other an explanation of how the true/false result was achieved
     helper_evaluateQuery(layer_query, feature) {
-        console.log(`  + [${this.svg_id}][evaluateQuery] Checking ${feature.landmark_id} against ${layer_query}`);
+        //console.log(`  + [${this.svg_id}][evaluateQuery] Checking ${feature.landmark_id} against ${layer_query}`);
         var conditions_and_instructions = [layer_query];
         var search_index = conditions_and_instructions[0].indexOf("{", 0);
         var other_end = 1;
@@ -877,7 +877,7 @@ class PVMap extends SVGManipulator {
             other_end = conditions_and_instructions[0].indexOf("}", search_index);
             content = conditions_and_instructions[0].slice(search_index, other_end + 1);
             content_in_between = conditions_and_instructions[0].slice(search_index + 1, other_end);
-            //console.log(content_in_between);
+            ////console.log(content_in_between);
             operators = content_in_between.split(",");
             if ((2 <= operators.length <= 3) == false) {
                 console.warn(`  - [${this.svg_id}][evaluateQuery] Bad condition: malformed qualifiers: ${content}, operators = ${operators}`);
@@ -886,20 +886,20 @@ class PVMap extends SVGManipulator {
 			operators[0] = operators[0].trim();
 			operators[1] = operators[1].trim();
 			if (operators[2]) operators[2] = operators[2].trim();
-            console.log(`    + Checking ${content}`);
+            //console.log(`    + Checking ${content}`);
             if (operators[0].slice(0, 1) == "$") {
-                console.log(`    + $op0:${operators[0]} transformation:`);
+                //console.log(`    + $op0:${operators[0]} transformation:`);
                 operators[0] = String(feature[operators[0].slice(1)]);
                 if (operators[0] == "undefined") operators[0] = "";
-                console.log(`    + ${operators[0]}`);
+                //console.log(`    + ${operators[0]}`);
             }
             if (operators[2] && operators[2].slice(0, 1) == "$") {
-                console.log(`    + $op1:${operators[0]} transformation:`);
+                //console.log(`    + $op1:${operators[0]} transformation:`);
                 operators[2] = String(feature[operators[2].slice(1)]);
                 if (operators[2] == "undefined") operators[2] = "";
-                console.log(`    + $op1:${operators[2]}`);
+                //console.log(`    + $op1:${operators[2]}`);
             }
-            //console.log(operators);
+            ////console.log(operators);
             switch (operators[1]) {
                 case "~":
                     to_replace_content = String(operators[0]).length > 0;
@@ -946,7 +946,7 @@ class PVMap extends SVGManipulator {
                     var RHSkeyterms = String(operators[2]).toLowerCase().split(";");
                     var hits = 0;
                     for (let kt = 0; kt < RHSkeyterms.length; kt++) {
-                        //console.log(RHSkeyterms[kt]);
+                        ////console.log(RHSkeyterms[kt]);
                         if (operators[0].toLowerCase().includes(RHSkeyterms[kt])) hits++;
                     }
                     to_replace_content = hits > 0;
@@ -957,8 +957,8 @@ class PVMap extends SVGManipulator {
                     break;
             }
             conditions_and_instructions[0] = conditions_and_instructions[0].replaceAll(content, to_replace_content);
-            //console.log(to_replace_content);
-            console.log(`    < ${conditions_and_instructions[0]}`);
+            ////console.log(to_replace_content);
+            //console.log(`    < ${conditions_and_instructions[0]}`);
             search_index = conditions_and_instructions[0].indexOf("{", search_index + 1); // this will tell JS to look past the current curly brace and see if there is another
         }
         // Now that we have something that resembles "true && false || true || false", we can parse that to make the ultimate determination as to whether or not the feature given is part of the layer
@@ -968,16 +968,16 @@ class PVMap extends SVGManipulator {
             return null;
         }
         var broken_up_by_and_operator = conditions_and_instructions[0].split("||");
-        console.log(`    ! ${broken_up_by_and_operator}`)
+        //console.log(`    ! ${broken_up_by_and_operator}`)
         for (let i = 0; i < broken_up_by_and_operator.length; i += 1) {
             if (broken_up_by_and_operator[i].includes("false")) {
                 // it's fine, this particular side of the OR statement didn't come true
             } else {
-				console.log(`  + [${this.svg_id}][evaluateQuery] Check passed for ${feature.landmark_id}: ${conditions_and_instructions[0]} from ${layer_query}`);
+				//console.log(`  + [${this.svg_id}][evaluateQuery] Check passed for ${feature.landmark_id}: ${conditions_and_instructions[0]} from ${layer_query}`);
 				return [true, conditions_and_instructions[0]];
 			}
         }
-		console.log(`  + [${this.svg_id}][evaluateQuery] Check failed for ${feature.landmark_id}...`);
+		//console.log(`  + [${this.svg_id}][evaluateQuery] Check failed for ${feature.landmark_id}...`);
 		return [false, conditions_and_instructions[0]];
 
     }
