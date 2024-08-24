@@ -1,5 +1,9 @@
 "use strict";
 
+class IOSTestClass {
+	
+}
+
 class SVGManipulator {
 
     static uuidv4() {
