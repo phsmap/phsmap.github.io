@@ -207,6 +207,34 @@ class PVMap extends SVGManipulator {
     }
 
     constructor(initial_configuration_data, toggleable_layer_data, feature_data) {
+		
+		  SVGPathElement.prototype.getBBox = function (precision){
+			  // modified fn
+        var path = this;
+        var total = path.getTotalLength();
+        if(total <= 0){
+            return {x:0,y:0,width:0,height:0};
+        }
+        var segLen = precision || 1;
+        var len = 0, pt, xarr = [], yarr = [];
+        while(len < total){
+            pt = path.getPointAtLength(len);
+            xarr.push(pt.x);
+            yarr.push(pt.y);
+            len += segLen;
+        }
+        pt = path.getPointAtLength(total);
+        xarr.push(pt.x);
+        yarr.push(pt.y);
+        var b = {};
+        b.x = Math.min.apply(0,xarr);
+        b.y = Math.min.apply(0,yarr);
+        b.width = Math.max.apply(0,xarr) - b.x;
+        b.height = Math.max.apply(0,yarr) - b.y;
+        return b;
+    };
+	
+	
         super(initial_configuration_data.svg_element_id, false);
         //console.log(`[${this.svg_id}][initialization] Bound.`)
             // Ideally, the maps that people are going to be loading will already have SVG elements with appropriate IDs (i.e. "RM:131A")
