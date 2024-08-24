@@ -139,16 +139,16 @@ function setViewport(x, y, zm) {
 	let scale = zm;
 }
 
-function illuminateNeighbors(id) {
-	function getRandomColor() {
+function getRandomColor() {
 	  var letters = '0123456789ABCDEF';
 	  var color = '#';
 	  for (var i = 0; i < 6; i++) {
 		color += letters[Math.floor(Math.random() * 16)];
 	  }
 	  return color;
-	}
+}
 	
+function illuminateNeighbors(id) {	
 	window.rcolor = getRandomColor();
 
 	var objectInReference = window.mapSet.activeMap.map_dataset_object.lookupFeatureObject(id);
