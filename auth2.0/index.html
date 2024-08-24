@@ -22,7 +22,7 @@
 					<h2>Sign in:</h2>
 				</div>
 				<ul>
-					<li>Remember to log in with your Microsoft account (@mcpsmd.<u>org</u>; see picture for explanation)</li>
+					<li>You can log in with yor mcpsmd.org account (see pictures), or a temporary visitor code.</li>
 					<br>
 					<li style='color: red;'>Your password is NEVER accessed or saved by the PHS Interactive Map's login system.</li>
 					<br>
@@ -33,7 +33,14 @@
 				<br>
 				<br>
 				<div style='text-align: center;'>
-					<button style='margin: 0 auto;' onclick='startSignIn()'>Proceed with signing in</button>
+					<button style='margin: 0 auto;' onclick='startSignIn()'>Sign into MCPS account</button>
+					<br>
+					<br>
+					--OR--
+					<br>
+					<br>
+					<input id='viscode' style='font-size: 24px; background-color: black; border: 1px solid #999; color: white;'>  
+					<button style='margin: 0 auto; font-size: 18px' onclick='localStorage.setItem("acstoken", `visitor:${document.getElementById("viscode").value}`);var params=new URLSearchParams(document.location.href.split("?")[1].split("#")[0]),destination=params.get("redirectonsuccess");destination&&(destination.includes(":/")?confirm(`This application wants to redirect you to ${destination}. Is that OK?`)&&(document.location=destination):document.location=destination);'>Use visitor code</button>
 				</div>
 				<br>
 				<br>

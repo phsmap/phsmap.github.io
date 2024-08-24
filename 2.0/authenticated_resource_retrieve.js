@@ -85,7 +85,7 @@ static authorized_httpGET(resource, callback, type = 'text') {
 						callback(xhr.response); //send it along without doing any processing like we had to do for text data - the callback should know what to do
 					}
 				} else if (xhr.status == 401) {
-					alert("Your sign in was expired, invalid or missing. Press OK to go sign in.");
+					alert("Your sign in/visitor code was expired or invalid. Press OK to return to the sign in page.");
 					console.error(`[authorized_httpGET] HTTP 401: ${xhr.response}`);
 					document.location = "/";
 				} else {

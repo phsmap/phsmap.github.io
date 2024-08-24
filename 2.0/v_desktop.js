@@ -321,8 +321,8 @@ window.onload = function() {
 	gebi("curr_type_legacy").textContent = getCookie("version_preference");
 	
 	if (window.localStorage.getItem("acstoken")) {
-		if (window.localStorage.getItem("acstoken").startsWith("testing")) {
-			gebi("tkn_issuer").textContent = "Fixed Testing Token";
+		if (window.localStorage.getItem("acstoken").startsWith("visitor")) {
+			gebi("tkn_issuer").textContent = "Visitor Token";
 		} else {
 			var decoded_jwt = JSON.parse(atob(window.localStorage.getItem("acstoken").split(".")[1]));
 			gebi("tkn_issuer").textContent = "Azure AD";
