@@ -817,7 +817,7 @@ class PVMap extends SVGManipulator {
             currentObj = featuredata_workingcopy[i];
             if (currentObj.tc && currentObj.newFontSize) {
                 // If a new text object was placed by layer commands
-                if (!currentObj.newFont) currentObj.newFont = "Lucida Console";
+                if (!currentObj.newFont) currentObj.newFont = "Arial";
                 if (!currentObj.newFont) currentObj.newTextColor = "lightgreen";
                 this.placeText(currentObj.tc, `text__${currentObj.landmark_id}`, currentObj.landmark_id, -2, -2, currentObj.newTextColor, currentObj.newFontSize, currentObj.newFont);
             }
