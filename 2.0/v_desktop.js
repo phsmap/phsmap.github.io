@@ -284,13 +284,13 @@ window.onload = function() {
 		if (window.localStorage.getItem("acstoken").startsWith("testing")) {
 			gebi("tkn_issuer").textContent = "Fixed Testing Token";
 		} else {
-			decoded_jwt = JSON.parse(atob(window.localStorage.getItem("acstoken").split(".")[1]));
+			var decoded_jwt = JSON.parse(atob(window.localStorage.getItem("acstoken").split(".")[1]));
 			gebi("tkn_issuer").textContent = "Azure AD";
 			gebi("tkn_name").textContent = decoded_jwt.name;
 			gebi("tkn_upn").textContent = decoded_jwt.upn;
-			d_iat = new Date(Number(decoded_jwt.iat) * 1000);
+			var d_iat = new Date(Number(decoded_jwt.iat) * 1000);
 			gebi("tkn_iat").textContent = d_iat.toLocaleString();
-			d_exp = new Date(Number(decoded_jwt.exp) * 1000);
+			var d_exp = new Date(Number(decoded_jwt.exp) * 1000);
 			gebi("tkn_exp").textContent = d_exp.toLocaleString();
 		}
 	}
