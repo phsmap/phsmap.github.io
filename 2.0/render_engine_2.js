@@ -490,7 +490,7 @@ class PVMap extends SVGManipulator {
                 var newTS = document.createElementNS("http://www.w3.org/2000/svg", "tspan");
                 newTS.setAttributeNS(null, "x", centroid[0]);
                 if (i == 0) newTS.setAttributeNS(null, "dy", "0px");
-                else newTS.setAttributeNS(null, "dy", "0.95em");
+                else newTS.setAttributeNS(null, "dy", "10px");
                 newTS.textContent = lines[i];
                 newTN.appendChild(newTS);
             }
@@ -510,9 +510,9 @@ class PVMap extends SVGManipulator {
             newTN.setAttributeNS(null, "font-size", new_font_size); // once we have the desired font size, set it
             // account for multiline text shift
             if (box_id && x < 0 && y < 0) {
-                var parent_bounds = this.retrieve_element_in_this_group(box_id).getBoundingClientRect();
+                var parent_bounds = this.retrieve_element_in_this_group(box_id).getBBox();
                 var midpoint_of_parent_bounds = parent_bounds.y + (parent_bounds.height / 2);
-                var text_box_bounds = this.retrieve_element_in_this_group(new_id).getBoundingClientRect();
+                var text_box_bounds = this.retrieve_element_in_this_group(new_id).getBBox();
                 var midpoint_of_text_box = text_box_bounds.y + (text_box_bounds.height / 2);
                 newTN.setAttributeNS(null, "y", centroid[1] - (midpoint_of_text_box - midpoint_of_parent_bounds));
                 ////console.log(centroid[1] - (midpoint_of_text_box - midpoint_of_parent_bounds));
