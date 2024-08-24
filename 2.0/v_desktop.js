@@ -373,7 +373,8 @@ window.onload = function() {
 			window.mapSet.stowAway(rt); 
 			setTimeout(function(){window.mapSet.makeActive(rt)}, 100)
 		}
-	}, 1000);
+		console.log("Reloaded...")
+	}, 5000);
 	
 }
 
