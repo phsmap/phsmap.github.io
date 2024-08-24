@@ -70,7 +70,7 @@ class PVMapGroup {
 	makeActive(map_id) {
 		// 0. Check to make sure that two maps aren't active at the same time
 		if (this.activeMap) {
-			console.error(`[PVMapGroup] A map is already marked as active: ${this.activeMap.map_dataset_object.svg_id}. Deactivate that map before activating another.`);
+			console.warn(`[PVMapGroup] A map is already marked as active: ${this.activeMap.map_dataset_object.svg_id}. Deactivate that map before activating another.`);
 			return null;
 		}
 		

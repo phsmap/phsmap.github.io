@@ -34,7 +34,7 @@ class SVGManipulator {
         // this corresponds to the actual SVG element
         this.svg_container = document.getElementById(svg_element_id);
 		if (!this.svg_container) {
-			console.error(`[svgmanipulator][${svg_element_id}] Bad SVG element ID.`);
+			console.warn(`[svgmanipulator][${svg_element_id}] Bad SVG element ID.`);
 			return null;
 		} else {
 			//console.log(`[svgmanipulator][${svg_element_id}] Got SVG element!`, this.svg_container);
@@ -45,7 +45,7 @@ class SVGManipulator {
         // if there are more than one the SVG needs to be modified
         var groups = this.svg_container.querySelector("g");
         if (!groups) {
-            console.error(`[svgmanipulator][${this.svg_id}][setCallbacks] No group element found (or bad parent element)! SVGManipulator creation fails.`);
+            console.warn(`[svgmanipulator][${this.svg_id}][setCallbacks] No group element found (or bad parent element)! SVGManipulator creation fails.`);
             return null;
         } else {
             this.group_container = groups;
@@ -97,7 +97,7 @@ class SVGManipulator {
         //console.log(`[svgmanipulator][${this.svg_id}][setCallbackParticularElement] Attempting to set a callback to sub element ${id}`);
         var elem = this.group_container.querySelector("#" + id);
         if (!elem) {
-            console.error(`[svgmanipulator][${this.svg_id}][setCallbackParticularElement] Unable to apply a callback to this particular element: ${id}`);
+            console.warn(`[svgmanipulator][${this.svg_id}][setCallbackParticularElement] Unable to apply a callback to this particular element: ${id}`);
             return null;
         }
         elem[listener] = callback;
@@ -142,7 +142,7 @@ class SVGManipulator {
     removeElementWithId(id) {
         var elem = this.group_container.querySelector("#" + id);
         if (!elem) {
-            console.error(`[svgmanipulator][${this.svg_id}][removeElementWithId] Could not find element with ID ${id} to remove.`);
+            console.warn(`[svgmanipulator][${this.svg_id}][removeElementWithId] Could not find element with ID ${id} to remove.`);
             return null;
         } else elem.remove();
         return id;
@@ -151,15 +151,15 @@ class SVGManipulator {
     retrieve_property(id, attribute) {
         var elem = this.group_container.querySelector("#" + id);
         if (!elem) {
-            console.error(`[svgmanipulator][${this.svg_id}][retrieve_property] Could not find element with ID ${id} to lookup.`);
+            console.warn(`[svgmanipulator][${this.svg_id}][retrieve_property] Could not find element with ID ${id} to lookup.`);
             return null;
         } else return elem.getAttributeNS(null, attribute);
     }
 
-    retrieve_element_in_this_group(id, suppress_error) {
+    retrieve_element_in_this_group(id, suppress_warn) {
         var elem = this.group_container.querySelector("#" + id);
-        if (!elem && !suppress_error) {
-            console.error(`[svgmanipulator][${this.svg_id}][retrieve_element_in_this_group] Could not find element with ID ${id} to lookup.`);
+        if (!elem && !suppress_warn) {
+            console.warn(`[svgmanipulator][${this.svg_id}][retrieve_element_in_this_group] Could not find element with ID ${id} to lookup.`);
             return null;
         } else if (!elem) {
             return null;
@@ -169,7 +169,7 @@ class SVGManipulator {
     set_property(id, attribute, value) {
         var elem = this.group_container.querySelector("#" + id);
         if (!elem) {
-            console.error(`[svgmanipulator][${this.svg_id}][set_property] Could not find element with ID ${id} to modify.`);
+            console.warn(`[svgmanipulator][${this.svg_id}][set_property] Could not find element with ID ${id} to modify.`);
             return null;
         }
         elem.setAttributeNS(null, attribute, value);
@@ -178,7 +178,7 @@ class SVGManipulator {
     remove_property(id, attribute) {
         var elem = this.group_container.querySelector("#" + id);
         if (!elem) {
-            console.error(`[svgmanipulator][${this.svg_id}][remove_property] Could not find element with ID ${id} to remote attributes on.`);
+            console.warn(`[svgmanipulator][${this.svg_id}][remove_property] Could not find element with ID ${id} to remote attributes on.`);
             return null;
         }
         elem.removeAttributeNS(null, attribute);
@@ -289,7 +289,7 @@ class PVMap extends SVGManipulator {
         if (this.autogen_layerboxes) {
 			var container = PVMap.gebi(this.autogen_layerboxes);
 			if (!container) {
-				console.error(`[${this.svg_id}][initialize] The constructor could not find the HTML container element to append layer data checkboxes to while attempting to create layer checkboxes. Initialization failed.`);
+				console.warn(`[${this.svg_id}][initialize] The constructor could not find the HTML container element to append layer data checkboxes to while attempting to create layer checkboxes. Initialization failed.`);
 				return null;
 			}
 			
@@ -378,7 +378,7 @@ class PVMap extends SVGManipulator {
     changeBorder(id, color = "#FFFF00FF", width = "8px", permanent = false) {
         var elem = this.retrieve_element_in_this_group(id);
         if (!elem) {
-            console.error(`[${this.svg_id}][setBorder] Unable to find element with ID ${id} during lookup.`)
+            console.warn(`[${this.svg_id}][setBorder] Unable to find element with ID ${id} during lookup.`)
             return null;
         }
         elem.append(this.helper_generateAnimationNode(`staticBorder_vfx__${id}`, "stroke", color, "0.8s"));
@@ -391,7 +391,7 @@ class PVMap extends SVGManipulator {
     flashBorder(id, colors = "#FFFF00FF;#999999FF", width = "15px", rate = "0.8s", permanent = false) {
         var elem = this.retrieve_element_in_this_group(id);
         if (!elem) {
-            console.error(`[${this.svg_id}][flashBorder] Unable to find element with ID ${id} during lookup.`)
+            console.warn(`[${this.svg_id}][flashBorder] Unable to find element with ID ${id} during lookup.`)
             return null;
         }
         elem.append(this.helper_generateAnimationNode(`flashBorder_width_vfx__${id}`, "stroke-width", `${width}`, "0.8s"));
@@ -403,7 +403,7 @@ class PVMap extends SVGManipulator {
 	changeBgd(id, color, permanent = false) {
 		var elem = this.retrieve_element_in_this_group(id);
         if (!elem) {
-            console.error(`[${this.svg_id}][changeBgd] Unable to find element with ID ${id} during lookup.`)
+            console.warn(`[${this.svg_id}][changeBgd] Unable to find element with ID ${id} during lookup.`)
             return null;
         }
         elem.append(this.helper_generateAnimationNode(`changeBgd_fill_vfx__${id}`, "fill", `${color}`, "0.8s"));
@@ -418,7 +418,7 @@ class PVMap extends SVGManipulator {
         var elem = this.retrieve_element_in_this_group(id);
 		//console.log(`[${this.svg_id}][clearFX] Clearing ${id} of FX...`);
         if (!elem) {
-            console.error(`[${this.svg_id}][clearFX] Unable to find element with ID ${id} during lookup.`);
+            console.warn(`[${this.svg_id}][clearFX] Unable to find element with ID ${id} during lookup.`);
             return null;
         }
         elem.querySelectorAll("animate").forEach(function(em) {
@@ -450,13 +450,13 @@ class PVMap extends SVGManipulator {
             var centroid = this.helper_calculatePathCentroid(box_id);
 			//console.log(centroid);
             if (!centroid) {
-                console.error(`[${this.svg_id}][placeTextInPath] Unable to place text in the center of this element. Place text fails.`);
+                console.warn(`[${this.svg_id}][placeTextInPath] Unable to place text in the center of this element. Place text fails.`);
                 return null;
             }
         } else if (x > 0 && y > 0 && !box_id) { // setting either x or y to be positive and leaving box_id blank will trigger manual placement
             var centroid = [x, y];
         } else {
-            console.error(`[${this.svg_id}][placeTextInPath] Program is attempting automatic placement without providing a path_id, or is attempting to attempt manual placement while also providing a path_id for the text to be placed in. Operation fails due to conflicting inputs.`);
+            console.warn(`[${this.svg_id}][placeTextInPath] Program is attempting automatic placement without providing a path_id, or is attempting to attempt manual placement while also providing a path_id for the text to be placed in. Operation fails due to conflicting inputs.`);
             return null;
             // any other combination is invalid and will result in failure
         }
@@ -466,7 +466,7 @@ class PVMap extends SVGManipulator {
         if (id) new_id = id
         else new_id = PVMap.uniqueID();
         if (this.retrieve_element_in_this_group(new_id, true)) {
-            console.error(`[${this.svg_id}][placeTextInPath] Unable to place new text due to ID collision: ${new_id} already exists in this map!`);
+            console.warn(`[${this.svg_id}][placeTextInPath] Unable to place new text due to ID collision: ${new_id} already exists in this map!`);
             return null;
         }
 
@@ -518,7 +518,7 @@ class PVMap extends SVGManipulator {
                 ////console.log((midpoint_of_text_box - midpoint_of_parent_bounds));
             }
         } else if (Array.isArray(font_size) && (!box_id || x > 0 || y > 0)) {
-            console.error(`[${this.svg_id}][placeTextInPath] Auto font size cannot be used when automatic central placement is not being used or the path_id is not specified.`);
+            console.warn(`[${this.svg_id}][placeTextInPath] Auto font size cannot be used when automatic central placement is not being used or the path_id is not specified.`);
 			return null;
         } else {
             newTN.setAttributeNS(null, "font-size", font_size);
@@ -585,7 +585,7 @@ class PVMap extends SVGManipulator {
 	helper_calculateLineMidpoint(id) {
 		var elem = this.retrieve_element_in_this_group(id);
 		if (!elem) {
-            console.error(`[${this.svg_id}][calculateLineMidpoint] Unable to lookup path data for object with ID ${id}.`);
+            console.warn(`[${this.svg_id}][calculateLineMidpoint] Unable to lookup path data for object with ID ${id}.`);
             return null;
         }
 		var bbox = elem.getBBox();
@@ -595,7 +595,7 @@ class PVMap extends SVGManipulator {
 	helper_calculateLineOrigin(id) {
 		var elem = this.retrieve_element_in_this_group(id);
 		if (!elem) {
-            console.error(`[${this.svg_id}][calculateLineOrigin] Unable to lookup path data for object with ID ${id}.`);
+            console.warn(`[${this.svg_id}][calculateLineOrigin] Unable to lookup path data for object with ID ${id}.`);
             return null;
         }
 		var path = this.retrieve_property(id, "d");
@@ -607,7 +607,7 @@ class PVMap extends SVGManipulator {
     helper_calculatePathCentroid(id) {
         var path_data = this.retrieve_property(id, "d");
         if (!path_data) {
-            console.error(`[${this.svg_id}][calculatePathCentroid] Unable to lookup path data for object with ID ${id}.`);
+            console.warn(`[${this.svg_id}][calculatePathCentroid] Unable to lookup path data for object with ID ${id}.`);
             return null;
         }
         var polygon = this.helper_pathDatatoVertices(path_data);
@@ -868,7 +868,7 @@ class PVMap extends SVGManipulator {
             ////console.log(content_in_between);
             operators = content_in_between.split(",");
             if ((2 <= operators.length <= 3) == false) {
-                console.error(`  - [${this.svg_id}][evaluateQuery] Bad condition: malformed qualifiers: ${content}, operators = ${operators}`);
+                console.warn(`  - [${this.svg_id}][evaluateQuery] Bad condition: malformed qualifiers: ${content}, operators = ${operators}`);
                 return null;
             }
 			operators[0] = operators[0].trim();
@@ -940,7 +940,7 @@ class PVMap extends SVGManipulator {
                     to_replace_content = hits > 0;
                     break;
                 default:
-                    console.error(`[${this.svg_id}][evaluateQuery] Bad operator: invalid check condition: ${content}, operators = ${operators}`);
+                    console.warn(`[${this.svg_id}][evaluateQuery] Bad operator: invalid check condition: ${content}, operators = ${operators}`);
                     return null;
                     break;
             }
@@ -952,7 +952,7 @@ class PVMap extends SVGManipulator {
         // Now that we have something that resembles "true && false || true || false", we can parse that to make the ultimate determination as to whether or not the feature given is part of the layer
         conditions_and_instructions[0] = conditions_and_instructions[0].replaceAll(" ", "");
         if (conditions_and_instructions[0].replaceAll("false", "").replaceAll("true", "").replaceAll("||", "").replaceAll("&&", "").length > 0) {
-            console.error(`    - [${this.svg_id}][evaluateQuery] Unable to simmer query down to valid boolean expression after parsing through replacements + match operators. Current exp = "${conditions_and_instructions[0]}".`);
+            console.warn(`    - [${this.svg_id}][evaluateQuery] Unable to simmer query down to valid boolean expression after parsing through replacements + match operators. Current exp = "${conditions_and_instructions[0]}".`);
             return null;
         }
         var broken_up_by_and_operator = conditions_and_instructions[0].split("||");

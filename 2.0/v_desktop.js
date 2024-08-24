@@ -171,7 +171,7 @@ function populateLookupMenu(id) {
 			newTR.appendChild(newTD2);
 			newTR.classList.add("landmark_datacell");
 			table_element.appendChild(newTR);
-			var tc = "(error!)";
+			var tc = "(warn!)";
 			var map_area = window.mapSet.activeMap.map_dataset_object.svg_id;
 			if (objectInReference.long_name) {
 				if (objectInReference.official_room_number) tc = `${objectInReference.long_name} (${map_area})`;
@@ -216,7 +216,7 @@ function searchAndResolve(search_term) {
 			var room_number = landmark.official_room_number
 			var landmark_name = landmark.long_name 
 			
-			var tc = "(error!)";
+			var tc = "(warn!)";
 			if (landmark_name) {
 				if (room_number) tc = `${landmark_name}/Rm ${room_number} (${map_area})`;
 				else tc = `${landmark_name} (${map_area})`;
@@ -323,7 +323,7 @@ window.onload = function() {
 			document.getElementById("console").innerHTML += "<br><br>";
 		}
 
-		console.error = function(content) {
+		console.warn = function(content) {
 			document.getElementById("console").innerHTML += `<b style="color:red">${content}</b>`;
 			document.getElementById("console").innerHTML += "<br><br>";
 		}
@@ -594,7 +594,7 @@ function navhelper_addarrows(target_direction, lineID, direction_neutral = false
 	if (auto_trim) {
 		console.log(`auto trimming to meet ${auto_trim}`)
 		if (auto_trim.split("::").length != 2) {
-			console.error(`[core-navhelper][addArrows] Malformed room_trim_to ID ${auto_trim}`);
+			console.warn(`[core-navhelper][addArrows] Malformed room_trim_to ID ${auto_trim}`);
 			return null;
 		}
 		var trim_to_room = window[auto_trim.split("::")[0]].helper_calculatePathCentroid(auto_trim.split("::")[1]);
@@ -602,8 +602,8 @@ function navhelper_addarrows(target_direction, lineID, direction_neutral = false
 			// if we couldn't look up the center point of the "trim-to" marker, it could also be a line and thus we should get the origin of that line
 			var trim_to_room = window[auto_trim.split("::")[0]].helper_calculateLineOrigin(auto_trim.split("::")[1]);
 			if (!trim_to_room) {
-				// if it wasn't a line OR a polygon, then error out  
-				console.error(`[core-navhelper][addArrows] No ctrpoint found: ${trim_to_room}`);
+				// if it wasn't a line OR a polygon, then warn out  
+				console.warn(`[core-navhelper][addArrows] No ctrpoint found: ${trim_to_room}`);
 				return null;
 			}
 		}
@@ -654,7 +654,7 @@ function navhelper_addarrows(target_direction, lineID, direction_neutral = false
 		try {
 			if (!direction_neutral) newTXP.textContent += " → ".repeat(repeatNumber - 1);
 			else newTXP.textContent += " -- ".repeat(repeatNumber - 1);
-		} catch(error) {
+		} catch(warn) {
 			if (!direction_neutral) newTXP.textContent += " → ".repeat(repeatNumberNoCut - 1);
 			else newTXP.textContent += " -- ".repeat(repeatNumberNoCut - 1);
 		}
@@ -674,17 +674,17 @@ function navhelper_addarrows(target_direction, lineID, direction_neutral = false
 
 function navhelper_determineLineDirection(id) {
 	if (id.split("::").length != 2) {
-		console.error(`[core-navhelper][calculateLineDirection] Malformed ID ${id}`);
+		console.warn(`[core-navhelper][calculateLineDirection] Malformed ID ${id}`);
 		return null;
 	}
 	var path_data = window[id.split("::")[0]].retrieve_property(id.split("::")[1], "d");
 	if (!path_data) {
-		console.error(`[core-navhelper][calculateLineDirection] Unable to lookup path data for object with ID ${id}.`);
+		console.warn(`[core-navhelper][calculateLineDirection] Unable to lookup path data for object with ID ${id}.`);
 		return null;
 	}
 	var path_data_list = path_data.split("l");
 	if (path_data_list.length != 2) {
-		console.error(`[core-navhelper][calculateLineDirection] This is not a line in m...l... format (move pointer and move to a point relative to the pointer location), calculate direction fails.`);
+		console.warn(`[core-navhelper][calculateLineDirection] This is not a line in m...l... format (move pointer and move to a point relative to the pointer location), calculate direction fails.`);
 		return null;
 	}
 	var command = path_data_list[1].split(" ");
@@ -707,21 +707,21 @@ function navhelper_determineLineDirection(id) {
 
 function navhelper_calculateDisplacementDirection(id1, id2) {
 	if (id1.split("::").length != 2) {
-		console.error(`[core-navhelper][calculateDisplacementDirection] Malformed ID 1 ${id}`);
+		console.warn(`[core-navhelper][calculateDisplacementDirection] Malformed ID 1 ${id}`);
 		return null;
 	}
 	var midPoint1 = window[id1.split("::")[0]].helper_calculatePathCentroid(id1.split("::")[1]);
 	if (!midPoint1) midPoint1 = window[id1.split("::")[0]].helper_calculateLineMidpoint(id1.split("::")[1]); // if calculatePathCentroid didn't work, the object could be a line instead, so let's get that midpoint before we declare that the path is invalid
 	
 	if (id1.split("::").length != 2) {
-		console.error(`[core-navhelper][calculateDisplacementDirection] Malformed ID 2 ${id}`);
+		console.warn(`[core-navhelper][calculateDisplacementDirection] Malformed ID 2 ${id}`);
 		return null;
 	}
 	var midPoint2 = window[id2.split("::")[0]].helper_calculatePathCentroid(id2.split("::")[1]);
 	if (!midPoint2) midPoint2 = window[id2.split("::")[0]].helper_calculateLineMidpoint(id2.split("::")[1]);
 	
 	if (!midPoint1 || !midPoint2) {
-		console.error(`[core-navhelper][calculateDisplacementDirection] Bad midpoint calculations, cannot proceed with calculating displacement on the plane: ${midPoint1} , ${midPoint2}`);
+		console.warn(`[core-navhelper][calculateDisplacementDirection] Bad midpoint calculations, cannot proceed with calculating displacement on the plane: ${midPoint1} , ${midPoint2}`);
 		return null;
 	}
 	
