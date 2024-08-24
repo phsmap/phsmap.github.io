@@ -172,11 +172,11 @@ Click <a onclick='this.parentElement.style.display="none";' style='color: pink;'
 </div>
 </div>
 
-<div id='settings' class='ws_modal menu' style='color: white;white-space: normal; padding: 4px; text-align: left;' hidden>
+<div id='settings' class='ws_modal menu' style='color: #999;white-space: normal; padding: 4px; text-align: left;' hidden>
 	<a onclick='openMenu("menu", "home")' style='color: yellow;' class='search noselect'><u>← Back</u></a>
    <h1 style='text-align: center;'>App Settings</h1>
 		<hr>
-		<h4 style='text-align: center;'><u>Client Type</u></h4>
+		<h4 style='text-align: center; color: white;'><u>Client Type</u></h4>
 		<b>Device Type</b><br><br>
 		Current device type preference: <u id='curr_type_device' style='color: white'>[loading...]</u><br>
 		Override device type preference:
@@ -212,7 +212,7 @@ Click <a onclick='this.parentElement.style.display="none";' style='color: pink;'
 		<br>
 		<br>
 		<hr>
-		<h4 style='text-align: center;'><u>Sign Out</u></h4>
+		<h4 style='text-align: center; color: white;'><u>Sign Out</u></h4>
 		<button style='color: red;' onclick='window.localStorage.clear(); document.cookie.split(";").forEach(function(c) { document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); }); document.location = "/";'>Sign out AND clear preference data</button>
 		<br>
 		<br>
@@ -222,8 +222,8 @@ Click <a onclick='this.parentElement.style.display="none";' style='color: pink;'
 		<br>
 		<br>
 		<hr>
-		<h4>Token</h4>
-		Information:
+		<h4 style='text-align: center; color: white;'><u>Authentication</u></h4>
+		Token Information:
 		<br>
 		<br>
 		<table>
@@ -256,18 +256,20 @@ Click <a onclick='this.parentElement.style.display="none";' style='color: pink;'
 		<br>
 		<br>
 		<hr>
-		<h4>Input Sensitivity</h4>
-		Scroll (zoom) sensitivity: <input id='wheel_sens' value='[loading...]'>
-		<br>
-		Mouse/trackpad (pan) sensitivity: <input id='mousemove_sens' value='[loading...]'>
-		<br>
-		<br>
-		<button style='color: lightgreen' onclick='setCookie("vers2_wheel_sens", gebi("wheel_sens").value, 40); setCookie("vers2_mousemove_sens", gebi("mousemove_sens").value, 40); window.location.reload()'>Apply changes and reload</button>
-		<br>
-		<br>
-		<br>
-		<br>
-		<hr>
+		<div hidden>
+			<h4 style='text-align: center; color: white;'><u>Input</u></h4>
+			Scroll (zoom) sensitivity: <input id='wheel_sens' value='[loading...]'>
+			<br>
+			Mouse/trackpad (pan) sensitivity: <input id='mousemove_sens' value='[loading...]'>
+			<br>
+			<br>
+			<button style='color: lightgreen' onclick='setCookie("vers2_wheel_sens", gebi("wheel_sens").value, 40); setCookie("vers2_mousemove_sens", gebi("mousemove_sens").value, 40); window.location.reload()'>Apply changes and reload</button>
+			<br>
+			<br>
+			<br>
+			<br>
+			<hr>
+		</div>
 		<h4>Debug Items:</h4>
 		<button style='color:gray' onclick='var rt = window.mapSet.activeMap.map_dataset_object.svg_id; window.mapSet.stowAway(rt); setTimeout(function(){window.mapSet.makeActive(rt)}, 250)'>Stow / reload</button>
 		<br>
