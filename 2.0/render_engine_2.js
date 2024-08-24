@@ -489,7 +489,7 @@ class PVMap extends SVGManipulator {
                 // 1. create multiple tspan elements
                 var newTS = document.createElementNS("http://www.w3.org/2000/svg", "tspan");
                 newTS.setAttributeNS(null, "x", centroid[0]);
-                newTS.setAttributeNS(null, "dy", "1.5ch");
+                newTS.setAttributeNS(null, "dy", "1em");
                 newTS.textContent = lines[i];
                 newTN.appendChild(newTS);
             }
@@ -517,6 +517,11 @@ class PVMap extends SVGManipulator {
                 //console.log(centroid[1] - (midpoint_of_text_box - midpoint_of_parent_bounds));
                 //console.log((midpoint_of_text_box - midpoint_of_parent_bounds));
             }
+			// now that we know the font size, we can set the dy to that value
+			window.nfs = new_font_size;
+			this.group_container.querySelector(`#${new_id}`).querySelectorAll("tspan").forEach(function(e) {
+				e.setAttributeNS(null, "dy", `${window.nfs}px`);
+			})
         } else if (Array.isArray(font_size) && (!box_id || x > 0 || y > 0)) {
             console.warn(`[${this.svg_id}][placeTextInPath] Auto font size cannot be used when automatic central placement is not being used or the path_id is not specified.`);
 			return null;
