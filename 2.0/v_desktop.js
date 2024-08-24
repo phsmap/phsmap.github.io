@@ -1,3 +1,5 @@
+"use strict";
+
 function gebi(id) {
 	return document.getElementById(id);
 } 
@@ -45,8 +47,8 @@ function startUpDesktopListeners() {
 	});
 	document.addEventListener("mousemove", function(evt) {
 		if (beingHeld) {
-			dX = window.mousemove_sens * (beganClickingX - evt.clientX) * (1/1);
-			dY = window.mousemove_sens * (beganClickingY - evt.clientY) * (1/1);
+			var dX = window.mousemove_sens * (beganClickingX - evt.clientX) * (1/1);
+			var dY = window.mousemove_sens * (beganClickingY - evt.clientY) * (1/1);
 			//console.log(`dX, dY = ${dX}, ${dY}`);
 			zoomableDiv.style.left = (Number(zoomableDiv.style.left.slice(0,-2)) + dX) + "px"; 
 			zoomableDiv.style.top = (Number(zoomableDiv.style.top.slice(0,-2)) + dY) + "px"; 
@@ -139,7 +141,7 @@ function setViewport(x, y, zm) {
 function populateLookupMenu(id) {
 	document.getElementById("show_landmark_data").style.display = "block";
 	document.querySelectorAll('.landmark_datacell').forEach(e => e.remove());
-	objectInReference = window.mapSet.activeMap.map_dataset_object.lookupFeatureObject(id);
+	var objectInReference = window.mapSet.activeMap.map_dataset_object.lookupFeatureObject(id);
 	if (!objectInReference) {
 		alert(`On populateLookupMenu( ${id} ), could not find the corresponding object on the active map.`);
 		return null;
@@ -155,13 +157,13 @@ function populateLookupMenu(id) {
 	document.getElementById("set_nav_origin").setAttribute("landmarkid", `${id}`);
 	document.getElementById("set_nav_destination").setAttribute("landmarkid", `${id}`);
 	
-	table_element = document.getElementById("lookup_table");
-	keys = Object.keys(objectInReference);
+	var table_element = document.getElementById("lookup_table");
+	var keys = Object.keys(objectInReference);
 	for (let i = 0; i < keys.length; i++) {
 		if (objectInReference[keys[i]] && objectInReference[keys[i]] != ""  && ["landmark_id", "search_terms", "physical_location", "attached_to"].includes(keys[i]) == false) {
-			newTR = document.createElement("tr");
-			newTD1 = document.createElement("td");
-			newTD2 = document.createElement("td");
+			var newTR = document.createElement("tr");
+			var newTD1 = document.createElement("td");
+			var newTD2 = document.createElement("td");
 			newTD1.textContent = keys[i];
 			newTD2.textContent = objectInReference[keys[i]].replaceAll(";", "\n\n").replaceAll("[comma]", ",").replaceAll("[newline]", "\n");;
 			newTD2.style.whiteSpace = "pre-wrap";
@@ -169,8 +171,8 @@ function populateLookupMenu(id) {
 			newTR.appendChild(newTD2);
 			newTR.classList.add("landmark_datacell");
 			table_element.appendChild(newTR);
-			tc = "(error!)";
-			map_area = window.mapSet.activeMap.map_dataset_object.svg_id;
+			var tc = "(error!)";
+			var map_area = window.mapSet.activeMap.map_dataset_object.svg_id;
 			if (objectInReference.long_name) {
 				if (objectInReference.official_room_number) tc = `${objectInReference.long_name} (${map_area})`;
 				else tc = `${objectInReference.long_name} (${map_area})`;
@@ -192,29 +194,29 @@ function searchAndResolve(search_term) {
 		alert("Search term cannot be empty!");
 		return null;
 	}
-	results = window.mapSet.searchAllMaps(search_term);
+	var results = window.mapSet.searchAllMaps(search_term);
 	console.log(results);
-	pBody = document.getElementById("resolution_options");
-	keys = Object.keys(results);
+	var pBody = document.getElementById("resolution_options");
+	var keys = Object.keys(results);
 	
 	document.querySelectorAll('.resolution_tr').forEach(e => e.remove());
 	
-	hits = 0
+	var hits = 0
 	
 	for (let i = 0; i < keys.length; i++) {
 		for (let j = 0; j < results[keys[i]].length; j ++) {
 			hits++;
 			//Add the row in (yes I chatgpt'd this code because lazy)
-			map_area = keys[i];
-			landmark_id = results[keys[i]][j];
+			var map_area = keys[i];
+			var landmark_id = results[keys[i]][j];
 			
-			landmark = window.mapSet.pvmaps[map_area].map_dataset_object.lookupFeatureObject(landmark_id);
+			var landmark = window.mapSet.pvmaps[map_area].map_dataset_object.lookupFeatureObject(landmark_id);
 			
-			landmark_type = landmark.type 
-			room_number = landmark.official_room_number
-			landmark_name = landmark.long_name 
+			var landmark_type = landmark.type 
+			var room_number = landmark.official_room_number
+			var landmark_name = landmark.long_name 
 			
-			tc = "(error!)";
+			var tc = "(error!)";
 			if (landmark_name) {
 				if (room_number) tc = `${landmark_name}/Rm ${room_number} (${map_area})`;
 				else tc = `${landmark_name} (${map_area})`;
@@ -222,7 +224,7 @@ function searchAndResolve(search_term) {
 			else if (room_number) tc = `Rm ${room_number} (${map_area})`;
 			else tc = `(obj: ${landmark_type} ${landmark_id}) (${map_area})`;
 			
-            newA = document.createElement('a');
+            var newA = document.createElement('a');
 			newA.textContent = tc;
 			newA.classList.add("noselect");
 			newA.classList.add("search");
@@ -237,7 +239,7 @@ function searchAndResolve(search_term) {
 				window.mapSet.pvmaps[evt.target.getAttribute("under_map")].map_dataset_object.flashBorder(evt.target.getAttribute("on_id"), "#FFFF00FF;#999999FF", "15px", "0.8s", true);
 				document.getElementById("map_select").value = evt.target.getAttribute("under_map");
 			}
-			newbr = document.createElement("br");
+			var newbr = document.createElement("br");
 			newbr.classList.add("srt_clearable");
 			pBody.append();
 			pBody.append(newbr);
@@ -295,7 +297,7 @@ window.onload = function() {
 	
 	
 	document.addEventListener('keydown', function(event) {
-	consoleElement = document.getElementById("console");
+	var consoleElement = document.getElementById("console");
     // Check if the Shift key and Escape key are both pressed
     if (event.shiftKey && event.altKey && event.key == 'Enter') {
         // Get the element with the id "console"
