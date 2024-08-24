@@ -1,3 +1,5 @@
+"use strict";
+
 class SVGManipulator {
 
     static uuidv4() {
