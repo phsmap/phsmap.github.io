@@ -1,0 +1,172 @@
+body {
+	background-color: #333;
+	font-family: Verdana;
+	font-size: 34px;
+    animation: fadeInAnimation ease 0.7s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+}
+@keyframes fadeInAnimation {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+button {
+	border: 1px solid #BBB;
+	background-color: black;
+	color: #BBB;
+	z-index: 999;
+	color: gold;
+	font-family: Verdana;
+	font-size: 34px;
+}
+
+table, tr, td {
+	padding: 5px;
+	border: 1px solid #BBB;
+	border-collapse: collapse;
+	color: #BBB;
+	font-size: 34px;
+}
+
+button:hover, input:hover {
+	background-color: #888;
+}
+
+button:active {
+	background-color: #FFF;
+}
+
+select, input {
+	color: #BBB;
+	background-color: black;
+	border: 1px solid #BBB;
+	font-size: 34px;
+	position: relative;
+	z-index: 999;
+	font-family: Verdana;
+}
+
+input[type=checkbox] {
+	width: 34px;
+	height: 34px;
+}
+
+
+button.mainmenu {
+	width: 100%; border: 0px solid white; text-align: left; font-size: 48px; padding: 14px;
+}
+
+
+div.mainbar {
+	position: fixed;
+	z-index: 999;
+	top: 0.75%;
+	text-align: center;
+	width: 100%;
+}
+
+div.search {
+	text-align: center;
+}
+
+a.search {
+	color: #BBB;
+	background-color: #00000000;
+}
+
+a.search:hover {
+	color: #BBB;
+	background-color: #999;
+}
+
+a.search:active {
+	color: white;
+	background-color: white;
+}
+
+div.top_corner {
+	position: fixed;
+	left: 1%;
+	top: 0%;
+	text-align: left;
+	z-index: 999;
+	width: 20%;
+	color: #BBB;
+}
+
+div.bottom_corner {
+	position: fixed;
+	text-align: right;
+	right: 1%;
+	bottom: 1%;
+	color: #999;
+	z-index: 999;
+	font-family: "Lucida Console"
+}
+
+svg text {
+   -webkit-user-select: none;
+   -moz-user-select: none;
+   -ms-user-select: none;
+   user-select: none;
+}
+
+.noselect {
+	-webkit-user-select: none;
+   -moz-user-select: none;
+   -ms-user-select: none;
+   user-select: none;
+}
+
+div.ws_modal {
+	position:fixed;
+	z-index:10002;
+	width:100%;
+	height:100%;
+	top:0%;
+	left:0%;
+	background-color:#000000DD;
+	color:#999;
+	overflow:scroll;
+	textwrap:stable;
+	white-space:pre-wrap;
+}
+
+button.ws_modal {
+	color: #AAA;
+	
+}
+
+div.config_menu {
+	border: 1px solid gray; 
+	position: fixed; 
+	width: 65%; 
+	height: 75%; 
+	right: 4%;
+	padding: 0px;
+	color: #BBB;
+	padding-left: 6px;
+}
+
+button.actions_menu {
+	height: 25px;
+}
+
+div.actions_menu {
+	position: fixed;
+	bottom: 1%;
+	left: 1%;
+}
+
+div.popup {
+	position: fixed; top: 0; left: 0; margin: auto; width: 100%; height: 100%; overflow:visible;background-color: #000000AA; z-index: 10003243243;
+	color: #AAA;
+	padding: 5px;
+	text-align:center;
+	overflow:scroll;
+}

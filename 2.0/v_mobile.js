@@ -124,9 +124,9 @@ function startUpDesktopListeners() {
   
 function resetViewport() {
 	var obj = window.mapSet.activeMap.map_dataset_object;
-	gebi("zoomableDiv").style.left = `${obj.desktop_default_x}px`;
-	gebi("zoomableDiv").style.top = `${obj.desktop_default_y}px`;
-	gebi("zoomableDiv").style.transform = `scale(${obj.desktop_default_zoom})`;
+	gebi("zoomableDiv").style.left = `${obj.mobile_default_x}px`;
+	gebi("zoomableDiv").style.top = `${obj.mobile_default_y}px`;
+	gebi("zoomableDiv").style.transform = `scale(${obj.mobile_default_zoom})`;
 	let scale = obj.desktop_default_zoom;
 	gebi("zoom").innerHTML = `zoom: ${scale.toFixed(2)}`;
 }
@@ -253,11 +253,11 @@ function searchAndResolve(search_term, containing_body = "resolution_options", s
 			
 			var tc = "(warn!)";
 			if (landmark_name) {
-				if (room_number) tc = `${landmark_name}/Rm ${room_number} (${map_area})`;
-				else tc = `${landmark_name} (${map_area})`;
+				if (room_number) tc = `> ${landmark_name}/Rm ${room_number} (${map_area})`;
+				else tc = `> ${landmark_name} (${map_area})`;
 			} 
-			else if (room_number) tc = `Rm ${room_number} (${map_area})`;
-			else tc = `(obj: ${landmark_type} ${landmark_id}) (${map_area})`;
+			else if (room_number) tc = `> Rm ${room_number} (${map_area})`;
+			else tc = `> (obj: ${landmark_type} ${landmark_id}) (${map_area})`;
 			
             var newA = document.createElement('a');
 			newA.textContent = tc;
@@ -276,11 +276,13 @@ function searchAndResolve(search_term, containing_body = "resolution_options", s
 					resetViewport();
 					window.mapSet.pvmaps[evt.target.getAttribute("under_map")].map_dataset_object.flashBorder(evt.target.getAttribute("on_id"), "#FFFF00FF;#999999FF", "15px", "0.8s", true);
 					document.getElementById("map_select").value = evt.target.getAttribute("under_map");
+					document.getElementById("mainmenu").hidden = true;
 				}
 			}
 			var newbr = document.createElement("br");
 			newbr.classList.add(special_class_name);
 			pBody.append();
+			pBody.append(newbr);
 			pBody.append(newbr);
 			pBody.append(newA);
 		}
@@ -395,7 +397,7 @@ window.onload = function() {
 			map.autogenerate_layer_checkboxes_under_element = "feature_checkboxes";
 			
 			var m1 = new PVMap(map, layer_data, feature_data);
-			window.mapSet.addPVMap(m1);
+			window.mapSet.addPVMap(m1, m1.mobile_default_x, m1.mobile_default_y, m1.mobile_default_zoom);
 			var newOption = document.createElement("option");
 			newOption.value = map.svg_element_id;
 			newOption.textContent = map.map_screen_name;

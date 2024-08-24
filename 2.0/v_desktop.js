@@ -395,7 +395,7 @@ window.onload = function() {
 			map.autogenerate_layer_checkboxes_under_element = "feature_checkboxes";
 			
 			var m1 = new PVMap(map, layer_data, feature_data);
-			window.mapSet.addPVMap(m1);
+			window.mapSet.addPVMap(m1, m1.desktop_default_x, m1.desktop_default_y, m1.desktop_default_zoom);
 			var newOption = document.createElement("option");
 			newOption.value = map.svg_element_id;
 			newOption.textContent = map.map_screen_name;

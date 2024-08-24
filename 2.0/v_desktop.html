@@ -149,7 +149,7 @@ Click <a onclick='this.parentElement.style.display="none";' style='color: pink;'
 	
 	<div id='navactions' hidden>Actions:<br>
 		<button style='color:white;font-size:14' onclick='document.getElementById("navsearch").style.display = "block";'>Search for origin/destination</button>&nbsp;
-		<button style='color:gray; background-color: #333; font-size:14' id='navstart' onclick='var rts = bestRoutes(allRoutes(window.navhelper.origin, window.navhelper.destination,false)); if (rts.length > 0) {displayRoutes(rts[0])} else {alert("No route found! Please note that only classrooms, offices, major landmarks and doors are navigable -- mechanical rooms and certain other features cannot be navigated to using Nav Helper.")}'>Start Nav Helper</button>
+		<button style='color:gray; background-color: #333; font-size:14' id='navstart' onclick='var rts = bestRoutes(allRoutes(window.navhelper.origin, window.navhelper.destination,false)); if (rts.length > 0) {displayRoute(rts[0])} else {alert("No route found! Please note that only classrooms, offices, major landmarks and doors are navigable -- mechanical rooms and certain other features cannot be navigated to using Nav Helper.")}'>Start Nav Helper</button>
 		<br>
 		<br>
 		<button style='color:red; font-size:14' id='navstart' onclick='eraseRoute(); navhelper_clearnodes();'>Erase route + stop Nav Helper</button>
