@@ -618,9 +618,9 @@ function navhelper_addnode(namespace, nodeID, origin_destination) {
 		gebi("navstatus2").innerHTML = "<b style='color:lime;'>Ready.</b>"	
 		gebi("navstart").style.color = 'lightgreen';
 		gebi("navstart").style.backgroundColor = '';
-		if (confirm("An origin and destination have been set! Do you want to start Nav Helper?")) {
+		/* if (confirm("An origin and destination have been set! Do you want to start Nav Helper?")) {
 			navhelper_navstart();
-		}
+		} */
 	}
 	if (window.navhelper.origin && !window.navhelper.destination) {
 		gebi("navstatus2").innerHTML = "<b style='color:yellow;'>Waiting for user to select a destination...</b>"	
