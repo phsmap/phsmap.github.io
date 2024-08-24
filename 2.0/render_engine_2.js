@@ -537,7 +537,7 @@ class PVMap extends SVGManipulator {
             var new_font_size = PVMap.clamp(Math.round(scaling_factor * bounds.height), font_size[1], font_size[2]);
             newTN.setAttributeNS(null, "font-size", new_font_size); // once we have the desired font size, set it
             // account for multiline text shift
-            if (box_id && x < 0 && y < 0 && false) {
+            if (box_id && x < 0 && y < 0 && false) { // apparently, disabling automatic repositioning doesn't impact the position of the text and it prevents the text from rendering incorrectly on iOS
                 var parent_bounds = this.retrieve_element_in_this_group(box_id).getBBox();
                 var midpoint_of_parent_bounds = parent_bounds.y + (parent_bounds.height / 2);
                 var text_box_bounds = this.retrieve_element_in_this_group(new_id).getBBox();
@@ -553,7 +553,7 @@ class PVMap extends SVGManipulator {
             newTN.setAttributeNS(null, "font-size", font_size);
             this.group_container.append(newTN);
             // account for multiline text shift
-            if (box_id && x < 0 && y < 0) {
+            if (box_id && x < 0 && y < 0 && false) { // apparently, disabling automatic repositioning doesn't impact the position of the text and it prevents the text from rendering incorrectly on iOS
                 var parent_bounds = this.retrieve_element_in_this_group(box_id).getBBox();
                 var midpoint_of_parent_bounds = parent_bounds.y + (parent_bounds.height / 2);
                 var text_box_bounds = this.retrieve_element_in_this_group(new_id).getBBox();
@@ -854,6 +854,10 @@ class PVMap extends SVGManipulator {
 				this.changeBgd(currentObj.landmark_id, currentObj.newBgdColor, true);
 			}
         }
+		// apparently, reloading the map (as in, stowing it away and then bringing it back out fixes a render issue on IOS
+		var rt = window.mapSet.activeMap.map_dataset_object.svg_id; 
+		window.mapSet.stowAway(rt); 
+		setTimeout(function(){window.mapSet.makeActive(rt)}, 100)
     }
 	
 	clearLayerGeneratedText(id) {
