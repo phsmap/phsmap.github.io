@@ -640,7 +640,8 @@ class PVMap extends SVGManipulator {
     // This is a function that takes in SVG path data and extracts the coordinates out of the pen movement/styling commands 
     helper_pathDatatoVertices(pathData) {
         function splitByLetter(inputString) {
-            const segments = inputString.split(/(?=[a-zA-Z])(?<=[^a-zA-Z])|(?=[^a-zA-Z])(?<=[a-zA-Z])/); // regex by ChatGPT
+            //const segments = inputString.split(/(?=[a-zA-Z])(?<=[^a-zA-Z])|(?=[^a-zA-Z])(?<=[a-zA-Z])/); // regex by ChatGPT
+			const segments = "";
             return segments.filter(segment => segment.trim() !== '');
         }
 
