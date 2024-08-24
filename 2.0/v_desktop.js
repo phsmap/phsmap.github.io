@@ -364,17 +364,14 @@ window.onload = function() {
 		});
 		resetViewport();
 		startUpDesktopListeners();
+		// apparently re-rendering the map fixes text rendering issues that affect iOS spesifically
+		if (window.mapSet && window.mapSet.activeMap) {
+			var rt = window.mapSet.activeMap.map_dataset_object.svg_id; 
+			window.mapSet.stowAway(rt); 
+			setTimeout(function(){window.mapSet.makeActive(rt)}, 100)
+		}
+		console.log("[window.onload] Reloaded...")
 	}, "text");
-	
-	// apparently re-rendering the map fixes text rendering issues that affect iOS spesifically
-	if (window.mapSet && window.mapSet.activeMap) {
-		var rt = window.mapSet.activeMap.map_dataset_object.svg_id; 
-		window.mapSet.stowAway(rt); 
-		setTimeout(function(){window.mapSet.makeActive(rt)}, 100)
-	}
-	console.log("[window.onload] Reloaded...")
-	
-	
 }
 
 function eraseRoute() {
