@@ -19,7 +19,7 @@ function openMenu(cn, open) {
 <select id='map_select' onchange="window.mapSet.stowAway(window.mapSet.activeMap.map_dataset_object.svg_id, Number(gebi('zoomableDiv').style.left.replaceAll('px', '')), Number(gebi('zoomableDiv').style.top.replaceAll('px', '')), Number(gebi('zoomableDiv').style.transform.replaceAll('scale(','').replaceAll(')',''))); c = window.mapSet.makeActive(this.value); console.log(c); setViewport(c[0], c[1], c[2]); console.log(`OK! Changed the active map to ${this.value}`)" style='width: 100%; position: fixed; top:0%; left: 0%; font-size: 52px; text-align: center;'>
 </select>
 <button onclick='resetViewport();' style='position: fixed; width: 33%; left: 0%; bottom: 0%; font-size: 38px;'>Zoom and <br>Pan Reset</button>
-<button onclick='eraseRoute();Object.keys(window.mapSet.pvmaps).forEach(function(pvm){window.mapSet.pvmaps[pvm].map_dataset_object.clearFXAll(true)});' style='position: fixed; width: 33%; left: 33%; bottom: 0%; font-size: 38px;'>Clear Search/NH</button>
+<button onclick='eraseRoute();navhelper_clearnodes();Object.keys(window.mapSet.pvmaps).forEach(function(pvm){window.mapSet.pvmaps[pvm].map_dataset_object.clearFXAll(true)});' style='position: fixed; width: 33%; left: 33%; bottom: 0%; font-size: 38px;'>Clear Search/NH</button>
 <button onclick='document.getElementById("mainmenu").style.display = "block"' style='position: fixed; width: 34%; right: 0%; bottom: 0%; font-size: 38px;'>Open Main <br>Menu</button>
 
 <div id='hiddenItems' hidden>
