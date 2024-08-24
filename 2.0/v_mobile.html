@@ -46,7 +46,7 @@ Click <a onclick='this.parentElement.style.display="none";' style='color: pink;'
 	<button style='color: lightblue; font-size: 36px;' class='mainmenu' id='set_nav_origin' onclick='navhelper_addnode(this.getAttribute("mapname"), this.getAttribute("landmarkid"), "origin"); this.parentElement.style.display="none";'>🧭 Nav Helper: Set as origin</button>
 	<button style='color: lightblue; font-size: 36px;' class='mainmenu' id='set_nav_destination' onclick='navhelper_addnode(this.getAttribute("mapname"), this.getAttribute("landmarkid"), "destination"); this.parentElement.style.display="none";'>🧭 Nav Helper: Set as destination</button>
 	<button style='color: gray; font-size: 36px;' class='mainmenu' id='dbg_copy' onclick='navigator.clipboard.writeText(this.getAttribute("landmarkid"));'>🔧 Debug: Copy landmark ID</button>
-	<button style='color: gray; font-size: 36px;' class='mainmenu' id='dbg_illuminate' onclick='illuminateNeighbors(this.getAttribute("landmarkid"))'>🔧 Debug: Illuminate neighbors</button>
+	<button style='color: gray; font-size: 36px;' class='mainmenu' id='dbg_illuminate' onclick='illuminateNeighbors(this.getAttribute("landmarkid"))'>🔧Debug: Illuminate neighbors</button>
 	<br>
 	<p>Information:</p>
 	<table style='margin: auto; background-color: #333333FF; width: 80%; overflow: scroll;' id='lookup_table'>
@@ -57,7 +57,7 @@ Click <a onclick='this.parentElement.style.display="none";' style='color: pink;'
 	</table>
 </div>
 
-<div id='mainmenu' class='popup' style='overflow: scroll;'>
+<div id='mainmenu' class='popup' style='overflow: scroll;' hidden>
 
 <div id='home' class='menu'>
 	<button class='mainmenu' onclick='openMenu("menu", "search_resolution_modal")'>🔍   Find A Place<br><b style='color:gray;font-size:28px'>Find and point out a specific point on the map</b></button>
@@ -276,7 +276,7 @@ Click <a onclick='this.parentElement.style.display="none";' style='color: pink;'
 		<br>
 		<br>
 		<b style='color: gray;'>
-		Remember! These buttons act ONLY on the currently loaded map (pointed to by window.mapSet.activeMap)
+		Remember! These buttons act ONLY on the currently loaded map (pointed to by window.mapSet.activeMap)<br>
 		Individual controls for "illuminate neighbors" and "get ID" can be found in the double click menu.
 		</b>
 	</div>
