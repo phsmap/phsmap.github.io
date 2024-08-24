@@ -855,7 +855,7 @@ class PVMap extends SVGManipulator {
 			}
         }
 		// apparently, reloading the map (as in, stowing it away and then bringing it back out fixes a render issue on IOS
-		if (window.mapSet) {
+		if (window.mapSet && window.activeMap) {
 			var rt = window.mapSet.activeMap.map_dataset_object.svg_id; 
 			window.mapSet.stowAway(rt); 
 			setTimeout(function(){window.mapSet.makeActive(rt)}, 100)
