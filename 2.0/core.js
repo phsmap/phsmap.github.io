@@ -618,6 +618,9 @@ function navhelper_addnode(namespace, nodeID, origin_destination) {
 		gebi("navstatus2").innerHTML = "<b style='color:lime;'>Ready.</b>"	
 		gebi("navstart").style.color = 'lightgreen';
 		gebi("navstart").style.backgroundColor = '';
+		if (confirm("An origin and destination have been set! Do you want to start Nav Helper?")) {
+			navhelper_navstart();
+		}
 	}
 	if (window.navhelper.origin && !window.navhelper.destination) {
 		gebi("navstatus2").innerHTML = "<b style='color:yellow;'>Waiting for user to select a destination...</b>"	
@@ -645,6 +648,12 @@ function navhelper_clearnodes() {
 	window.navhelper.origin = null;
 	window.navhelper.destination = null;
 	window.advances = {};
+}
+
+function navhelper_navstart() {
+	var rts = bestRoutes(allRoutes(window.navhelper.origin, window.navhelper.destination,false)); 
+	if (rts.length > 0) {displayRoute(rts[0])} 
+	else {alert("No route found! Please note that only classrooms, offices, major landmarks and doors are navigable -- mechanical rooms and certain other features cannot be navigated to using Nav Helper.")}
 }
 
 function navhelper_addarrows(target_direction, lineID, direction_neutral = false, auto_trim = false, color = "cyan", measure_from = "arrowhead") {
