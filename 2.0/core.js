@@ -442,7 +442,7 @@ function eraseRoute() {
 }
 
 function displayRoute(route) {
-	console.log(`route: ${JSON.stringify(route)}`);
+	console.log(`[core-navhelper][dispRoute] route: ${JSON.stringify(route)}`);
 	window[route[0].split("::")[0]].changeBorder(route[0].split("::")[1], "lime", "8px", true);
 	var rt = window.mapSet.activeMap.map_dataset_object.svg_id; 
 	window.mapSet.stowAway(rt);
@@ -457,7 +457,7 @@ function displayRoute(route) {
 	
 	for (let i = 1; i < route.length - 1; i++) {
 		var jump = route[i];
-		console.log(route[i], route[i + 1], navhelper_calculateDisplacementDirection(route[i], route[i + 1]));
+		console.log("[core-navhelper][dispRoute]", route[i], route[i + 1], navhelper_calculateDisplacementDirection(route[i], route[i + 1]));
 		
 		var auto_trim = false;
 		var truncate = "";
@@ -691,7 +691,7 @@ function navhelper_navstart() {
 
 function navhelper_addarrows(target_direction, lineID, direction_neutral = false, auto_trim = false, color = "cyan", measure_from = "arrowhead") {
 	var lineDirection = navhelper_determineLineDirection(lineID);
-	console.log("line prev dir: "+lineDirection)
+	console.log("[core-navhelper][addArrows] line prev dir: "+lineDirection)
 	if (!lineDirection) return null;
 	
 	if (
@@ -765,7 +765,7 @@ function navhelper_addarrows(target_direction, lineID, direction_neutral = false
 			if (lineDirection == "W") {
 				cut = trim_to_room[0] - line_destination[0];
 			}
-			console.log("cut: " + cut);
+			console.log("[core-navhelper][addArrows] cut: " + cut);
 		} else {
 			console.log("[core-navhelper][addArrows] sliding up the base... mode detected: "+lineDirection);
 			if (lineDirection == "S") {
