@@ -166,7 +166,6 @@ function illuminateNeighbors(id) {
 	window.mapSet.activeMap.map_dataset_object.changeBorder(id, window.rcolor, "8px", false);
 	var neighbors = objectInReference.attached_to.split(";");
 	neighbors.forEach(function(elem) {
-		console.log(elem);
 		if (!elem.includes("::")) window.mapSet.activeMap.map_dataset_object.changeBorder(elem, window.rcolor, "8px", false);
 	})
 }
@@ -505,6 +504,8 @@ function bestRoutes(routes) {
 function allRoutes(startNode, endNode) {
 	window.nodes = {};
 	window.mapNamespace = "";
+	window.navorigin = startNode;
+	window.destiny = endNode;
 	// preprocessing with hallways (because these need to be loaded first) in order to "reverse-logic" hallway connection
 	Object.keys(window.mapSet.pvmaps).forEach(function(elem) {
 		elem = window.mapSet.pvmaps[elem];
@@ -529,8 +530,25 @@ function allRoutes(startNode, endNode) {
 		window.mapNamespace = elem.map_dataset_object.svg_id;
 		elem.map_dataset_object.featuredata.forEach(function(elem2) {
 			if (false) {
-				
+				// This used to do something but now it doesn't, so we're keeping i
 			} else {
+				// If this isn't a navigation pathway (door, elevator, stairway, big chamber, or hallway), simply do not add it to the graph
+				if (
+					(
+					elem2.landmark_id.includes("WW") == false && 
+					elem2.landmark_id.includes("LV") == false && 
+					elem2.landmark_id.includes("EE") == false && 
+					elem2.landmark_id.includes("SW") == false && 
+					elem2.landmark_id.includes("LM") == false && 
+					window.navorigin.includes(elem2.landmark_id) == false && 
+					window.destiny.includes(elem2.landmark_id) == false 
+					)
+				) {
+					// SKip
+					//console.log("skip")
+				} else {
+				// Go ahead, this is one we want to add to the graph
+				//console.log(elem2.landmark_id);
 				var attached_to = elem2.attached_to.split(";");
 				for (let i = 0; i < attached_to.length; i++) {
 					if (attached_to[i] == "") continue;
@@ -540,18 +558,27 @@ function allRoutes(startNode, endNode) {
 					// Because each WW element doesn't store a list of every room you can access from that hallway, we have to reverse this 
 					// information from the actual room's information
 					if (attached_to[i].length > 1) {
-						if (attached_to[i].split("::")[1].startsWith("WW")) {
-							//console.log("implicit connection WW: " + attached_to[i] + " and " + `${window.mapNamespace}::${elem2.landmark_id}; appending to ${JSON.stringify(window.nodes[attached_to[i]])}`);
+						// in actuality, we don't want to reverse-connect every room to its hallway, we realisitically only need to 
+						// attach stairways, exits and the destination/origin
+						if (
+							(elem2.landmark_id.startsWith("EE") || elem2.landmark_id.startsWith("SW") || elem2.landmark_id.startsWith("LV") 
+							|| window.destiny.split("::")[1].includes(elem2.landmark_id)) &&
+							attached_to[i].split("::")[1].startsWith("WW")
+						) {
 							if (!window.nodes[attached_to[i]]) {
 								console.log(`${attached_to[i]} isn't a real hallway, will not connect this hallway to this room`);
 							}
+
 							window.nodes[attached_to[i]].push(`${window.mapNamespace}::${elem2.landmark_id}`);
+							console.log("implicit connection WW: " + attached_to[i] + " and " + `${window.mapNamespace}::${elem2.landmark_id}; appending to ${JSON.stringify(window.nodes[attached_to[i]])}`);
+			
 						}
 					}
 				}
 				var cur_node = window.nodes[`${window.mapNamespace}::${elem2.landmark_id}`];
 				if (cur_node) cur_node.concat(structuredClone(attached_to));
 				else window.nodes[`${window.mapNamespace}::${elem2.landmark_id}`] = structuredClone(attached_to);
+			}
 			}
 		});
 	});
@@ -564,46 +591,47 @@ function allRoutes(startNode, endNode) {
 }
 
 function graph_findAllRoutes(nodes, startId, endId) {
-    let routes = []; // To store all possible routes
-    let visited = {}; // To keep track of visited nodes during traversal
+    window.paths = [];
+	window.path = [];
+	window.originating = startId;
+	window.terminating = endId;
+	window.stairs_traversed = 0;
+	function checkPaths(nodeID) {
+		//window.paths.push(structuredClone(window.path));
+		if (!window.nodes[nodeID]) {
+			//console.warn(`[findAllRoutes] ${nodeID} isn't a real place, doesn't have any neighbors, will not investigate further`);
+			return false;
+		}
+		
+		window.path.push(nodeID);
 
-    // Helper function for DFS traversal
-    function dfs(currentId, path) {
-        // Mark the current node as visited
-        visited[currentId] = true;
-        path.push(currentId);
-
-        // If the current node is the destination, add the path to routes
-        if (currentId === endId) {
-            routes.push([...path]);
-        } else {
-            // Otherwise, continue DFS on unvisited neighbors
-            let neighbors = nodes[currentId];
-			if (!nodes[currentId]) {
-				console.log(`${currentId} is not a valid place and thus does not have neighbors. Back tracking...`);
-			} else {
-				for (let neighborId of neighbors) {
-					if (!visited[neighborId] && neighborId.length > 1 && window.nodes[neighborId]) {
-						dfs(neighborId, path);
-					} else if (neighborId.length < 1) {
-						//console.log(`${currentId} has encountered an empty neighbor node ID ${neighborId}, ignoring that...`);
-					} else if (!window.nodes[neighborId]) {
-						//console.log(`${currentId} has encountered an invalid or nonexistent node ID ${neighborId}, ignoring that...`);
-					}
-				}
+		// If this one is the destination, record the current path in window.paths
+		if (nodeID == window.terminating && window.path.join().includes("::-LV") == false) {
+			window.paths.push(structuredClone(window.path));
+			//console.log(window.paths);
+			return true;
+		}
+		
+		if (nodeID.includes("::SW-") || nodeID.includes("::LV-") ) window.stairs_traversed += 1;
+				
+		for (let i = 0; i < window.nodes[nodeID].length; i++) {
+			var neighbor = window.nodes[nodeID][i];
+			if (neighbor == window.terminating && window.path.join().includes("::-LV") == false) {
+				window.paths.push(structuredClone(window.path).concat([neighbor]));
+				window.path.pop();
+				return true;
 			}
-        }
-
-        // Backtrack: remove current node from path and mark it unvisited
-        path.pop();
-        visited[currentId] = false;
-		//console.log(`dead end: ${visited}`);
-    }
-
-    // Initialize DFS with the start node
-    dfs(startId, []);
-
-    return routes;
+			// If the next one down is not the destination, and we haven't been here before, check to see what's attached to the neighbor
+			if (window.path.includes(neighbor) == false && window.stairs_traversed <= 2) {
+				checkPaths(neighbor);
+			}
+		}
+		//console.log(`dead end: ${window.path}`);
+		window.path.pop();
+		if (nodeID.includes("::SW-") || nodeID.includes("::LV-") ) window.stairs_traversed -= 1;
+	}
+	checkPaths(startId);
+	return window.paths;
 }
 
 function navhelper_addnode(namespace, nodeID, origin_destination) {
