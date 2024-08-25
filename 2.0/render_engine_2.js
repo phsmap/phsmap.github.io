@@ -1,7 +1,7 @@
 "use strict";
 
 class IOSTestClass {
-	
+
 }
 
 class SVGManipulator {
@@ -33,12 +33,12 @@ class SVGManipulator {
     constructor(svg_element_id, rewrite_id = false) {
         // this corresponds to the actual SVG element
         this.svg_container = document.getElementById(svg_element_id);
-		if (!this.svg_container) {
-			console.warn(`[svgmanipulator][${svg_element_id}] Bad SVG element ID.`);
-			return null;
-		} else {
-			//console.log(`[svgmanipulator][${svg_element_id}] Got SVG element!`, this.svg_container);
-		}
+        if (!this.svg_container) {
+            console.warn(`[svgmanipulator][${svg_element_id}] Bad SVG element ID.`);
+            return null;
+        } else {
+            //console.log(`[svgmanipulator][${svg_element_id}] Got SVG element!`, this.svg_container);
+        }
         this.svg_id = structuredClone(svg_element_id);
 
         // this corresponds to the g element that holds all of the map elements; 
@@ -202,43 +202,50 @@ class PVMap extends SVGManipulator {
         var appRes = toAttachTo.appendChild(svgElement);
         svgElement.outerHTML = svg_content;
         //console.log(`[PVMap STATIC][loadSVGToDOMIfNotAlreadyLoaded] OK! Loaded ${svg_content.length} bytes of SVG map data into parent element ${parent_element}.`);
-		var dp = new DOMParser();
-		return dp.parseFromString(svg_content, "application/xml").querySelector("svg").getAttributeNS(null, "id");
+        var dp = new DOMParser();
+        return dp.parseFromString(svg_content, "application/xml").querySelector("svg").getAttributeNS(null, "id");
     }
 
     constructor(initial_configuration_data, toggleable_layer_data, feature_data) {
-		
-		  SVGPathElement.prototype.getBBox = function (precision){
-			  // modified fn
-        var path = this;
-        var total = path.getTotalLength();
-        if(total <= 0){
-            return {x:0,y:0,width:0,height:0};
-        }
-        var segLen = precision || 1;
-        var len = 0, pt, xarr = [], yarr = [];
-        while(len < total){
-            pt = path.getPointAtLength(len);
+
+        SVGPathElement.prototype.getBBox = function(precision) {
+            // modified fn
+            var path = this;
+            var total = path.getTotalLength();
+            if (total <= 0) {
+                return {
+                    x: 0,
+                    y: 0,
+                    width: 0,
+                    height: 0
+                };
+            }
+            var segLen = precision || 1;
+            var len = 0,
+                pt, xarr = [],
+                yarr = [];
+            while (len < total) {
+                pt = path.getPointAtLength(len);
+                xarr.push(pt.x);
+                yarr.push(pt.y);
+                len += segLen;
+            }
+            pt = path.getPointAtLength(total);
             xarr.push(pt.x);
             yarr.push(pt.y);
-            len += segLen;
-        }
-        pt = path.getPointAtLength(total);
-        xarr.push(pt.x);
-        yarr.push(pt.y);
-        var b = {};
-        b.x = Math.min.apply(0,xarr);
-        b.y = Math.min.apply(0,yarr);
-        b.width = Math.max.apply(0,xarr) - b.x;
-        b.height = Math.max.apply(0,yarr) - b.y;
-        return b;
-    };
-	
-	
+            var b = {};
+            b.x = Math.min.apply(0, xarr);
+            b.y = Math.min.apply(0, yarr);
+            b.width = Math.max.apply(0, xarr) - b.x;
+            b.height = Math.max.apply(0, yarr) - b.y;
+            return b;
+        };
+
+
         super(initial_configuration_data.svg_element_id, false);
         //console.log(`[${this.svg_id}][initialization] Bound.`)
-            // Ideally, the maps that people are going to be loading will already have SVG elements with appropriate IDs (i.e. "RM:131A")
-            // which means we should pass FALSE to "overwrite_all_id" in super( );
+        // Ideally, the maps that people are going to be loading will already have SVG elements with appropriate IDs (i.e. "RM:131A")
+        // which means we should pass FALSE to "overwrite_all_id" in super( );
         this.featuredata = feature_data; // expected to be an array [0: ..., 1: ..., etc] of JSON objects with certain attributes such as landmark_id. used when displaying layers and also for searching. the reason why we do NOT make a copy and instead take a reference to an external object is so that the feature data can be updated automatically without having to notify PVMap objects that their map data has changed.
         this.feature_data_index_lookup = {};
         this.layerdata = structuredClone(toggleable_layer_data); // also expected to be an array of JSON objects that contain certain attributes such as layer_name. the reason why we need a copy of this object is that we want to be able to modify this.layerdata without inadvertently modifying an object outside of PVMap class.
@@ -285,25 +292,25 @@ class PVMap extends SVGManipulator {
                     window[evt.target.parentElement.parentElement.id].changeBorder(evt.target.id);
                 });
                 this.setCallbackParticularElement(this.featuredata[i].landmark_id, "ontouchstart", function(evt) {
-					window.lastTapX = evt.targetTouches[0].clientX;
-					window.lastTapY = evt.targetTouches[0].clientY;
-				});
+                    window.lastTapX = evt.targetTouches[0].clientX;
+                    window.lastTapY = evt.targetTouches[0].clientY;
+                });
                 this.setCallbackParticularElement(this.featuredata[i].landmark_id, "ontouchend", function(evt) {
-					if (evt.changedTouches && evt.changedTouches.length > 0) { // because the "text element triggers attached path's ontouchend event" doesn't provide a changedTouches property, we can't always be sure that there was an x and y.
-						var x = evt.changedTouches[0].clientX;
-						var y = evt.changedTouches[0].clientY;
-					} else {
-						var x = -1;
-						var y = -1;
-					}
-					if (evt.manuallyTriggered || (x == window.lastTapX && y == window.lastTapY)) { // if it was manually triggered, we know that the event was fired by a text element relaying the message on and we should consider it a tap in the same location and thus fire the double click event
-						window[evt.target.parentElement.parentElement.id].changeBorder(evt.target.id);
-						setTimeout(function(){
-							window[evt.target.parentElement.parentElement.id].double_clickcallback(evt);
-							window[evt.target.parentElement.parentElement.id].clearFX(evt.target.id);
-						}, 100);
-					}
-				});
+                    if (evt.changedTouches && evt.changedTouches.length > 0) { // because the "text element triggers attached path's ontouchend event" doesn't provide a changedTouches property, we can't always be sure that there was an x and y.
+                        var x = evt.changedTouches[0].clientX;
+                        var y = evt.changedTouches[0].clientY;
+                    } else {
+                        var x = -1;
+                        var y = -1;
+                    }
+                    if (evt.manuallyTriggered || (x == window.lastTapX && y == window.lastTapY)) { // if it was manually triggered, we know that the event was fired by a text element relaying the message on and we should consider it a tap in the same location and thus fire the double click event
+                        window[evt.target.parentElement.parentElement.id].changeBorder(evt.target.id);
+                        setTimeout(function() {
+                            window[evt.target.parentElement.parentElement.id].double_clickcallback(evt);
+                            window[evt.target.parentElement.parentElement.id].clearFX(evt.target.id);
+                        }, 100);
+                    }
+                });
                 this.setCallbackParticularElement(this.featuredata[i].landmark_id, "ondblclick", this.double_clickcallback);
             }
         }
@@ -315,53 +322,53 @@ class PVMap extends SVGManipulator {
 
         // Initialize the layer data checkboxes, if the user has specified a parent element to stick the checkboxes in
         if (this.autogen_layerboxes) {
-			var container = PVMap.gebi(this.autogen_layerboxes);
-			if (!container) {
-				console.warn(`[${this.svg_id}][initialize] The constructor could not find the HTML container element to append layer data checkboxes to while attempting to create layer checkboxes. Initialization failed.`);
-				return null;
-			}
-			
+            var container = PVMap.gebi(this.autogen_layerboxes);
+            if (!container) {
+                console.warn(`[${this.svg_id}][initialize] The constructor could not find the HTML container element to append layer data checkboxes to while attempting to create layer checkboxes. Initialization failed.`);
+                return null;
+            }
+
             for (let i = 0; i < this.layerdata.length; i += 1) {
-				if (this.layerdata[i].layer_id) {
-					// First, we have to create the actual checkbox element
-					var newCB = document.createElement('input');
-					newCB.type = "checkbox";
-					newCB.id = `${this.svg_id}__${this.layerdata[i].layer_id}`;
-					newCB.checked = this.layerdata[i].visible;
-					var newLB = document.createElement('label');
-					newLB.id = `${this.svg_id}__${PVMap.uniqueID()}`
-					newLB.setAttribute("for", newCB.id);
-					newLB.textContent = `${this.layerdata[i].layer_name}`;
-					// Second, we have to append the checkbox and label to the container element
-					var newBR = document.createElement("br");
-					newBR.id = `${this.svg_id}__${PVMap.uniqueID()}`;
-					container.append(newBR);
-					container.append(newBR);
-					container.append(newCB);
-					container.append(newLB);
-				} else if (this.layerdata[i].category_name) {
-					var newBR = document.createElement("br");
-					newBR.id = `${this.svg_id}__${PVMap.uniqueID()}`;
-					container.append(newBR);
-					var newBR2 = document.createElement("br");
-					newBR2.id = `${this.svg_id}__${PVMap.uniqueID()}`;
-					container.append(newBR2);
-					var newH = document.createElement('u');
-					newH.textContent = this.layerdata[i].category_name;
-					newH.id = `${this.svg_id}__${PVMap.uniqueID()}`;
-					container.append(newH);
-				}
+                if (this.layerdata[i].layer_id) {
+                    // First, we have to create the actual checkbox element
+                    var newCB = document.createElement('input');
+                    newCB.type = "checkbox";
+                    newCB.id = `${this.svg_id}__${this.layerdata[i].layer_id}`;
+                    newCB.checked = this.layerdata[i].visible;
+                    var newLB = document.createElement('label');
+                    newLB.id = `${this.svg_id}__${PVMap.uniqueID()}`
+                    newLB.setAttribute("for", newCB.id);
+                    newLB.textContent = `${this.layerdata[i].layer_name}`;
+                    // Second, we have to append the checkbox and label to the container element
+                    var newBR = document.createElement("br");
+                    newBR.id = `${this.svg_id}__${PVMap.uniqueID()}`;
+                    container.append(newBR);
+                    container.append(newBR);
+                    container.append(newCB);
+                    container.append(newLB);
+                } else if (this.layerdata[i].category_name) {
+                    var newBR = document.createElement("br");
+                    newBR.id = `${this.svg_id}__${PVMap.uniqueID()}`;
+                    container.append(newBR);
+                    var newBR2 = document.createElement("br");
+                    newBR2.id = `${this.svg_id}__${PVMap.uniqueID()}`;
+                    container.append(newBR2);
+                    var newH = document.createElement('u');
+                    newH.textContent = this.layerdata[i].category_name;
+                    newH.id = `${this.svg_id}__${PVMap.uniqueID()}`;
+                    container.append(newH);
+                }
             }
             // Now that all checkboxes are loaded in, we can now applyLayerCheckboxesForThisMap();
             this.applyLayerCheckboxesForThisMap();
 
             // Don't forget to add a button that applies changes
             var newBR = document.createElement("br");
-			newBR.id = `${this.svg_id}__${PVMap.uniqueID()}`;
-			container.append(newBR);
-			var newBR2 = document.createElement("br");
-			newBR2.id = `${this.svg_id}__${PVMap.uniqueID()}`;
-			container.append(newBR2);
+            newBR.id = `${this.svg_id}__${PVMap.uniqueID()}`;
+            container.append(newBR);
+            var newBR2 = document.createElement("br");
+            newBR2.id = `${this.svg_id}__${PVMap.uniqueID()}`;
+            container.append(newBR2);
             var APB = document.createElement("button");
             APB.id = `${this.svg_id}__applybutton`;
             APB.onclick = function(evt) {
@@ -411,8 +418,10 @@ class PVMap extends SVGManipulator {
         }
         elem.append(this.helper_generateAnimationNode(`staticBorder_vfx__${id}`, "stroke", color, "0.8s"));
         elem.append(this.helper_generateAnimationNode(`staticBorder_vfx__${id}`, "stroke-width", `${width}`, "0.8s"));
-		if (permanent) elem.querySelectorAll("animate").forEach(function(em){em.setAttributeNS(null, "permanent", "true")});
-		//console.log(`[${this.svg_id}][changeBorder] OK, applied new border to ${id}.`);
+        if (permanent) elem.querySelectorAll("animate").forEach(function(em) {
+            em.setAttributeNS(null, "permanent", "true")
+        });
+        //console.log(`[${this.svg_id}][changeBorder] OK, applied new border to ${id}.`);
     }
 
     // This will flash the border
@@ -424,59 +433,63 @@ class PVMap extends SVGManipulator {
         }
         elem.append(this.helper_generateAnimationNode(`flashBorder_width_vfx__${id}`, "stroke-width", `${width}`, "0.8s"));
         elem.append(this.helper_generateAnimationNode(`flashBorder_vfx__${id}`, "stroke", colors, rate));
-		if (permanent) elem.querySelectorAll("animate").forEach(function(em){em.setAttributeNS(null, "permanent", "true")});
-		//console.log(`[${this.svg_id}][flashBorder] OK, applied flashing border to ${id}.`);
+        if (permanent) elem.querySelectorAll("animate").forEach(function(em) {
+            em.setAttributeNS(null, "permanent", "true")
+        });
+        //console.log(`[${this.svg_id}][flashBorder] OK, applied flashing border to ${id}.`);
     }
-	
-	changeBgd(id, color, permanent = false) {
-		var elem = this.retrieve_element_in_this_group(id);
+
+    changeBgd(id, color, permanent = false) {
+        var elem = this.retrieve_element_in_this_group(id);
         if (!elem) {
             console.warn(`[${this.svg_id}][changeBgd] Unable to find element with ID ${id} during lookup.`)
             return null;
         }
         elem.append(this.helper_generateAnimationNode(`changeBgd_fill_vfx__${id}`, "fill", `${color}`, "0.8s"));
-		if (permanent) elem.querySelectorAll("animate").forEach(function(em){em.setAttributeNS(null, "permanent", "true")});
-		elem.setAttributeNS(null, "fill-opacity", "1.0");
-		//console.log(`[${this.svg_id}][changeBgd] OK, applied new bgd color to ${id}.`);
-	}
+        if (permanent) elem.querySelectorAll("animate").forEach(function(em) {
+            em.setAttributeNS(null, "permanent", "true")
+        });
+        elem.setAttributeNS(null, "fill-opacity", "1.0");
+        //console.log(`[${this.svg_id}][changeBgd] OK, applied new bgd color to ${id}.`);
+    }
 
     // This will clear FX
     clearFX(id, clear_permanent = false) {
-		window.clear_perm = clear_permanent;
+        window.clear_perm = clear_permanent;
         var elem = this.retrieve_element_in_this_group(id);
-		//console.log(`[${this.svg_id}][clearFX] Clearing ${id} of FX...`);
+        //console.log(`[${this.svg_id}][clearFX] Clearing ${id} of FX...`);
         if (!elem) {
             console.warn(`[${this.svg_id}][clearFX] Unable to find element with ID ${id} during lookup.`);
             return null;
         }
         elem.querySelectorAll("animate").forEach(function(em) {
-			if ((em.getAttributeNS(null, "permanent") != "true" && em.getAttributeNS(null, "permanent") != "yes") || window.clear_perm) {
-				//console.log(`    + Clearing FX ${em}`);
-				em.remove();
-			}
+            if ((em.getAttributeNS(null, "permanent") != "true" && em.getAttributeNS(null, "permanent") != "yes") || window.clear_perm) {
+                //console.log(`    + Clearing FX ${em}`);
+                em.remove();
+            }
         });
     }
 
     clearFXAll(clear_permanent = false) {
-		window.clear_perm = clear_permanent;
-		//console.log(`[${this.svg_id}][clearFXAll] Clearing ALL FX`)
+        window.clear_perm = clear_permanent;
+        //console.log(`[${this.svg_id}][clearFXAll] Clearing ALL FX`)
         this.group_container.querySelectorAll("animate").forEach(function(em) {
-			if ((em.getAttributeNS(null, "permanent") != "true" && em.getAttributeNS(null, "permanent") != "yes") || window.clear_perm) {
-				//console.log(`    + Clearing FX ${em}`);
-				em.remove();
-			}
+            if ((em.getAttributeNS(null, "permanent") != "true" && em.getAttributeNS(null, "permanent") != "yes") || window.clear_perm) {
+                //console.log(`    + Clearing FX ${em}`);
+                em.remove();
+            }
         });
     }
 
     // This will place text in the middle of a given path 
     placeText(content, id = null, box_id = null, x = -1, y = -1, color = "#FFFF00", font_size = ["auto", 12, 24], font = "Arial") {
-		content = content.replaceAll("[comma]", ",").replaceAll("[newline]", "\n");
-		//console.log(`[${this.svg_id}][placeTextInPath] Placing text: ${content} on ${box_id} with new ID # ${id}`);
+        content = content.replaceAll("[comma]", ",").replaceAll("[newline]", "\n");
+        //console.log(`[${this.svg_id}][placeTextInPath] Placing text: ${content} on ${box_id} with new ID # ${id}`);
         // The first thing we have to do is calculate the centroid of this path
         // Setting either x or y to a negative number will trigger auto place based on the box ID
         if ((x < 0 || y < 0) && box_id) {
             var centroid = this.helper_calculatePathCentroid(box_id);
-			//console.log(centroid);
+            //console.log(centroid);
             if (!centroid) {
                 console.warn(`[${this.svg_id}][placeTextInPath] Unable to place text in the center of this element. Place text fails.`);
                 return null;
@@ -548,7 +561,7 @@ class PVMap extends SVGManipulator {
             }
         } else if (Array.isArray(font_size) && (!box_id || x > 0 || y > 0)) {
             console.warn(`[${this.svg_id}][placeTextInPath] Auto font size cannot be used when automatic central placement is not being used or the path_id is not specified.`);
-			return null;
+            return null;
         } else {
             newTN.setAttributeNS(null, "font-size", font_size);
             this.group_container.append(newTN);
@@ -565,7 +578,7 @@ class PVMap extends SVGManipulator {
         }
 
         // make it so that the text can also be used to activate the same callbacks
-		// (these callbacks ONLY work when the ID of the text is "text__(existing parent element)" -- if another format is used it will not find its way back to the correct parent
+        // (these callbacks ONLY work when the ID of the text is "text__(existing parent element)" -- if another format is used it will not find its way back to the correct parent
         this.setCallbackParticularElement(new_id, "onmouseover", function(evt) {
             var elem = window[evt.target.parentElement.parentElement.parentElement.id].retrieve_element_in_this_group(evt.target.parentElement.id.split("__")[1]); // this is a very roundabout way of being able to retrieve the non-text companion to this text element (which you can't reach just by using parentElement)
             elem.dispatchEvent(new Event('mouseover')); // once we've gone all the way around through the globally accessible object for this PVMap, dispatch its mouseover/whatever event
@@ -590,46 +603,46 @@ class PVMap extends SVGManipulator {
                 elem.dispatchEvent(clickEvent);
             }
         );
-		this.setCallbackParticularElement(new_id, "ontouchstart", function(evt) {
-			window.lastTapX = evt.targetTouches[0].clientX;
-			window.lastTapY = evt.targetTouches[0].clientY;
-		});
-		this.setCallbackParticularElement(new_id, "ontouchend", function(evt) {
-			var x = evt.changedTouches[0].clientX;
-			var y = evt.changedTouches[0].clientY;
-			if (x == window.lastTapX && y == window.lastTapY) {
-				var elem = window[evt.target.parentElement.parentElement.parentElement.id].retrieve_element_in_this_group(evt.target.parentElement.id.split("__")[1]);
+        this.setCallbackParticularElement(new_id, "ontouchstart", function(evt) {
+            window.lastTapX = evt.targetTouches[0].clientX;
+            window.lastTapY = evt.targetTouches[0].clientY;
+        });
+        this.setCallbackParticularElement(new_id, "ontouchend", function(evt) {
+            var x = evt.changedTouches[0].clientX;
+            var y = evt.changedTouches[0].clientY;
+            if (x == window.lastTapX && y == window.lastTapY) {
+                var elem = window[evt.target.parentElement.parentElement.parentElement.id].retrieve_element_in_this_group(evt.target.parentElement.id.split("__")[1]);
                 var clickEvent = document.createEvent('TouchEvent');
                 clickEvent.initEvent('touchend', true, true);
-				clickEvent.manuallyTriggered = true;
+                clickEvent.manuallyTriggered = true;
                 elem.dispatchEvent(clickEvent);
-			}
-		});
+            }
+        });
 
 
         //console.log(`[${this.svg_id}][placeTextInPath] SVG element has ID # ${new_id}; new ID returned by fn.`);
         return new_id;
     }
-	
-	helper_calculateLineMidpoint(id) {
-		var elem = this.retrieve_element_in_this_group(id);
-		if (!elem) {
+
+    helper_calculateLineMidpoint(id) {
+        var elem = this.retrieve_element_in_this_group(id);
+        if (!elem) {
             console.warn(`[${this.svg_id}][calculateLineMidpoint] Unable to lookup path data for object with ID ${id}.`);
             return null;
         }
-		var bbox = elem.getBBox();
-		return [bbox.x + (0.5 * bbox.width), bbox.y + (0.5 * bbox.height)];
-	}
-	
-	helper_calculateLineOrigin(id) {
-		var elem = this.retrieve_element_in_this_group(id);
-		if (!elem) {
+        var bbox = elem.getBBox();
+        return [bbox.x + (0.5 * bbox.width), bbox.y + (0.5 * bbox.height)];
+    }
+
+    helper_calculateLineOrigin(id) {
+        var elem = this.retrieve_element_in_this_group(id);
+        if (!elem) {
             console.warn(`[${this.svg_id}][calculateLineOrigin] Unable to lookup path data for object with ID ${id}.`);
             return null;
         }
-		var path = this.retrieve_property(id, "d");
-		return path.split("l")[0].replaceAll("m", "").split(" ");
-	}
+        var path = this.retrieve_property(id, "d");
+        return path.split("l")[0].replaceAll("m", "").split(" ");
+    }
 
     // Taken from d3.js's polygon tools, src: https://github.com/d3/d3-polygon/blob/main/src/centroid.js
     // Calculates the center of a path
@@ -669,21 +682,21 @@ class PVMap extends SVGManipulator {
     // This is a function that takes in SVG path data and extracts the coordinates out of the pen movement/styling commands 
     helper_pathDatatoVertices(pathData) {
         function splitByLetter(str) {
-			var acc = [];
-	
-			var split_up = str.split(/(?=[a-zA-Z])/);
-			//console.log(split_up);
-			
-			for (let i = 0; i < split_up.length; i ++) {
-				if (split_up[i].length > 1 && /[a-zA-Z]/.exec(split_up[i])) {
-					acc.push(split_up[i].slice(0,1));
-					acc.push(split_up[i].slice(1));
-				} else {
-					acc.push(split_up[i]);
-				}
-			}
-			
-			return acc;
+            var acc = [];
+
+            var split_up = str.split(/(?=[a-zA-Z])/);
+            //console.log(split_up);
+
+            for (let i = 0; i < split_up.length; i++) {
+                if (split_up[i].length > 1 && /[a-zA-Z]/.exec(split_up[i])) {
+                    acc.push(split_up[i].slice(0, 1));
+                    acc.push(split_up[i].slice(1));
+                } else {
+                    acc.push(split_up[i]);
+                }
+            }
+
+            return acc;
         }
 
         var cut_up = splitByLetter(pathData);
@@ -726,7 +739,7 @@ class PVMap extends SVGManipulator {
             currentObj.newFontSize = "";
             currentObj.newFont = "";
             currentObj.tc = "";
-			currentObj.newBgdColor = "transparent";
+            currentObj.newBgdColor = "transparent";
             id_to_feature_index[currentObj.landmark_id] = i;
         }
 
@@ -739,7 +752,7 @@ class PVMap extends SVGManipulator {
         // (but we'll only do this if the user generated checkboxes...)
         if (this.autogen_layerboxes) {
             for (let i = 0; i < this.layerdata.length; i += 1) {
-				if (!this.layerdata[i].layer_id) continue;
+                if (!this.layerdata[i].layer_id) continue;
                 this.layerdata[i].visible = PVMap.gebi(`${this.svg_id}__${this.layerdata[i].layer_id}`).checked;
                 //console.log(`[${this.svg_id}][applyLayerCheckboxesForThisMap] Layer ${this.layerdata[i].layer_id} enabled: ${this.layerdata[i].visible}`);
             }
@@ -750,7 +763,7 @@ class PVMap extends SVGManipulator {
             currentObj = featuredata_workingcopy[i];
             //console.log(`[${this.svg_id}][applyLayerCheckboxesForThisMap] Working on ${featuredata_workingcopy[i].landmark_id}...`);
             for (let j = 0; j < this.layerdata.length; j += 1) {
-				if (!this.layerdata[j].layer_id) continue;
+                if (!this.layerdata[j].layer_id) continue;
                 //console.log(`&& Layer ${this.layerdata[j].layer_id}`);
                 // First, we check if this particular landmark is a part of the given layer
                 var jointQueryCmd = this.layerdata[j].layer_instructions.split("=>");
@@ -780,14 +793,14 @@ class PVMap extends SVGManipulator {
                             }
                         }
                         switch (command.split("(")[0]) {
-							case "set_background_color":
-								//console.log(`  x set_background_color: ${params}`);
-								if (id_to_feature_index[params[0]] == undefined || id_to_feature_index[params[0]] == null || params.length != 2) {
+                            case "set_background_color":
+                                //console.log(`  x set_background_color: ${params}`);
+                                if (id_to_feature_index[params[0]] == undefined || id_to_feature_index[params[0]] == null || params.length != 2) {
                                     console.warn(`  - Bad parameter #0 (ID of landmark to change styling of) or incorrect number of parameters. Will proceed, but may result in faulty layer rendering.`);
                                     break;
                                 }
-								featuredata_workingcopy[id_to_feature_index[params[0]]].newBgdColor = params[1];
-								break;
+                                featuredata_workingcopy[id_to_feature_index[params[0]]].newBgdColor = params[1];
+                                break;
                             case "set_semiauto_font_size":
                                 //console.log(`  x set_semiauto_font_size: ${params}`);
                                 if (id_to_feature_index[params[0]] == undefined || id_to_feature_index[params[0]] == null || params.length != 3) {
@@ -840,7 +853,7 @@ class PVMap extends SVGManipulator {
             this.autoForEachElement(function(id) {
                 window.tco.removeElementWithId(id);
             }, "text__", true); // true because we are destroying children in this.group_container.children, which means a traditional for loop will not work
-			this.clearFXAll(true); // if the current layers also happened to act on the styling of the parent path, we also remove those (i.e. reset the background from a transparent blue to clear)
+            this.clearFXAll(true); // if the current layers also happened to act on the styling of the parent path, we also remove those (i.e. reset the background from a transparent blue to clear)
         }
         for (let i = 0; i < featuredata_workingcopy.length; i += 1) {
             currentObj = featuredata_workingcopy[i];
@@ -850,30 +863,32 @@ class PVMap extends SVGManipulator {
                 if (!currentObj.newFont) currentObj.newTextColor = "lightgreen";
                 this.placeText(currentObj.tc, `text__${currentObj.landmark_id}`, currentObj.landmark_id, -2, -2, currentObj.newTextColor, currentObj.newFontSize, currentObj.newFont);
             }
-			if (currentObj.newBgdColor && currentObj.newBgdColor != "transparent") {
-				this.changeBgd(currentObj.landmark_id, currentObj.newBgdColor, true);
-			}
+            if (currentObj.newBgdColor && currentObj.newBgdColor != "transparent") {
+                this.changeBgd(currentObj.landmark_id, currentObj.newBgdColor, true);
+            }
         }
-		// apparently, reloading the map (as in, stowing it away and then bringing it back out fixes a render issue on IOS
-		if (window.mapSet && window.mapSet.activeMap) {
-			var rt = window.mapSet.activeMap.map_dataset_object.svg_id; 
-			window.mapSet.stowAway(rt); 
-			setTimeout(function(){window.mapSet.makeActive(rt)}, 100)
-		}
+        // apparently, reloading the map (as in, stowing it away and then bringing it back out fixes a render issue on IOS
+        if (window.mapSet && window.mapSet.activeMap) {
+            var rt = window.mapSet.activeMap.map_dataset_object.svg_id;
+            window.mapSet.stowAway(rt);
+            setTimeout(function() {
+                window.mapSet.makeActive(rt)
+            }, 100)
+        }
     }
-	
-	clearLayerGeneratedText(id) {
+
+    clearLayerGeneratedText(id) {
         this.group_container.querySelectorAll(`[id*=text__${id}]`).forEach(function(em) {
-			em.remove();
+            em.remove();
         });
-	}
-	
-	clearAllLayerGeneratedText() {
-		window.tco = this;
+    }
+
+    clearAllLayerGeneratedText() {
+        window.tco = this;
         this.autoForEachElement(function(id) {
-			window.tco.removeElementWithId(id);
+            window.tco.removeElementWithId(id);
         }, "text__", true);
-	}
+    }
 
     searchForInThisMap(search_term) {
         // like in applyLayerCheckboxesForThisMap, we also want a copy of the data so we do not inadvertently modify outside variables in doing our work 
@@ -886,7 +901,7 @@ class PVMap extends SVGManipulator {
             // (because the search queries attached to each layer look something like {$query,@=,$official_room_number}
             featuredata_workingcopy[i].query = search_term;
             for (let j = 0; j < this.layerdata.length; j++) {
-				if (!this.layerdata[j].layer_id) continue;
+                if (!this.layerdata[j].layer_id) continue;
                 individualResult = false;
                 individualResult = this.helper_evaluateQuery(this.layerdata[j].layer_querying_conditions, featuredata_workingcopy[i])[0];
                 if (individualResult && !positiveResults.includes(featuredata_workingcopy[i].landmark_id)) positiveResults.push(featuredata_workingcopy[i].landmark_id);
@@ -918,9 +933,9 @@ class PVMap extends SVGManipulator {
                 console.warn(`  - [${this.svg_id}][evaluateQuery] Bad condition: malformed qualifiers: ${content}, operators = ${operators}`);
                 return null;
             }
-			operators[0] = operators[0].trim();
-			operators[1] = operators[1].trim();
-			if (operators[2]) operators[2] = operators[2].trim();
+            operators[0] = operators[0].trim();
+            operators[1] = operators[1].trim();
+            if (operators[2]) operators[2] = operators[2].trim();
             //console.log(`    + Checking ${content}`);
             if (operators[0].slice(0, 1) == "$") {
                 //console.log(`    + $op0:${operators[0]} transformation:`);
@@ -997,7 +1012,7 @@ class PVMap extends SVGManipulator {
             search_index = conditions_and_instructions[0].indexOf("{", search_index + 1); // this will tell JS to look past the current curly brace and see if there is another
         }
         // Now that we have something that resembles "true && false || true || false", we can parse that to make the ultimate determination as to whether or not the feature given is part of the layer
-        conditions_and_instructions[0] = conditions_and_instructions[0].replaceAll(" ", "");
+		conditions_and_instructions[0] = conditions_and_instructions[0].replaceAll(" ", "");
         if (conditions_and_instructions[0].replaceAll("false", "").replaceAll("true", "").replaceAll("||", "").replaceAll("&&", "").length > 0) {
             console.warn(`    - [${this.svg_id}][evaluateQuery] Unable to simmer query down to valid boolean expression after parsing through replacements + match operators. Current exp = "${conditions_and_instructions[0]}".`);
             return null;
@@ -1008,12 +1023,12 @@ class PVMap extends SVGManipulator {
             if (broken_up_by_and_operator[i].includes("false")) {
                 // it's fine, this particular side of the OR statement didn't come true
             } else {
-				//console.log(`  + [${this.svg_id}][evaluateQuery] Check passed for ${feature.landmark_id}: ${conditions_and_instructions[0]} from ${layer_query}`);
-				return [true, conditions_and_instructions[0]];
-			}
+                //console.log(`  + [${this.svg_id}][evaluateQuery] Check passed for ${feature.landmark_id}: ${conditions_and_instructions[0]} from ${layer_query}`);
+                return [true, conditions_and_instructions[0]];
+            }
         }
-		//console.log(`  + [${this.svg_id}][evaluateQuery] Check failed for ${feature.landmark_id}...`);
-		return [false, conditions_and_instructions[0]];
+        //console.log(`  + [${this.svg_id}][evaluateQuery] Check failed for ${feature.landmark_id}...`);
+        return [false, conditions_and_instructions[0]];
 
     }
 

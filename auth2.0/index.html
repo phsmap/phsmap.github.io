@@ -1,70 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PHS Interactive Map: Sign-In Required</title>
-    <link rel="stylesheet" href="/js_css/auth/styles2.css" defer> <!-- Link to your CSS file -->
-	<script src='/js_css/auth/auth2_bundle.js' defer></script>
-</head>
-<body>
-
-<div class="login-container move">
-	<div style='text-align: center;'>
-		<!--img src='logo_standalone.png' width='15%' style='display:inline;'-->
-		<h2 style='color: gold;'>Poolesville High School Interactive Map</h2>
-		<hr>
-	</div>
-	
-	<div class='break'></div>
-
-	
-    <div class="login-content" style="display: flex; flex-direction: row; align-items: center; flex-wrap: wrap; justify-content: space-around">
+    <link rel="stylesheet" href="/js_css/auth/styles2.css" defer>
+    <!-- Link to your CSS file -->
+    <script src='/js_css/auth/auth2_bundle.js' defer></script>
+  </head>
+  <body>
+    <div class="login-container move">
+      <div style='text-align: center;'>
+        <!--img src='logo_standalone.png' width='15%' style='display:inline;'-->
+        <h2 style='color: gold;'>Poolesville High School Interactive Map</h2>
+        <hr>
+      </div>
+      <div class='break'></div>
+      <div class="login-content" style="display: flex; flex-direction: row; align-items: center; flex-wrap: wrap; justify-content: space-around">
         <div class="sign-in-section" style="text-align: left;">
-            <h2 style='text-align: center;'>Sign in:</h2>
-            <ul style="list-style-type: none; padding: 0;">
-                <li>You can log in with your mcpsmd.org account (see pictures), or a temporary visitor code.</li>
-                <br>
-                <li style="color: red;">Your password is NEVER accessed or saved by the PHS Interactive Map's login system.</li>
-                <br>
-                <li><a href="/info#useofdata">How is my information used as a part of logging in?</a></li>
-                <br>
-                <li><a href="/info#sensitiveinfo">Why does this application require a login?</a></li>
-            </ul>
-			        <div class="login-buttons" style="text-align: center; margin-top: 20px;">
+          <h2 style='text-align: center;'>Sign in:</h2>
+          <ul style="list-style-type: none; padding: 0;">
+            <li>You can log in with your mcpsmd.org account (see pictures), or a temporary visitor code.</li>
+            <br>
+            <li style="color: red;">Your password is NEVER accessed or saved by the PHS Interactive Map's login system.</li>
+            <br>
+            <li>
+              <a href="/info#useofdata">How is my information used as a part of logging in?</a>
+            </li>
+            <br>
+            <li>
+              <a href="/info#sensitiveinfo">Why does this application require a login?</a>
+            </li>
+          </ul>
+          <div class="login-buttons" style="text-align: center; margin-top: 20px;">
             <button style="margin: 0 auto;" onclick="startSignIn()">Sign into MCPS account</button>
-            <br><br>
-            --OR--
-            <br><br>
+            <br>
+            <br> --OR-- <br>
+            <br>
             <input id="viscode" style="font-size: 24px; background-color: black; border: 1px solid #999; color: white;">
             <button style="margin: 0 auto; font-size: 18px;" onclick="localStorage.setItem('acstoken', `visitor:${document.getElementById('viscode').value}`); var params = new URLSearchParams(document.location.href.split('?')[1].split('#')[0]), destination = params.get('redirectonsuccess'); destination && (destination.includes(':/') ? confirm(`This application wants to redirect you to ${destination}. Is that OK?`) && (document.location = destination) : document.location = destination);">Use visitor code</button>
+          </div>
         </div>
-		</div>
-		        <div class="disclaimer" style="text-align: center; margin-top: 40px;">
-            <h2>Disclaimer:</h2>
-            <ul style="list-style-type: none; padding: 0;">
-                <li>Don't rely on this application as your sole source of information in an emergency.</li>
-                <br>
-                <li>Don't share map printouts, screenshots, datasets, etc. with anyone except <br>for other MCPS students, staff, and authorized visitors (parents, subs, etc). <br>See "Why does this application require a login?" for an explanation.</li>
-            </ul>
+        <div class="disclaimer" style="text-align: center; margin-top: 40px;">
+          <h2>Disclaimer:</h2>
+          <ul style="list-style-type: none; padding: 0;">
+            <li>Don't rely on this application as your sole source of information in an emergency.</li>
+            <br>
+            <li>Don't share map printouts, screenshots, datasets, etc. with anyone except <br>for other MCPS students, staff, and authorized visitors (parents, subs, etc). <br>See "Why does this application require a login?" for an explanation. </li>
+          </ul>
         </div>
+      </div>
+      <div class="login-help" style="text-align: center; margin-top: 40px;">
+        <h2>Which logins do I use?</h2>
+        <div>
+          <img src="student_login.webp" width="70%" style="padding: 15px;max-width: 420px;">
+          <br>
+          <br>
+          <img src="staff_login.webp" width="70%" style="padding: 15px;max-width: 420px;">
         </div>
-			        <div class="login-help" style="text-align: center; margin-top: 40px;">
-            <h2>Which logins do I use?</h2>
-            <div>
-                <img src="student_login.webp" width="70%" style="padding: 15px;max-width: 420px;">
-				<br>
-				<br>
-                <img src="staff_login.webp" width="70%" style="padding: 15px;max-width: 420px;">
-            </div>
-        </div>
+      </div>
     </div>
-	
-
-</div>
-
-
-</div>
-
-</body>
+    </div>
+    </div>
+  </body>
 </html>

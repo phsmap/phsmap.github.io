@@ -7,141 +7,128 @@
 <script charset="UTF-8" src='core.js' defer></script>
 <title>(mobile 2.0) PHS Interactive Map</title>
 <script>
-function openMenu(cn, open) {
-	c = document.getElementsByClassName(cn);
-	for (let i = 0; i < c.length; i++) {
-		c[i].style.display = "none";
-	}
-	document.getElementById(open).style.display = "block";
-}
+  function openMenu(cn, open) {
+    c = document.getElementsByClassName(cn);
+    for (let i = 0; i < c.length; i++) {
+      c[i].style.display = "none";
+    }
+    document.getElementById(open).style.display = "block";
+  }
 </script>
-
-<select id='map_select' onchange="window.mapSet.stowAway(window.mapSet.activeMap.map_dataset_object.svg_id, Number(gebi('zoomableDiv').style.left.replaceAll('px', '')), Number(gebi('zoomableDiv').style.top.replaceAll('px', '')), Number(gebi('zoomableDiv').style.transform.replaceAll('scale(','').replaceAll(')',''))); c = window.mapSet.makeActive(this.value); console.log(c); setViewport(c[0], c[1], c[2]); console.log(`OK! Changed the active map to ${this.value}`)" style='width: 100%; position: fixed; top:0%; left: 0%; font-size: 52px; text-align: center;'>
-</select>
-<button onclick='resetViewport();' style='position: fixed; width: 33%; left: 0%; bottom: 0%; font-size: 38px;'>Zoom and <br>Pan Reset</button>
+<select id='map_select' onchange="window.mapSet.stowAway(window.mapSet.activeMap.map_dataset_object.svg_id, Number(gebi('zoomableDiv').style.left.replaceAll('px', '')), Number(gebi('zoomableDiv').style.top.replaceAll('px', '')), Number(gebi('zoomableDiv').style.transform.replaceAll('scale(','').replaceAll(')',''))); c = window.mapSet.makeActive(this.value); console.log(c); setViewport(c[0], c[1], c[2]); console.log(`OK! Changed the active map to ${this.value}`)" style='width: 100%; position: fixed; top:0%; left: 0%; font-size: 52px; text-align: center;'></select>
+<button onclick='resetViewport();' style='position: fixed; width: 33%; left: 0%; bottom: 0%; font-size: 38px;'>Zoom and <br>Pan Reset </button>
 <button onclick='eraseRoute();navhelper_clearnodes();Object.keys(window.mapSet.pvmaps).forEach(function(pvm){window.mapSet.pvmaps[pvm].map_dataset_object.clearFXAll(true)});' style='position: fixed; width: 33%; left: 33%; bottom: 0%; font-size: 38px;'>Clear Search/NH</button>
-<button onclick='document.getElementById("mainmenu").style.display = "block"' style='position: fixed; width: 34%; right: 0%; bottom: 0%; font-size: 38px;'>Open Main <br>Menu</button>
-
+<button onclick='document.getElementById("mainmenu").style.display = "block"' style='position: fixed; width: 34%; right: 0%; bottom: 0%; font-size: 38px;'>Open Main <br>Menu </button>
 <div id='hiddenItems' hidden>
-   <b id='selecting'>hovering: [none]</b>
-   &nbsp;
-   <b id='zoom'>zoom: [none]</b>
+  <b id='selecting'>hovering: [none]</b> &nbsp; <b id='zoom'>zoom: [none]</b>
 </div>
-
 <div id='zoomableDiv' style='position:fixed;width:100%;height:100%;top:0;left:0;z-index:1'></div>
-
-<div id='console' class='ws_modal' style='font-family: "Lucida Console"' hidden>
-== No F12 Reporting ==
-If you use this feature, the regular console will no longer function as intended.
-
-Click <a onclick='this.parentElement.style.display="none";' style='color: pink;'><u>here</u></a> to close this menu.
-</div>
-
+<div id='console' class='ws_modal' style='font-family: "Lucida Console"' hidden> == No F12 Reporting == If you use this feature, the regular console will no longer function as intended. Click <a onclick='this.parentElement.style.display="none";' style='color: pink;'>
+    <u>here</u>
+  </a> to close this menu. </div>
 <div id='show_landmark_data' class='popup' hidden>
-	<a onclick='this.parentElement.style.display="none";' style='color: red;' class='search noselect'><u>↓ Close menu ↓</u></a>
-	<br>
-	<br>
-	<h2 id='lookup_informal_name'>parsed_shortname</h2>
-	<p>Actions:</p>
-	<button style='color: lightblue; font-size: 36px;' class='mainmenu' id='set_nav_origin' onclick='navhelper_addnode(this.getAttribute("mapname"), this.getAttribute("landmarkid"), "origin"); this.parentElement.style.display="none";'>🧭 Nav Helper: Set as origin</button>
-	<button style='color: lightblue; font-size: 36px;' class='mainmenu' id='set_nav_destination' onclick='navhelper_addnode(this.getAttribute("mapname"), this.getAttribute("landmarkid"), "destination"); this.parentElement.style.display="none";'>🧭 Nav Helper: Set as destination</button>
-	<button style='color: gray; font-size: 36px;' class='mainmenu' id='dbg_copy' onclick='navigator.clipboard.writeText(this.getAttribute("landmarkid"));'>🔧 Debug: Copy landmark ID</button>
-	<button style='color: gray; font-size: 36px;' class='mainmenu' id='dbg_illuminate' onclick='illuminateNeighbors(this.getAttribute("landmarkid"))'>🔧Debug: Illuminate neighbors</button>
-	<br>
-	<p>Information:</p>
-	<table style='margin: auto; background-color: #333333FF; width: 80%; overflow: scroll;' id='lookup_table'>
-		<tr style='text-align:left;background-color:black'>	
-			<td><b style='color:gold;'>Attribute</b></td>
-			<td><b style='color:gold;'>Value</b></td>
-		</tr>
-	</table>
+  <a onclick='this.parentElement.style.display="none";' style='color: red;' class='search noselect'>
+    <u>↓ Close menu ↓</u>
+  </a>
+  <br>
+  <br>
+  <h2 id='lookup_informal_name'>parsed_shortname</h2>
+  <p>Actions:</p>
+  <button style='color: lightblue; font-size: 36px;' class='mainmenu' id='set_nav_origin' onclick='navhelper_addnode(this.getAttribute("mapname"), this.getAttribute("landmarkid"), "origin"); this.parentElement.style.display="none";'>🧭 Nav Helper: Set as origin</button>
+  <button style='color: lightblue; font-size: 36px;' class='mainmenu' id='set_nav_destination' onclick='navhelper_addnode(this.getAttribute("mapname"), this.getAttribute("landmarkid"), "destination"); this.parentElement.style.display="none";'>🧭 Nav Helper: Set as destination</button>
+  <button style='color: gray; font-size: 36px;' class='mainmenu' id='dbg_copy' onclick='navigator.clipboard.writeText(this.getAttribute("landmarkid"));'>🔧 Debug: Copy landmark ID</button>
+  <button style='color: gray; font-size: 36px;' class='mainmenu' id='dbg_illuminate' onclick='illuminateNeighbors(this.getAttribute("landmarkid"))'>🔧Debug: Illuminate neighbors</button>
+  <br>
+  <p>Information:</p>
+  <table style='margin: auto; background-color: #333333FF; width: 80%; overflow: scroll;' id='lookup_table'>
+    <tr style='text-align:left;background-color:black'>
+      <td>
+        <b style='color:gold;'>Attribute</b>
+      </td>
+      <td>
+        <b style='color:gold;'>Value</b>
+      </td>
+    </tr>
+  </table>
 </div>
-
 <div id='mainmenu' class='popup' style='overflow: scroll;' hidden>
-
-<div id='home' class='menu'>
-	<button class='mainmenu' onclick='openMenu("menu", "search_resolution_modal")'>🔍   Find A Place<br><b style='color:gray;font-size:28px'>Find and point out a specific point on the map</b></button>
-	<button class='mainmenu' onclick='openMenu("menu", "navsettings")'>🧭   Nav Helper<br><b style='color:gray;font-size:28px'>Find and plot a route between two rooms/landmarks</b></button>
-	<button class='mainmenu' onclick='openMenu("menu", "layer_menu")'>ℹ️   Map Layers<br><b style='color:gray;font-size:28px'>Choose what types of information are displayed on the map</b></button>
-	<button class='mainmenu' onclick='openMenu("menu", "settings")'>⚙️   App Settings<br><b style='color:gray;font-size:28px'>Client version, sign out, device type override and more</button>
-	<button class='mainmenu' onclick='this.parentElement.parentElement.parentElement.style.display = "none";'>❌   Exit<br><b style='color:gray;font-size:28px'>Close this menu</button>
-</div>
-
-<div class='noselect menu' hidden id='layer_menu' style='text-align: left;'>
-	<a onclick='openMenu("menu", "home")' style='color: yellow;' class='search noselect'><u>← Back</u></a>
-	<br>
-	<br>
-	<b>Remember to click Apply Changes at the bottom!</b>
-   <h2 id='feature_checkboxes'><u style='font-size: 44px;'>Layers:</u></h2>
-</div>
-
-<div id='search_resolution_modal' class='menu search noselect' hidden>
-	<a onclick='openMenu("menu", "home")' style='color: yellow;' class='search noselect'><u>← Back</u></a>
-	<br>
-	<br>
-   Enter a room #, locker #, staff member last name,<br> office (i.e. finance office), or landmark:
-   <br>
-   <br>
-   <button style='color:red;' onclick='document.querySelectorAll(".srt_clearable").forEach(function(e){e.remove()}); Object.keys(window.mapSet.pvmaps).forEach(function(pvm){window.mapSet.pvmaps[pvm].map_dataset_object.clearFXAll(true)});document.getElementById("query").value=""'>Clear</button>
-   <button style='color:lightgreen;' onclick='document.getElementById("searchstatus").hidden = false; searchAndResolve(document.getElementById("query").value); document.getElementById("searchstatus").hidden = true; '>Search</button>
-   <br>
-   <br>
-   <input id='query' onkeydown='handleKeyDownQuery(event)'>
-
-   <br>
-   <b id='searchstatus' hidden>SEARCHING...</b>
-   <br>
-   Click on a result below to highlight it on the map.
-   <br>
-   <div class='noselect' id='resolution_options' style='text-align: left;'>
-   </div>
-   <br>
-   Click the red "Clear" in this menu or "Clear Search/NH" on the bottom bar to clear the highlight.
-</div>
-
-
-<div id='navsettings' class='menu noselect' style='color:white;background-color:transparent;' hidden>
-	<a onclick='openMenu("menu", "home")' style='color: yellow;' class='search noselect'><u>← Back</u></a>
-	<h2 id='navstatus'>Nav Helper Status: 
-	<b id='navstatus2' style='color:gray;'>No origin or destination</b>
-	</h2>
-	
-	
-	<h2 id='navroute'>
-	<br>
-	<br>
-	Route:
-	<b id='navstopA'>...</b>
-	<b id='navarrow'>to</b>
-	<b id='navstopB'>...</b>
-	</h2>
-
-	<br>
-	
-	<h2 id='navactions'>Actions:<br>
-		<button style='color:gray; background-color: #333;' id='navstart' onclick='navhelper_navstart(); document.getElementById("mainmenu").style.display = "none"'>Start Nav Helper</button>
-		<br>
-		<br>
-		<button style='color:red;' id='navstart' onclick='eraseRoute(); navhelper_clearnodes();'>Erase route + stop Nav Helper</button>
-		<br>
-		<br>
-		<br>
-	</h2>
-	
-	<hr>
-	<div id='navsearch'>
-	<h2>Search for origin/destination:</h2>
-	<br>
-	<br>
-	
-		<button id='navsearch_clear' style='font-size: 44px; color: red' onclick="
+  <div id='home' class='menu'>
+    <button class='mainmenu' onclick='openMenu("menu", "search_resolution_modal")'>🔍 Find A Place <br>
+      <b style='color:gray;font-size:28px'>Find and point out a specific point on the map</b>
+    </button>
+    <button class='mainmenu' onclick='openMenu("menu", "navsettings")'>🧭 Nav Helper <br>
+      <b style='color:gray;font-size:28px'>Find and plot a route between two rooms/landmarks</b>
+    </button>
+    <button class='mainmenu' onclick='openMenu("menu", "layer_menu")'>ℹ️ Map Layers <br>
+      <b style='color:gray;font-size:28px'>Choose what types of information are displayed on the map</b>
+    </button>
+    <button class='mainmenu' onclick='openMenu("menu", "settings")'>⚙️ App Settings <br>
+      <b style='color:gray;font-size:28px'>Client version, sign out, device type override and more </button>
+    <button class='mainmenu' onclick='this.parentElement.parentElement.parentElement.style.display = "none";'>❌ Exit <br>
+      <b style='color:gray;font-size:28px'>Close this menu </button>
+  </div>
+  <div class='noselect menu' hidden id='layer_menu' style='text-align: left;'>
+    <a onclick='openMenu("menu", "home")' style='color: yellow;' class='search noselect'>
+      <u>← Back</u>
+    </a>
+    <br>
+    <br>
+    <b>Remember to click Apply Changes at the bottom!</b>
+    <h2 id='feature_checkboxes'>
+      <u style='font-size: 44px;'>Layers:</u>
+    </h2>
+  </div>
+  <div id='search_resolution_modal' class='menu search noselect' hidden>
+    <a onclick='openMenu("menu", "home")' style='color: yellow;' class='search noselect'>
+      <u>← Back</u>
+    </a>
+    <br>
+    <br> Enter a room #, locker #, staff member last name, <br> office (i.e. finance office), or landmark: <br>
+    <br>
+    <button style='color:red;' onclick='document.querySelectorAll(".srt_clearable").forEach(function(e){e.remove()}); Object.keys(window.mapSet.pvmaps).forEach(function(pvm){window.mapSet.pvmaps[pvm].map_dataset_object.clearFXAll(true)});document.getElementById("query").value=""'>Clear</button>
+    <button style='color:lightgreen;' onclick='document.getElementById("searchstatus").hidden = false; searchAndResolve(document.getElementById("query").value); document.getElementById("searchstatus").hidden = true; '>Search</button>
+    <br>
+    <br>
+    <input id='query' onkeydown='handleKeyDownQuery(event)'>
+    <br>
+    <b id='searchstatus' hidden>SEARCHING...</b>
+    <br> Click on a result below to highlight it on the map. <br>
+    <div class='noselect' id='resolution_options' style='text-align: left;'></div>
+    <br> Click the red "Clear" in this menu or "Clear Search/NH" on the bottom bar to clear the highlight.
+  </div>
+  <div id='navsettings' class='menu noselect' style='color:white;background-color:transparent;' hidden>
+    <a onclick='openMenu("menu", "home")' style='color: yellow;' class='search noselect'>
+      <u>← Back</u>
+    </a>
+    <h2 id='navstatus'>Nav Helper Status: <b id='navstatus2' style='color:gray;'>No origin or destination</b>
+    </h2>
+    <h2 id='navroute'>
+      <br>
+      <br> Route: <b id='navstopA'>...</b>
+      <b id='navarrow'>to</b>
+      <b id='navstopB'>...</b>
+    </h2>
+    <br>
+    <h2 id='navactions'>Actions: <br>
+      <button style='color:gray; background-color: #333;' id='navstart' onclick='navhelper_navstart(); document.getElementById("mainmenu").style.display = "none"'>Start Nav Helper</button>
+      <br>
+      <br>
+      <button style='color:red;' id='navstart' onclick='eraseRoute(); navhelper_clearnodes();'>Erase route + stop Nav Helper</button>
+      <br>
+      <br>
+      <br>
+    </h2>
+    <hr>
+    <div id='navsearch'>
+      <h2>Search for origin/destination:</h2>
+      <br>
+      <br>
+      <button id='navsearch_clear' style='font-size: 44px; color: red' onclick="
 		document.querySelectorAll('.nh_resolve_clearable').forEach(e => e.remove());
 		document.getElementById('navsearch_textbox').value = '';
 		document.getElementById('navsearchselect').innerText = '(nothing selected yet)';
 		document.getElementById('navsearchbuttons').style.display = 'none';
-	">Clear</button>&nbsp;&nbsp;
-		
-	<button style='font-size: 44px; color: lightgreen' onclick='
+	">Clear</button>&nbsp;&nbsp; <button style='font-size: 44px; color: lightgreen' onclick='
 	searchAndResolve(document.getElementById("navsearch_textbox").value, "navsearchresults", "nh_resolve_clearable", function(evt){
 		document.getElementById("navsearch_set_destination").setAttribute("navhelper_namespace", evt.target.getAttribute("under_map"));
 		document.getElementById("navsearch_set_destination").setAttribute("navhelper_landmarkid", evt.target.getAttribute("on_id"));
@@ -150,140 +137,124 @@ Click <a onclick='this.parentElement.style.display="none";' style='color: pink;'
 		document.getElementById("navsearchselect").innerText = evt.target.innerText.slice(1);
 		document.getElementById("nav_choosetype").style.display = "block";
 	});
-	'>Search</button>	
-	
-	<br>
-	<br>
-	<input id='navsearch_textbox' style='font-size: 44px;'>&nbsp;&nbsp;
-
-	
-	<div id='navsearchresults'>
-	
-	</div>
-	
-		<b style='display:none' id='nav_choosetype'><b>Set <h3 style='display:inline' id='navsearchselect'>(nothing selected yet)</h3> as origin or destination?</b>
-		<br>
-		<button style='color: lightblue;' id='navsearch_set_origin' onclick='navhelper_addnode(this.getAttribute("navhelper_namespace"), this.getAttribute("navhelper_landmarkid"), "origin"); document.getElementById("nav_choosetype").style.display = "none"; document.getElementById("navsearch_clear").onclick();'>Set as origin</button>&nbsp;
-		<button style='color: lightblue;' id='navsearch_set_destination' onclick='navhelper_addnode(this.getAttribute("navhelper_namespace"), this.getAttribute("navhelper_landmarkid"), "destination"); document.getElementById("nav_choosetype").style.display = "none"; document.getElementById("navsearch_clear").onclick();'>Set as destination</button>&nbsp;
-		</b>
-	
-	
-
+	'>Search</button>
+      <br>
+      <br>
+      <input id='navsearch_textbox' style='font-size: 44px;'>&nbsp;&nbsp; <div id='navsearchresults'></div>
+      <b style='display:none' id='nav_choosetype'>
+        <b>Set <h3 style='display:inline' id='navsearchselect'>(nothing selected yet)</h3> as origin or destination? </b>
+        <br>
+        <button style='color: lightblue;' id='navsearch_set_origin' onclick='navhelper_addnode(this.getAttribute("navhelper_namespace"), this.getAttribute("navhelper_landmarkid"), "origin"); document.getElementById("nav_choosetype").style.display = "none"; document.getElementById("navsearch_clear").onclick();'>Set as origin</button>&nbsp; <button style='color: lightblue;' id='navsearch_set_destination' onclick='navhelper_addnode(this.getAttribute("navhelper_namespace"), this.getAttribute("navhelper_landmarkid"), "destination"); document.getElementById("nav_choosetype").style.display = "none"; document.getElementById("navsearch_clear").onclick();'>Set as destination</button>&nbsp; </b>
+    </div>
+  </div>
+  <div id='settings' class='ws_modal menu' style='color: #999;white-space: normal; padding: 4px; text-align: left;' hidden>
+    <a onclick='openMenu("menu", "home")' style='color: yellow;' class='search noselect'>
+      <u>← Back</u>
+    </a>
+    <h1 style='text-align: center;'>App Settings</h1>
+    <hr>
+    <h4 style='text-align: center; color: white;'>
+      <u>Client Type</u>
+    </h4>
+    <b>Device Type</b>
+    <br>
+    <br> Current device type preference: <u id='curr_type_device' style='color: white'>[loading...]</u>
+    <br> Override device type preference: <br>
+    <br>
+    <select id='dev_select'>
+      <option value=''>Auto-Detect On Relaunch</option>
+      <option value='mobile'>Mobile</option>
+      <option value='desktop'>Desktop</option>
+    </select>
+    <br>
+    <br>
+    <br> (Tablet users should use the desktop client.) <br>
+    <br>
+    <br>
+    <b>Legacy Version</b>
+    <br>
+    <br> Current version preference: <u id='curr_type_legacy' style='color: white'>[loading...]</u>&nbsp;&nbsp;&nbsp;(1 = legacy, 2 = new) <br> Prefer legacy version over newer version: <br>
+    <br>
+    <select id='vers_select'>
+      <option value='2'>No, use new version (2)</option>
+      <option value='1'>Yes, use legacy version (1)</option>
+    </select>
+    <br>
+    <br>
+    <button style='color: lightgreen;' onclick='setCookie("devicePreference", gebi("dev_select").value, 40); setCookie("version_preference", gebi("vers_select").value, 40); document.location = "/"'>Apply device/version preferences and relaunch</button>
+    <br>
+    <br>
+    <br>
+    <br>
+    <hr>
+    <h4 style='text-align: center; color: white;'>
+      <u>Sign Out</u>
+    </h4>
+    <button style='color: red;' onclick='window.localStorage.clear(); document.cookie.split(";").forEach(function(c) { document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); }); document.location = "/";'>Sign out AND clear preference data</button>
+    <br>
+    <br>
+    <button style='color: red;' onclick='window.localStorage.clear(); document.location = "/";'>Sign out</button>
+    <br>
+    <br>
+    <br>
+    <br>
+    <hr>
+    <h4 style='text-align: center; color: white;'>
+      <u>Authentication</u>
+    </h4> Token Information: <br>
+    <br>
+    <table>
+      <tr>
+        <td style='color: white;'>issuer</td>
+        <td style='color: white;'>name</td>
+      </tr>
+      <tr>
+        <td id='tkn_issuer'>waiting...</td>
+        <td id='tkn_name'>N/A</td>
+      </tr>
+      <tr>
+        <td colspan='2' style='color: white;'>upn</td>
+      </tr>
+      <tr>
+        <td id='tkn_upn' colspan='2'>N/A</td>
+      </tr>
+      <tr>
+        <td style='color: white;'>issue time</td>
+        <td style='color: white;'>expiry time</td>
+      </tr>
+      <tr style='font-family:monospace'>
+        <td id='tkn_iat'>N/A</td>
+        <td id='tkn_exp'>N/A</td>
+      </tr>
+    </table>
+    <br>
+    <br>
+    <br>
+    <br>
+    <hr>
+    <div hidden>
+      <h4 style='text-align: center; color: white;'>
+        <u>Input</u>
+      </h4> Scroll (zoom) sensitivity: <input id='wheel_sens' value='[loading...]'>
+      <br> Mouse/trackpad (pan) sensitivity: <input id='mousemove_sens' value='[loading...]'>
+      <br>
+      <br>
+      <button style='color: lightgreen' onclick='setCookie("vers2_wheel_sens", gebi("wheel_sens").value, 40); setCookie("vers2_mousemove_sens", gebi("mousemove_sens").value, 40); window.location.reload()'>Apply changes and reload</button>
+      <br>
+      <br>
+      <br>
+      <br>
+      <hr>
+    </div>
+    <h4>Debug Items:</h4>
+    <button style='color:gray' onclick='var rt = window.mapSet.activeMap.map_dataset_object.svg_id; window.mapSet.stowAway(rt); setTimeout(function(){window.mapSet.makeActive(rt)}, 250)'>Stow / reload</button>
+    <br>
+    <br>
+    <button style='color:gray' onclick='window.mapSet.activeMap.map_dataset_object.applyLayerCheckboxesForThisMap()'>Apply layer checkboxes</button>
+    <br>
+    <br>
+    <b style='color: gray;'> Remember! These buttons act ONLY on the currently loaded map (pointed to by window.mapSet.activeMap) <br> Individual controls for "illuminate neighbors" and "get ID" can be found in the double click menu. </b>
+  </div>
 </div>
 </div>
-
-<div id='settings' class='ws_modal menu' style='color: #999;white-space: normal; padding: 4px; text-align: left;' hidden>
-	<a onclick='openMenu("menu", "home")' style='color: yellow;' class='search noselect'><u>← Back</u></a>
-   <h1 style='text-align: center;'>App Settings</h1>
-		<hr>
-		<h4 style='text-align: center; color: white;'><u>Client Type</u></h4>
-		<b>Device Type</b><br><br>
-		Current device type preference: <u id='curr_type_device' style='color: white'>[loading...]</u><br>
-		Override device type preference:
-		<br>
-		<br>
-		<select id='dev_select'>
-			<option value=''>Auto-Detect On Relaunch</option>
-			<option value='mobile'>Mobile</option>
-			<option value='desktop'>Desktop</option>
-		</select>
-		<br>
-		<br>
-		<br>
-		(Tablet users should use the desktop client.)
-		<br>
-		<br>
-		<br>
-		<b>Legacy Version</b><br><br>
-		Current version preference: <u id='curr_type_legacy' style='color: white'>[loading...]</u>&nbsp;&nbsp;&nbsp;(1 = legacy, 2 = new)
-		<br>
-		Prefer legacy version over newer version:
-		<br>
-		<br>
-		<select id='vers_select'>
-			<option value='2'>No, use new version (2)</option>
-			<option value='1'>Yes, use legacy version (1)</option>
-		</select>
-		<br>
-		<br>
-		<button style='color: lightgreen;' onclick='setCookie("devicePreference", gebi("dev_select").value, 40); setCookie("version_preference", gebi("vers_select").value, 40); document.location = "/"'>Apply device/version preferences and relaunch</button>
-		<br>
-		<br>
-		<br>
-		<br>
-		<hr>
-		<h4 style='text-align: center; color: white;'><u>Sign Out</u></h4>
-		<button style='color: red;' onclick='window.localStorage.clear(); document.cookie.split(";").forEach(function(c) { document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); }); document.location = "/";'>Sign out AND clear preference data</button>
-		<br>
-		<br>
-		<button style='color: red;' onclick='window.localStorage.clear(); document.location = "/";'>Sign out</button>
-		<br>
-		<br>
-		<br>
-		<br>
-		<hr>
-		<h4 style='text-align: center; color: white;'><u>Authentication</u></h4>
-		Token Information:
-		<br>
-		<br>
-		<table>
-			<tr>
-				<td style='color: white;'>issuer</td>
-				<td style='color: white;'>name</td>
-
-			</tr>
-			<tr>
-				<td id='tkn_issuer'>waiting...</td>
-				<td id='tkn_name'>N/A</td>
-			</tr>
-			<tr>
-				<td colspan='2' style='color: white;'>upn</td>
-			</tr>
-			<tr>
-				<td id='tkn_upn' colspan='2'>N/A</td>
-			</tr>
-			<tr>
-				<td style='color: white;'>issue time</td>
-				<td style='color: white;'>expiry time</td>
-			</tr>
-			<tr style='font-family:monospace'>
-				<td id='tkn_iat'>N/A</td>
-				<td id='tkn_exp'>N/A</td>
-			</tr>
-		</table>
-		<br>
-		<br>
-		<br>
-		<br>
-		<hr>
-		<div hidden>
-			<h4 style='text-align: center; color: white;'><u>Input</u></h4>
-			Scroll (zoom) sensitivity: <input id='wheel_sens' value='[loading...]'>
-			<br>
-			Mouse/trackpad (pan) sensitivity: <input id='mousemove_sens' value='[loading...]'>
-			<br>
-			<br>
-			<button style='color: lightgreen' onclick='setCookie("vers2_wheel_sens", gebi("wheel_sens").value, 40); setCookie("vers2_mousemove_sens", gebi("mousemove_sens").value, 40); window.location.reload()'>Apply changes and reload</button>
-			<br>
-			<br>
-			<br>
-			<br>
-			<hr>
-		</div>
-		<h4>Debug Items:</h4>
-		<button style='color:gray' onclick='var rt = window.mapSet.activeMap.map_dataset_object.svg_id; window.mapSet.stowAway(rt); setTimeout(function(){window.mapSet.makeActive(rt)}, 250)'>Stow / reload</button>
-		<br>
-		<br>
-		<button style='color:gray' onclick='window.mapSet.activeMap.map_dataset_object.applyLayerCheckboxesForThisMap()'>Apply layer checkboxes</button>
-		<br>
-		<br>
-		<b style='color: gray;'>
-		Remember! These buttons act ONLY on the currently loaded map (pointed to by window.mapSet.activeMap)<br>
-		Individual controls for "illuminate neighbors" and "get ID" can be found in the double click menu.
-		</b>
-	</div>
-</div>
-
-</div>
-
 <p hidden id='devicetype'>mobile</p>
