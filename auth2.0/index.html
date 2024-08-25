@@ -18,9 +18,9 @@
       <div class='break'></div>
       <div class="login-content" style="display: flex; flex-direction: row; align-items: center; flex-wrap: wrap; justify-content: space-around">
         <div class="sign-in-section" style="text-align: left;">
-          <h2 style='text-align: center;'>Sign in:</h2>
+          <h2 style='text-align: left;'>Sign in:</h2>
           <ul style="list-style-type: none; padding: 0;">
-            <li>You can log in with your mcpsmd.org account (see pictures), or a temporary visitor code.</li>
+            <li>You can log in with your mcpsmd.org account (see pictures at bottom/side), or a temporary visitor code.</li>
             <br>
             <li style="color: red;">Your password is NEVER accessed or saved by the PHS Interactive Map's login system.</li>
             <br>
@@ -32,22 +32,33 @@
               <a href="/info#sensitiveinfo">Why does this application require a login?</a>
             </li>
           </ul>
-          <div class="login-buttons" style="text-align: center; margin-top: 20px;">
-            <button style="margin: 0 auto;" onclick="startSignIn()">Sign into MCPS account</button>
+          <div class="login-buttons" style="text-align: left; margin-top: 20px;">
+            <button style="" onclick="startSignIn()">Sign into MCPS account</button>
             <br>
             <br> --OR-- <br>
             <br>
             <input id="viscode" style="font-size: 24px; background-color: black; border: 1px solid #999; color: white;">
+			<br>
+			<br>
             <button style="margin: 0 auto; font-size: 18px;" onclick="localStorage.setItem('acstoken', `visitor:${document.getElementById('viscode').value}`); var params = new URLSearchParams(document.location.href.split('?')[1].split('#')[0]), destination = params.get('redirectonsuccess'); destination && (destination.includes(':/') ? confirm(`This application wants to redirect you to ${destination}. Is that OK?`) && (document.location = destination) : document.location = destination);">Use visitor code</button>
           </div>
         </div>
-        <div class="disclaimer" style="text-align: center; margin-top: 40px;">
+        <div class="disclaimer" style="text-align: left; margin-top: 40px;">
           <h2>Disclaimer:</h2>
           <ul style="list-style-type: none; padding: 0;">
             <li>Don't rely on this application as your sole source of information in an emergency.</li>
             <br>
             <li>Don't share map printouts, screenshots, datasets, etc. with anyone except <br>for other MCPS students, staff, and authorized visitors (parents, subs, etc). <br>See "Why does this application require a login?" for an explanation. </li>
           </ul>
+		  <h2>Other information:</h2>
+		  <ul style='list-style-type: none; padding: 0;'>
+			<li><a href=''>Credits</a></li>
+			<li><a href='/info#opensource'>Links to Github</a>
+			<li><a href='/info#contact'>Contact developer</a>
+			<li><a href='/info#emergency'>Emergency information disclaimer (full text)</a>
+			<li><a href='/info#useofdata'>Use of account data + data security notice (full text)</a>
+			<li><a href='/info#sensitiveinfo'>Sensitive information control notice (full text)</a>
+		  </ul>
         </div>
       </div>
       <div class="login-help" style="text-align: center; margin-top: 40px;">
