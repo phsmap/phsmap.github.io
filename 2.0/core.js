@@ -166,7 +166,8 @@ function illuminateNeighbors(id) {
 	window.mapSet.activeMap.map_dataset_object.changeBorder(id, window.rcolor, "8px", false);
 	var neighbors = objectInReference.attached_to.split(";");
 	neighbors.forEach(function(elem) {
-		window.mapSet.activeMap.map_dataset_object.changeBorder(elem, window.rcolor, "8px", false);
+		console.log(elem);
+		if (!elem.includes("::")) window.mapSet.activeMap.map_dataset_object.changeBorder(elem, window.rcolor, "8px", false);
 	})
 }
 
