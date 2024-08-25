@@ -691,13 +691,14 @@ function navhelper_navstart() {
 
 function navhelper_addarrows(target_direction, lineID, direction_neutral = false, auto_trim = false, color = "cyan", measure_from = "arrowhead") {
 	var lineDirection = navhelper_determineLineDirection(lineID);
+	console.log("line prev dir: "+lineDirection)
 	if (!lineDirection) return null;
 	
 	if (
-	(lineDirection.includes("N") && target_direction.includes("N")) ||
-	(lineDirection.includes("S") && target_direction.includes("S")) ||
-	(lineDirection.includes("E") && target_direction.includes("E")) ||
-	(lineDirection.includes("W") && target_direction.includes("W"))
+	((lineDirection.includes("N") && target_direction.includes("S")) ||
+	(lineDirection.includes("S") && target_direction.includes("N")) ||
+	(lineDirection.includes("E") && target_direction.includes("W")) ||
+	(lineDirection.includes("W") && target_direction.includes("E"))) == false
 	) {
 		// do nothing, since the path already points the right way
 	} else {
@@ -710,11 +711,19 @@ function navhelper_addarrows(target_direction, lineID, direction_neutral = false
 		window[lineID.split("::")[0]].retrieve_element_in_this_group(lineID.split("::")[1]).setAttributeNS(null, "d", new_cmd);
 		console.log("reversed: "+lineID);
 		lineDirection = navhelper_determineLineDirection(lineID);
+		console.log("new dir: "+lineDirection)
 	}
 	
 	var newTN = document.createElementNS("http://www.w3.org/2000/svg", "text");
 	var newTXP = document.createElementNS("http://www.w3.org/2000/svg", "textPath");
-	newTXP.setAttributeNS(null, "href", "#" + window[lineID.split("::")[0]].retrieve_element_in_this_group(lineID.split("::")[1]).id);
+	
+	var newHWNode = window[lineID.split("::")[0]].retrieve_element_in_this_group(lineID.split("::")[1]).cloneNode();
+	var newID = PVMap.uniqueID();
+	newHWNode.id = newID;
+	console.log(`[core-navhelper][addArrows] generated alongside element #${newID}`);
+	window[lineID.split("::")[0]].group_container.prepend(newHWNode);
+	
+	newTXP.setAttributeNS(null, "href", `#${newID}`);
 	newTXP.setAttributeNS(null, "stroke", color);
 	newTXP.setAttributeNS(null, "font-size", "24px");
 	newTXP.setAttributeNS(null, "dominant-baseline", "middle");
@@ -722,7 +731,7 @@ function navhelper_addarrows(target_direction, lineID, direction_neutral = false
 	// account for automatic trim for a room
 	var cut = 0;
 	if (auto_trim) {
-		console.log(`auto trimming to meet ${auto_trim}`)
+		console.log(`[core-navhelper][addArrows] auto trimming to meet ${auto_trim}`)
 		if (auto_trim.split("::").length != 2) {
 			console.warn(`[core-navhelper][addArrows] Malformed room_trim_to ID ${auto_trim}`);
 			return null;
@@ -737,13 +746,13 @@ function navhelper_addarrows(target_direction, lineID, direction_neutral = false
 				return null;
 			}
 		}
-		console.log(`auto trimming to meet ${trim_to_room}`);
+		console.log(`[core-navhelper][addArrows] auto trimming to meet ${trim_to_room}`);
 		
 		var path = window[lineID.split("::")[0]].retrieve_element_in_this_group(lineID.split("::")[1]).getAttributeNS(null, "d");
 		var line_origin = path.split("l")[0].replaceAll("m", "").split(" ");
 		var line_destination = [Number(line_origin[0]) + Number(path.split("l")[1].split(" ")[0]), Number(line_origin[1]) + Number(path.split("l")[1].split(" ")[1])];
 		if (measure_from == "arrowhead") {
-			console.log("cutting off the arrowhead... mode detected: "+lineDirection);
+			console.log("[core-navhelper][addArrows] cutting off the arrowhead... mode detected: "+lineDirection);
 			if (lineDirection == "S") {
 				cut = (line_destination[1] - trim_to_room[1]);
 			}
@@ -758,7 +767,7 @@ function navhelper_addarrows(target_direction, lineID, direction_neutral = false
 			}
 			console.log("cut: " + cut);
 		} else {
-			console.log("cutting off the arrowhead... mode detected: "+lineDirection);
+			console.log("[core-navhelper][addArrows] sliding up the base... mode detected: "+lineDirection);
 			if (lineDirection == "S") {
 				cut = (line_origin[1] - trim_to_room[1]);
 			}
@@ -771,7 +780,7 @@ function navhelper_addarrows(target_direction, lineID, direction_neutral = false
 			if (lineDirection == "W") {
 				cut = trim_to_room[0] - line_origin[0];
 			}
-			console.log("cut: " + cut);
+			console.log("[core-navhelper][addArrows] cut: " + cut);
 		}
 	}
 	
