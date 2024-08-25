@@ -1,12 +1,20 @@
 <head>
-  <link rel="stylesheet" href="/js_css/viewer/viewer_desktop_styles.css">
+  <link rel="stylesheet" href="/js_css/auth/styles2.css">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PHS Interactive Map Important Information</title>
+  <style>
+  a {
+	color: gold;
+  }
+  h2 {
+	color: gold;
+	text-align: center;
+  }
+  </style>
 </head>
 
 
-<h1 style='text-align: center'>IMPORTANT INFORMATION</h1>
-<p style='text-align: center; color: red;'>(THE FIRST TWO ARE ESPECIALLY IMPORTANT!)</p>
+<h2 style='text-align: center; color: white;'>IMPORTANT INFORMATION</h2>
 <hr><br><br>
 
 <a id='emergency'></a>
@@ -23,15 +31,13 @@ You should always follow the directions of staff during an emergency, and take t
 <fieldset>
 <h2>(2) MCPS Sensitive Information Notice</h2>
 <p>
-	<li>Per MCPS policies, any map or document that provides information about the inside of MCPS 
-	facilities <b>CANNOT BE ACCESSIBLE</b> to the general public or disseminated to anyone outside of MCPS. 
-	As a result, all website users must sign with their mcpsmd.org accounts to be allowed access to map and facility data.</li>
+	<li>According to MCPS policies, any map or document that provides information about the inside of MCPS 
+	facilities cannot be accessible to the general public or disseminated to anyone outside of MCPS. 
+	As a result, the school has requested that I implement an access control that only grants website access to MCPS students/staff + authorized visitors.</li>
 	<br>
-	<li>Furthermore, should you decide to make any "export" of this application's data (i.e. by taking screenshots or printing the map out), 
-	you <b>MAY NOT DISSEMINATE IT</b> to anyone except for other Poolesville students, staff and temporary authorized visitors (i.e. students 
-	entering for an extracurricular/sport or substitute teachers).</li>
+	<li>This also means that should you decide to make any "export" of this application's data (i.e. by taking screenshots or printing the map out), 
+	you may not share it with anyone except for other Poolesville students, staff and temporary authorized visitors (such as students visiting our school for an event, parents, and subs).</li>
 	<br>
-	<li>Please understand that this policy is in place to <b>keep our schools and other facilities safe</b> and that it is strictly enforced by school administrators, security and county officials. </li>
 	
 </p>
 </fieldset>
@@ -40,25 +46,25 @@ You should always follow the directions of staff during an emergency, and take t
 
 <a id='useofdata'></a>
 <fieldset>
-<h2>(3) Use of Account Data Notice</h2>
+<h2>(3) Use of Account Information + Data Security Notice</h2>
 <p>
-	<li>As a part of complying with MCPS' policies on interior maps/other similar documents, this application requires you to sign in with your MCPS issued Microsoft account
-	in order to restrict who can view this website.</li>
+	<b><u>Use of Account Information</b></u>
+	<li>The resource server (which is responsible for serving map/layer data to users) controls access by looking up incoming users' Microsoft profiles and checking to make sure that they are of MCPS origin.</li>
 	<br>
-	<li>Our resource server (the one that actually serves maps/layer data to users) works by looking up incoming users' Microsoft profiles and checking to make sure that they are of MCPS origin before serving any maps or data. More specifically, we check the user's principal name, which contains the user's name as well as their domain (the domain is the part we care about).</li>
+	<li>During this process, the server is <b>ABLE TO SEE</b> a limited amount of account data, such as email address, phone number, office location, job title and language preference. However, <b>most of it is not recorded</b> since it isn't actually used to authenticate users. (For more information about what information is visible when you log in with Microsoft see, <a href="https://learn.microsoft.com/en-us/graph/api/user-get?view=graph-rest-1.0&tabs=http">this article</a>).</li>
 	<br>
-	<li>While we're looking up users' profiles, we are able to see other information too, such as their email address, phone number, office location, job title and language preferences. (This is the information that Microsoft returns on its API endpoint for user lookup, <a href="https://learn.microsoft.com/en-us/graph/api/user-get?view=graph-rest-1.0&tabs=http">/me</a>). However, we do not record any of this Microsoft account information - once we're done using it for authentication, we let go of it.</li>
+	<li>The server will <b>RECORD</b> IP addresses, user names, user agents, email addresses, date/time of first and subsequent sign ins, and date/time of requests for protected resources.</li>
 	<br>
-	<li>(Do note however that we record IP addresses, user names, user agents, email addresses, date/time of first and subsequent sign ins, and date/time of attempted accesses of secured resources. These are pieces of information that almost all web services will record.)</li>
+	<b><u>Data Security</b></u>
 	<br>
-	<li>Furthermore, I would like to restate that we <b>DO NOT HANDLE any user passwords or secrets</b>. Some applications will take your username/password, and then use those to directly look up your account information/act on your behalf. However, we do not. Instead, we have users enter their passwords on Microsoft's website, after which Microsoft gives us an <i>access token</i> (a certificate of delegated permission) which allows us to look up their information.</li>
 	<br>
-	<li>And because of the way access tokens work in terms of permissions, this application <b>cannot act on your behalf and cannot access any Microsoft account data beyond what has been described.</b></li>
+	<li>I would like to restate that this app <b>DOES NOT HANDLE any user passwords or secrets</b>, and that it <b>CANNOT ACCESS OR ACT ON BEHALF OF YOUR ACCOUNT</b>. </li>
 	<br>
-	<li>For people who want to know: we're using OAuth 2.0 access tokens in the manner described in <a href='https://learn.microsoft.com/en-us/entra/architecture/auth-oauth2'>this</a> document. We only request the User.Read, openid, profile and email scopes.</li>
+	<li>Users enter their passwords on Microsoft's website, after which Microsoft gives us an <i>access token</i>, which is essentially a digitally signed, temporary certificate that can be used to prove a user's identity and allow the bearer (in this case, the PHS Interactive Map) <b>limited</b> access to account information.</li>
 	<br>
-	<li>Lastly, we use Microsoft Azure Active Directory/Entra ID as our authorization provider and Supabase as an intermediary between the application and Microsoft AAD. You may want to consider reading their policies about what data they collect, who gets access to it and what they do with it. This information was last updated on the 14th of April, 2024 and is subject to change without notice.</li>
+	<li>This is different from some other applications, where your username/password is saved by the application and then later used to act directly on your behalf -- which is bad because a password carries full account access priviledges, does not expire and can be changed to lock the original account owner out.</li>
 	<br>
+	<li>For more information on how this system works and how it prevents 3rd party applications such as this one from accessing your password and your account, see <a href='https://learn.microsoft.com/en-us/entra/architecture/auth-oauth2'>this document about OAuth2.0</a>.</b></li>
 	
 </p>
 </fieldset>
@@ -81,17 +87,16 @@ Please do not open an issue or pull request on Github without contacting me firs
 <h2>(5) Credits</h2>
 <p>
 	<b>APPLICATION</b>
-	<li>Map/layer rendering engine, front-facing website, authentication system and backend by Charles Hu (Humanities '25).</li>
-	<li>App pre-release testing and feedback provided by Arjun Rao (Global '25), Rue Tercero (Humanities '25) and Daniel Matthews (SMCS '24).</li>
-	<li>Link on PHS schedule placed by Daniel Matthews.</li>
+	<li>Map/layer rendering engine, front-facing website, authentication system and backend developed by Charles Hu (Humanities '25).</li>
+	<li>Link on PHS schedule placed by Daniel Matthews (SMCS '24).</li>
 	<li>Authentication and authorization provided by Supabase and Microsoft Azure Active Directory.</li>
 	<li>Hosting provided by Anaconda's PythonAnywhere and Github Pages.</li>
 	<br>
 	<b>MAP DATA</b>
 	<br>
 	<br>
-	<li>Map data provided by Arjun Rao, PHS Administration and Google Maps.</li>
-	<li>Base maps provided by VMDO Architects and modified by Arjun Rao.</li>
+	<li>Map and feature data sourced from Arjun Rao, PHS Administration and Google Maps.</li>
+	<li>Base maps for version 1.0 sourced from VMDO Architects with assistance from Arjun Rao.</li>
 </p>
 </fieldset>
 
@@ -101,6 +106,6 @@ Please do not open an issue or pull request on Github without contacting me firs
 <fieldset>
 <h2>(6) Open Source Software</h2>
 <p>
-This is open source software. Source code is available for public scrutiny at <a href='https://github.com/phsmap/phsmap.github.io'>https://github.com/phsmap/phsmap.github.io</a> (for our frontend) and <a href='https://github.com/phsmap/phsmap_backend'>https://github.com/phsmap/phsmap_backend</a> (for our backend).
+This is open source software. Source code is available at <a href='https://github.com/phsmap/phsmap.github.io'>https://github.com/phsmap/phsmap.github.io</a> (for our frontend) and <a href='https://github.com/phsmap/phsmap_backend'>https://github.com/phsmap/phsmap_backend</a> (for our backend).
 </p>
 </fieldset>
