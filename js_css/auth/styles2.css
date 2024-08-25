@@ -7,13 +7,16 @@ body, html {
 
 /* Container for login form */
 .login-container {
-    width: 85%;
-    margin: 20px auto; /* Center align and provide top margin */
+	min-width: 75%;
+	max-width: 95%;
+	margin: auto;
     padding: 20px;
     background-color: #222; /* Darker container background */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Box shadow for depth */
     border-radius: 8px; /* Rounded corners */
 	text-align: center;
+	display: flex;
+	flex-direction: column;
 }
 
 /* Button */
