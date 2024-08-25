@@ -33,8 +33,8 @@ function getCookie(cname) {
   }
   return "";
 }
-
-function startUpDesktopListeners() {
+ 
+function startUpListeners() {
 	const zoomableDiv = document.getElementById('zoomableDiv');
 	
     // MOUSE LISTENERS
@@ -420,7 +420,7 @@ window.onload = function() {
 			document.getElementById("map_select").appendChild(newOption);
 		});
 		resetViewport();
-		startUpDesktopListeners();
+		startUpListeners();
 		// apparently re-rendering the map fixes text rendering issues that affect iOS spesifically
 		if (window.mapSet && window.mapSet.activeMap) {
 			var rt = window.mapSet.activeMap.map_dataset_object.svg_id; 

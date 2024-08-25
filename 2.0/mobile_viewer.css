@@ -157,3 +157,7 @@ div.popup {
 	text-align:center;
 	overflow:scroll;
 }
+
+svg {
+	position: fixed;
+}
