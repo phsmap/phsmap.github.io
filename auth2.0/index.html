@@ -9,7 +9,7 @@
     <script src='/js_css/auth/auth2_bundle.js' defer></script>
   </head>
   <body>
-	<div style='position:fixed;top:0;left:0;width:100%;background-color:red;z-index:42069'>Jan 23, 2025: Because no users have logged in during the last few months, the provider that PHS IAM uses for authentication has suspended the SSO service. Users will no longer be able to sign in using an MCPS account. Contact Charles Hu (130713@mcpsmd.net) if you need access to the site.</div>
+	<div hidden style='position:fixed;top:0;left:0;width:100%;background-color:red;z-index:42069'>Jan 23, 2025: Because no users have logged in during the last few months, the provider that PHS IAM uses for authentication has suspended the SSO service. Users will no longer be able to sign in using an MCPS account. Contact Charles Hu (130713@mcpsmd.net) if you need access to the site.</div>
     <div class="login-container move">
       <div style='text-align: center;'>
         <!--img src='logo_standalone.png' width='15%' style='display:inline;'-->
@@ -34,7 +34,7 @@
             </li>
           </ul>
           <div class="login-buttons" style="text-align: left; margin-top: 20px;">
-            <button style="background-color: #555;" onclick="startSignIn()" disabled>SSO sign on disabled</button>
+            <button onclick="startSignIn()" disabled>SSO sign in</button>
             <br>
             <br> --OR-- <br>
             <br>
